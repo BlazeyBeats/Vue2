@@ -1,30 +1,35 @@
 <template>
-<div class="main">
+<div id="app">
+    <app-firebasetest></app-firebasetest>
     <app-navbar></app-navbar>
     <app-intro></app-intro>
     <app-body></app-body>
+
 </div>
 </template>
 
 <script>
-//Imports
 import Navbar from './components/Navbar';
 import Intro from './components/Intro';
 import Body from './components/Body';
+import FirebaseTest from './components/FirebaseTest';
 
 export default {
     components: {
+        'app-firebasetest': FirebaseTest,
         'app-navbar': Navbar,
         'app-intro': Intro,
         'app-body': Body
     }
-}
-</script>
+};
+</script>  
 
-<style>
+<style lang="scss">
 body {
     margin: 0;
+
     background-color: rgb(227, 221, 221);
+    ;
 }
 
 #app {
