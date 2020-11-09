@@ -10,33 +10,46 @@
     <div v-if="popupsignin" class="signtemplate">
         <h1>SIGN IN</h1>
         <form @submit.prevent="pressed">
-            <div class="login">
-                <input type="text" placeholder="login" v-model="email" />
+            <div class="input-email-password">
+                <div class="login">
+                    <p>Email :</p>
+                    <input type="text" placeholder="example@gmail.com" v-model="email" />
+                </div>
+                <div class="password">
+                    <p>Password :</p>
+                    <input type="password" placeholder="password" v-model="password" />
+                </div>
+
+                <button v-on:click="Login">SIGN IN</button>
             </div>
-            <div class="password">
-                <input type="password" placeholder="password" v-model="password" />
-            </div>
-            <button v-on:click="Login">Login</button>
         </form>
         <div class="error" v-if="error">{{error.message}}</div>
-        <p>Don't have an account?</p><button v-on:click="popupsignup=true;popupsignin=false">Sign Up</button>
+        <div class="switch-template">
+            <p>Don't have an account?</p><button v-on:click="popupsignup=true;popupsignin=false">Sign Up</button>
+        </div>
     </div>
 
     <div v-if="popupsignup" class="signtemplate">
         <h1>SIGN UP</h1>
         <div>
-            <div class="error" v-if="error">{{error.message}}</div>
             <form @submit.prevent="pressed">
+                <div class="input-email-password">
+                    <div class="email">
+                        <p>Email :</p>
+                        <input type="email" v-model="email" placeholder="example@gmail.com" />
+                    </div>
+                    <div class="password">
+                        <p>Password :</p>
+                        <input type="password" v-model="password" placeholder="password" />
+                    </div>
 
-                <div class="email">
-                    <input type="email" v-model="email" placeholder="email" />
+                    <button v-on:click="Register" type="submit">SIGN UP</button>
                 </div>
-                <div class="password">
-                    <input type="password" v-model="password" placeholder="password" />
-                </div>
-                <button v-on:click="Register" type="submit">Sign Up</button>
-                <p>Already have an account?</p><button v-on:click="popupsignup=false;popupsignin=true">Sign in</button>
             </form>
+            <div class="error" v-if="error">{{error.message}}</div>
+            <div class="switch-template">
+                <p>Already have an account?</p><button v-on:click="popupsignup=false;popupsignin=true">Sign in</button>
+            </div>
         </div>
     </div>
 </div>
@@ -122,8 +135,8 @@ export default {
     left: 50%;
     top: 50%;
     width: 700px;
-    height: 600px;
-    margin-top: -300px;
+    height: 550px;
+    margin-top: -275px;
     margin-left: -350px;
     position: fixed;
     background-color: rgb(239, 243, 243);
@@ -131,6 +144,7 @@ export default {
 }
 
 .signtemplate h1 {
+    letter-spacing: 1px;
     color: rgb(50, 26, 5);
     background-color: rgb(202, 206, 196);
     margin: 0;
@@ -138,5 +152,81 @@ export default {
     border-radius: 15px 15px 0 0;
     display: flex;
     justify-content: center;
+}
+
+.input-email-password p {
+    color: rgb(50, 26, 5);
+    font-size: 22px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    margin-left: 30px;
+    display: flex;
+    justify-content: flex-start;
+    letter-spacing: 1px;
+}
+
+.input-email-password input {
+    font-size: 18px;
+    padding-left: 10px;
+    background-color: rgb(239, 243, 243);
+    width: 630px;
+    height: 30px;
+    margin: 0px 20px;
+    border: none;
+    border-bottom: 12px solid rgb(202, 206, 196);
+    border-radius: 0 0 15px 15px;
+    outline: none;
+}
+
+.input-email-password input::placeholder {
+    color: gray;
+}
+
+.input-email-password input:focus {}
+
+.input-email-password button {
+    background-color: rgb(239, 243, 243);
+    font-size: 30px;
+    margin-top: 30px;
+    padding: 10px 70px;
+    border: 2px solid rgb(50, 26, 5);
+    border-radius: 30px;
+    outline: none;
+    letter-spacing: 1px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.input-email-password button:hover {
+    background-color: rgb(50, 26, 5);
+    color: rgb(239, 243, 243);
+}
+
+.login .password {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.error {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 30px;
+    margin-top: 30px;
+}
+
+.switch-template {
+    display: flex;
+    justify-content: flex-start;
+    margin: 10px 30px;
+    font-size: 15px;
+}
+
+.switch-template button {
+    outline: none;
+    border: none;
+    cursor: pointer;
+    color: red;
+    font-size: 15px;
+    margin-left: 5px;
 }
 </style>
