@@ -1,8 +1,8 @@
 <template>
 <div>
     <div class="navbar">
-        <button v-on:click="popupsignin=!popupsignin;popupsignup=false" class="signinBtn">Sign In</button>
-        <button v-on:click="popupsignup=!popupsignup;popupsignin=false" class="signupBtn">Sign Up</button>
+        <button v-on:click="popupsignin=!popupsignin;" class="signinBtn">Sign In</button>
+        <button v-on:click="popupsignup=!popupsignup;" class="signupBtn">Sign Up</button>
     </div>
     <div v-if="popupsignin" v-on:click="popupsignup=false;popupsignin=false" class="signoverlay"></div>
     <div v-if="popupsignup" v-on:click="popupsignup=false;popupsignin=false" class="signoverlay"></div>
@@ -181,8 +181,6 @@ export default {
 .input-email-password input::placeholder {
     color: gray;
 }
-
-.input-email-password input:focus {}
 
 .input-email-password button {
     background-color: rgb(239, 243, 243);

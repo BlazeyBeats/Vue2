@@ -1,7 +1,9 @@
 <template>
 <div id="app">
     <app-firebasetest></app-firebasetest>
-    <app-navbar></app-navbar>
+    <app-navbar-loggedin v-if="loggedIn"></app-navbar-loggedin>
+    <app-navbar-loggedout v-else></app-navbar-loggedout>
+
     <app-intro></app-intro>
     <app-body></app-body>
 
@@ -9,17 +11,55 @@
 </template>
 
 <script>
-import Navbar from './components/Navbar';
+import NavbarLoggedOut from './components/NavbarLoggedOut';
+import NavbarLoggedIn from './components/NavbarLoggedIn';
 import Intro from './components/Intro';
 import Body from './components/Body';
 import FirebaseTest from './components/FirebaseTest';
+import * as firebase from "firebase/app";
+import "firebase/auth";
 
 export default {
     components: {
         'app-firebasetest': FirebaseTest,
-        'app-navbar': Navbar,
+        'app-navbar-loggedout': NavbarLoggedOut,
+        'app-navbar-loggedin': NavbarLoggedIn,
         'app-intro': Intro,
         'app-body': Body
+    },
+    mounted() {
+        this.setupFirebase();
+    },
+
+    methods: {
+        setupFirebase() {
+            firebase.auth().onAuthStateChanged(user => {
+                if (user) {
+                    // User is signed in.
+                    console.log("signed in");
+                    this.loggedIn = true;
+                } else {
+                    // No user is signed in.
+                    this.loggedIn = false;
+                    console.log("signed out", this.loggedIn);
+                }
+            });
+        },
+        signOut() {
+            firebase
+                .auth()
+                .signOut()
+                .then(() => {
+                    this.$router.replace({
+                        name: "login"
+                    });
+                });
+        }
+    },
+    data() {
+        return {
+            loggedIn: false
+        };
     }
 };
 </script>  
