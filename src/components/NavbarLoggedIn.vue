@@ -3,36 +3,48 @@
     <div class="navbar">
         <button v-on:click="popupsignin=!popupsignin;" class="upload">Upload</button>
         <button v-on:click="signOut" class="signoutBtn">Log Out</button>
-        <button class="user">User</button>
+        <button class="user">{{name}}</button>
     </div>
 
 </div>
 </template>
 
 <script>
-import * as firebase from "firebase/app";
-import "firebase/auth";
+
+
+import {fb,db} from './firebaseinit.js'
 export default {
+      data() {
+        return {
+            name:null
+        }
+    },
     mounted() {
         this.setupFirebase();
     },
-    data() {
-        return {
-
-        }
+    firestore(){
+      
     },
+     created() {
+      if (fb.auth().currentUser) {
+     
+      this.name= db.collection('profiles').doc(fb.auth().currentUser.uid.name);
+    }
+        
+            
+       
+     },
+  
     computed: {
 
     },
     methods: {
         signOut() {
-            firebase
+            fb
                 .auth()
                 .signOut()
                 .then(() => {
-                    this.$router.replace({
-                        name: "login"
-                    });
+               
                 });
         }
     }

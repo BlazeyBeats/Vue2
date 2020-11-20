@@ -1,4 +1,5 @@
 <template>
+<div class="mainpage">
 <div class="intro">
     <div class="introBlock">
         <div class="introcontentleft">
@@ -8,6 +9,10 @@
             <button v-on:click="upload" class="uploadBtn">Upload Now</button>
         </div>
     </div>
+</div>
+<div class="body">
+
+</div>
 </div>
 </template>
 

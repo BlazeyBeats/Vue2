@@ -4,17 +4,16 @@
     <app-navbar-loggedin v-if="loggedIn"></app-navbar-loggedin>
     <app-navbar-loggedout v-else></app-navbar-loggedout>
 
-    <app-intro></app-intro>
-    <app-body></app-body>
-
+    <router-view><app-mainpage></app-mainpage></router-view>
+   
 </div>
 </template>
 
 <script>
 import NavbarLoggedOut from './components/NavbarLoggedOut';
 import NavbarLoggedIn from './components/NavbarLoggedIn';
-import Intro from './components/Intro';
-import Body from './components/Body';
+import MainPage from './components/MainPage';
+
 import FirebaseTest from './components/FirebaseTest';
 import * as firebase from "firebase/app";
 import "firebase/auth";
@@ -24,8 +23,8 @@ export default {
         'app-firebasetest': FirebaseTest,
         'app-navbar-loggedout': NavbarLoggedOut,
         'app-navbar-loggedin': NavbarLoggedIn,
-        'app-intro': Intro,
-        'app-body': Body
+        'app-mainpage': MainPage,
+        
     },
     mounted() {
         this.setupFirebase();
@@ -38,11 +37,13 @@ export default {
                     // User is signed in.
                     console.log("signed in");
                     this.loggedIn = true;
+                    
                 } else {
                     // No user is signed in.
                     this.loggedIn = false;
                     console.log("signed out", this.loggedIn);
                 }
+                console.log(user);
             });
         },
         signOut() {

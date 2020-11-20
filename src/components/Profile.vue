@@ -1,6 +1,6 @@
 <template>
-<div class="body">
-
+<div class="profile">
+<p>Hello</p>
 </div>
 </template>
 

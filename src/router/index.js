@@ -1,7 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
 
+import MainPage from "../components/MainPage.vue";
+import Profile from "../components/Profile.vue"
 
 import * as firebase from "firebase/app";
 import "firebase/auth";
@@ -9,21 +10,19 @@ import "firebase/auth";
 Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: "/",
-    name: "home",
-    component: Home
+ {
+    path:"/",
+    name:"mainpage",
+    component:MainPage
+  },
+
+ {
+    path:"/profile",
+    name:"profile",
+    component:Profile
   },
   
-  {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
-  }
+  
 ];
 
 const router = new VueRouter({

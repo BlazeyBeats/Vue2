@@ -34,6 +34,10 @@
         <div>
             <form @submit.prevent="pressed">
                 <div class="input-email-password">
+                <div class="name">
+                        <p>Name :</p>
+                        <input type="text" v-model="name" placeholder="Name" />
+                    </div>
                     <div class="email">
                         <p>Email :</p>
                         <input type="email" v-model="email" placeholder="example@gmail.com" />
@@ -56,31 +60,32 @@
 </template>
 
 <script>
-import * as firebase from "firebase/app";
-import "firebase/auth";
+
+
+import {fb,db} from './firebaseinit.js'
 export default {
     data() {
         return {
             popupsignin: false,
             popupsignup: false,
-            email: "",
-            password: "",
-            error: ""
+            email: null,
+            password: null,
+            error: "",
+             name:null,
+            
         }
     },
     computed: {
 
     },
     methods: {
-        Login() {
-            firebase
-                .auth()
+        Login() { 
+           
+                fb.auth()
                 .signInWithEmailAndPassword(this.email, this.password)
                 .then(data => {
                     console.log(data);
-                    this.$router.replace({
-                        name: "secret"
-                    });
+                  
                 })
                 .catch(error => {
                     this.error = error;
@@ -88,11 +93,14 @@ export default {
         },
 
         Register() {
-            firebase
-                .auth()
-                .createUserWithEmailAndPassword(this.email, this.password)
-                .then(() => {
-                    console.log("here");
+           
+                
+                fb.auth().createUserWithEmailAndPassword(this.email, this.password)
+                .then((user) => {
+                    db.collection("profiles").doc(user.user.uid).set({
+                        name: this.name
+                    })
+                   
 
                 })
                 .catch(error => (this.error = error));
