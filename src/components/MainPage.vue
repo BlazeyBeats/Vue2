@@ -6,7 +6,7 @@
 
             <p>Upload your music</p>
             <p>Make friends</p>
-            <button v-on:click="upload" class="uploadBtn">Upload Now</button>
+            <button class="uploadBtn">Upload Now</button>
         </div>
     </div>
 </div>

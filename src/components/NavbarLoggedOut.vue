@@ -7,7 +7,7 @@
     <div v-if="popupsignin" v-on:click="popupsignup=false;popupsignin=false" class="signoverlay"></div>
     <div v-if="popupsignup" v-on:click="popupsignup=false;popupsignin=false" class="signoverlay"></div>
 
-    <div v-if="popupsignin" class="signtemplate">
+    <div v-if="popupsignin" class="signtemplate signintemplate">
         <h1>SIGN IN</h1>
         <form @submit.prevent="pressed">
             <div class="input-email-password">
@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <div v-if="popupsignup" class="signtemplate">
+    <div v-if="popupsignup" class="signtemplate signuptemplate">
         <h1>SIGN UP</h1>
         <div>
             <form @submit.prevent="pressed">
@@ -139,17 +139,30 @@ export default {
     background-color: #000;
 }
 
-.signtemplate {
+.signintemplate  {
     left: 50%;
     top: 50%;
     width: 700px;
-    height: 550px;
-    margin-top: -275px;
+    height: 500px;
+    margin-top: -250px;
     margin-left: -350px;
     position: fixed;
     background-color: rgb(239, 243, 243);
     border-radius: 15px;
 }
+
+.signuptemplate  {
+    left: 50%;
+    top: 50%;
+    width: 700px;
+    height: 600px;
+    margin-top: -300px;
+    margin-left: -350px;
+    position: fixed;
+    background-color: rgb(239, 243, 243);
+    border-radius: 15px;
+}
+
 
 .signtemplate h1 {
     letter-spacing: 1px;

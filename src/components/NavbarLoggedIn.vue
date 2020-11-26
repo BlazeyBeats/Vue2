@@ -3,7 +3,7 @@
     <div class="navbar">
         <button v-on:click="popupsignin=!popupsignin;" class="upload">Upload</button>
         <button v-on:click="signOut" class="signoutBtn">Log Out</button>
-        <button class="user">{{name}}</button>
+        <button class="user"><router-link to="/profile">{{name}}</router-link></button>
     </div>
 
 </div>
@@ -14,25 +14,23 @@
 
 import {fb,db} from './firebaseinit.js'
 export default {
-      data() {
+     data() {
         return {
-            name:null
+           name:""
         }
     },
-    mounted() {
-        this.setupFirebase();
-    },
-    firestore(){
-      
-    },
      created() {
-      if (fb.auth().currentUser) {
-     
-      this.name= db.collection('profiles').doc(fb.auth().currentUser.uid.name);
-    }
-        
-            
+         var user = fb.auth().currentUser;
+      var vm = this;
+      if (user) {
+     db.collection('profiles').doc(user.uid).get().then(doc =>{
+         console.log(doc.data().name);
        
+       
+    vm.name = doc.data().name;
+     })} 
+
+     
      },
   
     computed: {
@@ -47,7 +45,7 @@ export default {
                
                 });
         }
-    }
+    }, 
 }
 </script>
 
@@ -58,6 +56,7 @@ export default {
 }
 
 .navbar button {
+    text-decoration: none;
     font-size: 20px;
     margin: 30px 10px;
     border: none;
@@ -65,7 +64,10 @@ export default {
     background: transparent;
     cursor: pointer;
 }
-
+a{
+    text-decoration: none;
+    color: rgb(50, 26, 5);
+}
 .user {
     padding-right: 100px;
 }

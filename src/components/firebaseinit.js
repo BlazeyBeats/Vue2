@@ -16,7 +16,8 @@ var config = {
 
 
 const fb = firebase.initializeApp(config);
-fb.firestore().settings({ timestampsInSnapshots: true })
+
 const db = firebase.firestore();
+
 
 export {fb,db}
