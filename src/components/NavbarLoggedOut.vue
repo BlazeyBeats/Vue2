@@ -98,7 +98,8 @@ export default {
                 fb.auth().createUserWithEmailAndPassword(this.email, this.password)
                 .then((user) => {
                     db.collection("profiles").doc(user.user.uid).set({
-                        name: this.name
+                        name: this.name,
+                        bio:""
                     })
                    
 
@@ -113,6 +114,8 @@ export default {
 .navbar {
     display: flex;
     justify-content: flex-end;
+      padding-top: 20px;
+    padding-right: 20px;
 }
 
 .navbar button {

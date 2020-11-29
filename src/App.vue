@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-    <app-firebasetest></app-firebasetest>
+    <app-firebasetest v-if="firebasetest"></app-firebasetest>
     <app-navbar-loggedin v-if="loggedIn"></app-navbar-loggedin>
     <app-navbar-loggedout v-else></app-navbar-loggedout>
 
@@ -59,7 +59,8 @@ export default {
     },
     data() {
         return {
-            loggedIn: false
+            loggedIn: false,
+            firebasetest:true
         };
     }
 };
