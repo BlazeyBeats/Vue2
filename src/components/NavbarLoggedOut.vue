@@ -71,7 +71,7 @@ export default {
             email: null,
             password: null,
             error: "",
-             name:null,
+             name:"",
             
         }
     },
@@ -85,7 +85,9 @@ export default {
                 .signInWithEmailAndPassword(this.email, this.password)
                 .then(data => {
                     console.log(data);
-                  
+                    var user = fb.auth().currentUser;
+                    this.$store.state.userUID = user.uid;
+                 
                 })
                 .catch(error => {
                     this.error = error;
@@ -94,7 +96,9 @@ export default {
 
         Register() {
            
-                
+                if (this.name === "")
+                alert("Please input a name");
+                else{
                 fb.auth().createUserWithEmailAndPassword(this.email, this.password)
                 .then((user) => {
                     db.collection("profiles").doc(user.user.uid).set({
@@ -104,7 +108,7 @@ export default {
                    
 
                 })
-                .catch(error => (this.error = error));
+                .catch(error => (this.error = error));}
         }
     }
 }
@@ -114,8 +118,9 @@ export default {
 .navbar {
     display: flex;
     justify-content: flex-end;
-      padding-top: 20px;
+    padding-top: 20px;
     padding-right: 20px;
+    margin-right:100px;
 }
 
 .navbar button {
@@ -128,7 +133,7 @@ export default {
 }
 
 .signupBtn {
-    padding-right: 100px;
+    margin-right: 100px;
 }
 
 .signoverlay {

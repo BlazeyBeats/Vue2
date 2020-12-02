@@ -3,7 +3,8 @@
     Logged in
     <div v-if="loggedIn">
     Yes
-    <p>logged in as {{user}}</p></div>
+    <p>logged in as {{userEmail}}</p>
+    <p>user UID : {{userUID}}</p></div>
     <div v-else>No</div>
     
     <button  @click="signOut">Sign out</button>
@@ -13,17 +14,18 @@
 <script>
 import * as firebase from "firebase/app";
 import "firebase/auth";
+import {fb} from './firebaseinit.js'
 export default {
  
     
     name: "top-header",
+
     mounted() {
         this.setupFirebase();
-    },
-    created() {
     if (firebase.auth().currentUser) {
-     
-      this.user = firebase.auth().currentUser.email;
+        var user = fb.auth().currentUser;
+        this.$store.state.userUID = user.uid;
+      this.$store.state.userEmail = fb.auth().currentUser.email;
     }
   },
     methods: {
@@ -34,6 +36,8 @@ export default {
                     // User is signed in.
                     console.log("signed in");
                     this.loggedIn = true;
+                    this.userUID = this.$store.state.userUID;
+                    this.userEmail = this.$store.state.userEmail;
                   
                 } else {
                     // No user is signed in.
@@ -56,7 +60,8 @@ export default {
     data() {
         return {
             loggedIn: false,
-            user: false
+            userEmail: "",
+            userUID:""
         };
     }
 };

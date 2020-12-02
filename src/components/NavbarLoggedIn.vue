@@ -19,18 +19,24 @@ export default {
            name:""
         }
     },
+    
      created() {
-         var user = fb.auth().currentUser;
+        var user = fb.auth().currentUser;
       var vm = this;
+       this.$store.state.userUID = user.uid;
       if (user) {
      db.collection('profiles').doc(user.uid).get().then(doc =>{
          console.log(doc.data().name);
-    vm.name = doc.data().name;
+        this.$store.state.name = doc.data().name;
+        vm.name = this.$store.state.name;
      })} 
 
      
      },
-  
+     
+  updated: function () {
+  this.name = this.$store.state.name;
+},
     computed: {
 
     },
@@ -40,7 +46,8 @@ export default {
                 .auth()
                 .signOut()
                 .then(() => {
-               
+               this.$store.state.userUID = null;
+               this.$store.state.name = null;
                 });
         }
     }, 
@@ -68,7 +75,5 @@ a{
     text-decoration: none;
     color: rgb(50, 26, 5);
 }
-.user {
-    padding-right: 100px;
-}
+
 </style>

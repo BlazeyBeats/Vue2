@@ -13,7 +13,7 @@
 
 <script>
 import {fb,db} from './firebaseinit.js'
- var user = fb.auth().currentUser;
+ 
 export default {
   data() {
         return {
@@ -22,17 +22,30 @@ export default {
              
         };
     },
-    created(){},
+    created(){
+        var user = fb.auth().currentUser;
+         this.$store.state.userUID = user.uid;
+    },
      methods:{
          
          updateProfile(){
-            var profileUpdate = db.collection("profiles").doc(user.uid);
-            return profileUpdate.update({
+             var user = fb.auth().currentUser; 
+             if (this.name === "") this.name = this.$store.state.name
+             else this.$store.state.name = this.name;
+           if (user) {
+            var profileUpdate = db.collection("profiles").doc(this.$store.state.userUID);
+         
+               return profileUpdate.update({
                 name:this.name,
                 bio:this.bio   
             }).then(function() {
+                
                 alert("update success");
-            })
+
+            })}
+            
+           
+          
         }
     }
 }
