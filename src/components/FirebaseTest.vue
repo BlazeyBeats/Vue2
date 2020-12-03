@@ -34,7 +34,7 @@ export default {
                 if (user) {
                     
                     // User is signed in.
-                    console.log("signed in");
+                    
                     this.loggedIn = true;
                     this.userUID = this.$store.state.userUID;
                     this.userEmail = this.$store.state.userEmail;
@@ -42,7 +42,7 @@ export default {
                 } else {
                     // No user is signed in.
                     this.loggedIn = false;
-                    console.log("signed out", this.loggedIn);
+                 
                 }
             });
         },

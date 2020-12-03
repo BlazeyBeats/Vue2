@@ -5,15 +5,18 @@
         <input type="text" v-model="name" />
         <p>Bio :</p>
         <input type="text" v-model="bio" />
+        <p>Profile picture :</p>
+        <input type="file" v-on:change="chooseFile" class="uploadImage"/>
     </div>
-    <button v-on:click="updateProfile">Update</button>
+    <button v-on:click="updateProfile" >Update</button>
 
 </div>
 </template>
 
 <script>
 import {fb,db} from './firebaseinit.js'
- 
+let file = {};
+var userProfilePic = false;
 export default {
   data() {
         return {
@@ -27,27 +30,35 @@ export default {
          this.$store.state.userUID = user.uid;
     },
      methods:{
-         
          updateProfile(){
              var user = fb.auth().currentUser; 
-             if (this.name === "") this.name = this.$store.state.name
+             if (this.name === "") this.name = this.$store.state.name;
              else this.$store.state.name = this.name;
-           if (user) {
-            var profileUpdate = db.collection("profiles").doc(this.$store.state.userUID);
-         
-               return profileUpdate.update({
+             if(userProfilePic){
+                fb.storage().ref('profiles/'+ this.$store.state.userUID + '/profile.jpg').put(file).then(function(){
+                    console.log("Upload success");
+                });
+            }
+            if (user) {
+                var profileUpdate = db.collection("profiles").doc(this.$store.state.userUID);
+            
+                return profileUpdate.update({
                 name:this.name,
                 bio:this.bio   
             }).then(function() {
-                
                 alert("update success");
-
-            })}
-            
-           
+            });
+            } 
+        }, 
+        chooseFile(e){
           
+            if(e.target.files[0]){
+            file = e.target.files[0];
+            userProfilePic = true;
+            }
+            
         }
-    }
+     }
 }
 </script>
 
