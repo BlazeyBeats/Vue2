@@ -28,19 +28,26 @@ export default {
     created(){
         var user = fb.auth().currentUser;
          this.$store.state.userUID = user.uid;
+         
     },
      methods:{
          updateProfile(){
-             var user = fb.auth().currentUser; 
+             var user = fb.auth().currentUser;
+             var profileUpdate = db.collection("profiles").doc(this.$store.state.userUID);
              if (this.name === "") this.name = this.$store.state.name;
              else this.$store.state.name = this.name;
+              if (this.bio === "") this.bio = this.$store.state.bio;
+             else this.$store.state.bio = this.bio;
              if(userProfilePic){
                 fb.storage().ref('profiles/'+ this.$store.state.userUID + '/profile.jpg').put(file).then(function(){
-                    console.log("Upload success");
+                    alert("upload success");
+                    return profileUpdate.update({
+                        profilePic:true
+                    });
                 });
             }
             if (user) {
-                var profileUpdate = db.collection("profiles").doc(this.$store.state.userUID);
+                
             
                 return profileUpdate.update({
                 name:this.name,

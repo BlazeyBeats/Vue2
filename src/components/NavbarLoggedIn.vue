@@ -3,7 +3,7 @@
     <div class="navbar">
         <button v-on:click="popupsignin=!popupsignin;" class="upload">Upload</button>
         <button v-on:click="signOut" class="signoutBtn"><router-link to="/">Log Out</router-link></button>
-        <button class="user"><router-link to="/profile">{{name}}</router-link></button>
+        <button class="user"><router-link to="/profile">{{this.$store.state.name}}</router-link></button>
     </div>
 
 </div>
@@ -16,7 +16,7 @@ import {fb,db} from './firebaseinit.js'
 export default {
      data() {
         return {
-           name:""
+           
         }
     },
     
@@ -33,10 +33,7 @@ export default {
 
      
      },
-     
-  updated: function () {
-  this.name = this.$store.state.name;
-},
+  
     computed: {
 
     },

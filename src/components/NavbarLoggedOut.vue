@@ -103,7 +103,8 @@ export default {
                 .then((user) => {
                     db.collection("profiles").doc(user.user.uid).set({
                         name: this.name,
-                        bio:""
+                        bio:"",
+                        profilePic: false
                     })
                    
 

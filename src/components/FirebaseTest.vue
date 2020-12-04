@@ -3,8 +3,8 @@
     Logged in
     <div v-if="loggedIn">
     Yes
-    <p>logged in as {{userEmail}}</p>
-    <p>user UID : {{userUID}}</p></div>
+    <p>logged in as {{this.$store.state.userEmail}}</p>
+    <p>user UID : {{this.$store.state.userUID}}</p></div>
     <div v-else>No</div>
     
     <button  @click="signOut">Sign out</button>

@@ -1,9 +1,11 @@
 <template>
 <div class="profile">
 
-<div v-if="profilepic" class="profile-pic"></div>
+<div v-if="this.$store.state.userProfilePic" class="profile-pic">
+<img v-bind:src="imgSrc" alt="" class="imgSrc">
+</div>
 <div v-else class="circle-pic"></div>
-<div class="profile-name">{{name}}</div>
+<div class="profile-name">{{this.$store.state.name}}</div>
 <div class="profile-bio">{{bio}}</div>
 <div class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
 
@@ -15,25 +17,43 @@ import {fb,db} from './firebaseinit.js'
 export default {
   data() {
         return {
-            profilepic: false,
-             name:"",
+            imgSrc:"",
+             
              bio:""
         };
     },
     created() {
          var user = fb.auth().currentUser;
+        
       var vm = this;
       if (user) {
-     db.collection('profiles').doc(user.uid).get().then(doc =>{
-         console.log(doc.data().name);  
-    vm.name = doc.data().name;
+     db.collection('profiles').doc(user.uid).get().then(doc =>{ 
+    
     vm.bio = doc.data().bio;
+ 
+    this.$store.state.userProfilePic = doc.data().profilePic;
+    fb.storage().ref('profiles/'+this.$store.state.userUID+'/profile.jpg').getDownloadURL().then(imgUrl=>{
+        this.imgSrc = imgUrl;
+        console.log(this.imgSrc);
+    })
      })}  
      },
 }
 </script>
 
 <style scoped>
+
+.imgSrc{
+     width: 250px;
+    height: 250px;
+     border-radius: 50%;
+     object-fit: cover;
+     display: flex;
+    justify-content: center;
+    margin: auto;
+    margin-top: 80px;
+}
+
 .circle-pic{
     width: 250px;
     height: 250px;
