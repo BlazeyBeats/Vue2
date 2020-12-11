@@ -1,9 +1,9 @@
 <template>
 <div>
     <div class="navbar">
-        <button v-on:click="popupsignin=!popupsignin;" class="upload">Upload</button>
+        <button class="upload"><router-link to="/upload">Upload</router-link></button>
         <button v-on:click="signOut" class="signoutBtn"><router-link to="/">Log Out</router-link></button>
-        <button class="user"><router-link to="/profile">{{this.$store.state.name}}</router-link></button>
+        <button class="user"><router-link to="/profile">{{this.$store.state.userName}}</router-link></button>
     </div>
 
 </div>
@@ -27,8 +27,8 @@ export default {
       if (user) {
      db.collection('profiles').doc(user.uid).get().then(doc =>{
          console.log(doc.data().name);
-        this.$store.state.name = doc.data().name;
-        vm.name = this.$store.state.name;
+        this.$store.state.userName = doc.data().name;
+        vm.name = this.$store.state.userName;
      })} 
 
      
@@ -44,7 +44,7 @@ export default {
                 .signOut()
                 .then(() => {
                this.$store.state.userUID = null;
-               this.$store.state.name = null;
+               this.$store.state.userName = null;
                 });
         }
     }, 

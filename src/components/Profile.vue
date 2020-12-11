@@ -5,7 +5,7 @@
 <img v-bind:src="imgSrc" alt="" class="imgSrc">
 </div>
 <div v-else class="circle-pic"></div>
-<div class="profile-name">{{this.$store.state.name}}</div>
+<div class="profile-name">{{this.$store.state.userName}}</div>
 <div class="profile-bio">{{bio}}</div>
 <div class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
 

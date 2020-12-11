@@ -34,7 +34,7 @@ export default {
          updateProfile(){
              var user = fb.auth().currentUser;
              var profileUpdate = db.collection("profiles").doc(this.$store.state.userUID);
-             if (this.name === "") this.name = this.$store.state.name;
+             if (this.name === "") this.name = this.$store.state.userName;
              else this.$store.state.name = this.name;
               if (this.bio === "") this.bio = this.$store.state.bio;
              else this.$store.state.bio = this.bio;
