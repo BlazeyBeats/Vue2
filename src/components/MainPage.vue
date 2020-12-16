@@ -10,15 +10,39 @@
         </div>
     </div>
 </div>
-<div class="body">
 
+<div class="musics">
+<div v-for="music in musics" :key="music.postName" class="postcollection">
+   
+        <div class="postname">{{music.postName}}</div>
+        <div class="postbio">{{music.postBio}}</div>
+        <div class="posttype">{{music.postType}}</div>
+ 
+</div>
 </div>
 </div>
 </template>
 
 <script>
+import {db} from './firebaseinit.js'
 export default {
+data() {
+        return {
+            musics:[],
+           
+             
+        };
+    },
+    created(){        
+        db.collection('music').get().then(querySnapshot =>{
+            querySnapshot.forEach(doc=>{
+                console.log(doc.data());
+                  console.log(doc.id);
+                this.musics.push(doc.data())
+            })
+        })
 
+    }
 }
 </script>
 
@@ -63,5 +87,26 @@ export default {
     background-color: white;
     border-color: rgb(50, 26, 5);
     transition: 0.3s;
+}
+.musics{
+   display: flex;
+  flex-direction: row;
+   flex-wrap: wrap;
+  
+   padding: 30px 100px;
+}
+.postcollection{
+    width: 270px;
+    height: 320px;
+    color: rgb(50, 26, 5);
+    display: flex;
+    align-items:center;
+
+    justify-content:flex-end;
+    flex-direction: column;
+    margin: 20px 30px;
+    padding-bottom: 20px;
+   background-color: white;
+   border-radius: 15px;
 }
 </style>

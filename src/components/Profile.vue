@@ -78,7 +78,8 @@ export default {
 .profile-manage{
     display: flex;
     justify-content: flex-end;
-    margin-top: 100px;
+    margin-top: 80px;
+    margin-bottom: 50px;
   margin-right:300px ;
 }
 .profile-manage button{
