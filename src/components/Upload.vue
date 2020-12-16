@@ -2,13 +2,13 @@
 <div class="upload">
  
     <p>Name :</p>
-        <input type="text" v-model="postName" />
+        <input type="text" v-model="postName"/>
         <p>Bio :</p>
         <input type="text" v-model="postBio" />
         <p>Music Type :</p>
          <input type="text" v-model="postType" />
         <p>Choose File :</p>
-        <input type="file" v-on:click="checkname" v-on:change="chooseFile" class="uploadMusic"/>
+        <input type="file" v-on:change="chooseFile" class="uploadMusic"/>
     <button v-on:click="uploadMusic" v-if="upLoad">Upload</button>
 </div>
 </template>
@@ -24,6 +24,7 @@ export default {
              postBio:"",
              postType:"",  
              musicSrc:"",
+          
             upLoad:false
              
         };
@@ -34,47 +35,39 @@ export default {
          
     },
     methods:{
-      
+    
         uploadMusic(){
           
               var vm = this;
-                fb.storage().ref('music/'+ this.$store.state.userUID +'/' + this.postName + '.mp3').getDownloadURL().then(url=>{
+             
+             fb.storage().ref('music/'+ this.$store.state.userUID +'/' + this.postName + '.mp3').put(file).then(function(){
+                    console.log("upload success");
+                    alert("Upload Success!");
+                      fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + vm.postName + '.mp3').getDownloadURL().then(url=>{
                     vm.musicSrc = url;
                     console.log(vm.musicSrc); 
                    
                     db.collection("music").add({
-                    postName: this.postName,
-                    postBio:this.postBio,
-                    postType: this.postType,
-                    postUrl:this.musicSrc,
-                    postUser:this.$store.state.userUID
+                    postName: vm.postName,
+                    postBio:vm.postBio,
+                    postType: vm.postType,
+                    postUrl:vm.musicSrc,
+                    postUser:vm.$store.state.userUID
                 })
                 });
-               
-         
-                
-            
-        },
-
-
-           
-         
+                })
+        },     
  chooseFile(e){
-          if(this.postName ===null) alert("Please input a name for your file");
-          else{
+      
+             var vm = this;
                if(e.target.files[0]){
             file = e.target.files[0];
-           var vm = this;
-             fb.storage().ref('music/'+ this.$store.state.userUID +'/' + this.postName + '.mp3').put(file).then(function(){
-                    console.log("upload success");
-                    vm.upLoad = true;
-                })
-            }
-          }
+           vm.upLoad = true;
+          
            
             
             
-        }
+        }}
      }
 }
 </script>
