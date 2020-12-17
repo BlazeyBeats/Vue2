@@ -106,8 +106,6 @@ export default {
                         bio:"",
                         profilePic: false
                     })
-                   
-
                 })
                 .catch(error => (this.error = error));}
         }

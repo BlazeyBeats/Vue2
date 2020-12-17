@@ -18,25 +18,20 @@ export default {
   data() {
         return {
             imgSrc:"",
-             
-             bio:""
+            bio:""
         };
     },
     created() {
-         var user = fb.auth().currentUser;
-        
-      var vm = this;
-      if (user) {
-     db.collection('profiles').doc(user.uid).get().then(doc =>{ 
-    
-    vm.bio = doc.data().bio;
- 
-    this.$store.state.userProfilePic = doc.data().profilePic;
-    fb.storage().ref('profiles/'+this.$store.state.userUID+'/profile.jpg').getDownloadURL().then(imgUrl=>{
-        this.imgSrc = imgUrl;
-        console.log(this.imgSrc);
-    })
-     })}  
+        var user = fb.auth().currentUser;   
+        var vm = this;
+        if (user) {
+            db.collection('profiles').doc(user.uid).get().then(doc =>{ 
+            vm.bio = doc.data().bio;
+            this.$store.state.userProfilePic = doc.data().profilePic;
+            fb.storage().ref('profiles/'+this.$store.state.userUID+'/profile.jpg').getDownloadURL().then(imgUrl=>{
+            this.imgSrc = imgUrl;
+             })
+         })}  
      },
 }
 </script>

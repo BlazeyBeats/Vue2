@@ -21,13 +21,11 @@ let file = {};
 export default {
  data() {
         return {
-             postName:"",
-             postBio:"",
-             postType:"",  
-             musicSrc:"",
-          
-            upLoad:false
-             
+            postName:"",
+            postBio:"",
+            postType:"",  
+            musicSrc:"",
+            upLoad:false   
         };
     },
     created(){
@@ -40,21 +38,16 @@ export default {
         uploadMusic(){
      
             var ID;
-                   db.collection('music').orderBy("postID","desc").limit(1).get().then(querySnapshot =>{
+            db.collection('music').orderBy("postID","desc").limit(1).get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{
                 ID = doc.data().postID;
-                  console.log(ID);
-               
             })
         })
             var vm = this;  
             fb.storage().ref('music/'+ this.$store.state.userUID +'/' + this.postName + '.mp3').put(file).then(function(){
-                    console.log("upload success");
                     alert("Upload Success!");
-                      fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + vm.postName + '.mp3').getDownloadURL().then(url=>{
+                    fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + vm.postName + '.mp3').getDownloadURL().then(url=>{
                     vm.musicSrc = url;
-                    console.log(vm.musicSrc); 
-                   
                     db.collection("music").add({
                     postName: vm.postName,
                     postBio:vm.postBio,
@@ -65,17 +58,12 @@ export default {
                 })
                 });
                 })
-        },     
- chooseFile(e){
-      
-             var vm = this;
-               if(e.target.files[0]){
+        },  
+        chooseFile(e){
+            var vm = this;
+            if(e.target.files[0]){
             file = e.target.files[0];
-           vm.upLoad = true;
-          
-           
-            
-            
+            vm.upLoad = true;   
         }}
      }
 }

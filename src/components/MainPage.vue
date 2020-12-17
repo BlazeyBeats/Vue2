@@ -6,14 +6,13 @@
 
             <p>Upload your music</p>
             <p>Make friends</p>
-            <button class="uploadBtn">Upload Now</button>
+      
         </div>
     </div>
 </div>
-
 <div class="musics">
 <div v-for="music in musics" :key="music.postName" class="postcollection">
-   
+        <div class="postcollection-square"></div>
         <router-link :to="{name:'MusicPage',
         params:{
             postID:music.postID,
@@ -73,34 +72,21 @@ data() {
     margin-top: 0;
 }
 
-.uploadBtn {
-    color: white;
-    font-size: 28px;
-    background-color: rgb(50, 26, 5);
-    padding: 20px;
-    border-style: solid;
-    border-color: rgb(50, 26, 5);
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.3s;
-    outline: none;
-}
-
-.uploadBtn:hover {
-    color: rgb(50, 26, 5);
-    
-    background-color: white;
-    border-color: rgb(50, 26, 5);
-    transition: 0.3s;
-}
 .musics{
    display: flex;
   flex-direction: row;
    flex-wrap: wrap;
-  padding: 30px 125px;
+  padding: 30px 0;
+  margin: 0 120px;
 
 }
-
+.postcollection-square{
+    width: 220px;
+    height: 220px;
+    background-color: rgb(227, 221, 221);
+     border-radius: 15px;
+     margin-bottom:20px ;
+}
 .postcollection{
     width: 270px;
     height: 320px;

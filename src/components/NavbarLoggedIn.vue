@@ -26,7 +26,6 @@ export default {
        this.$store.state.userUID = user.uid;
       if (user) {
      db.collection('profiles').doc(user.uid).get().then(doc =>{
-         console.log(doc.data().name);
         this.$store.state.userName = doc.data().name;
         vm.name = this.$store.state.userName;
      })} 
