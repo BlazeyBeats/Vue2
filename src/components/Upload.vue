@@ -15,6 +15,7 @@
 
 <script>
 import {fb,db} from './firebaseinit.js'
+
 let file = {};
 
 export default {
@@ -37,10 +38,17 @@ export default {
     methods:{
     
         uploadMusic(){
-          
-              var vm = this;
-             
-             fb.storage().ref('music/'+ this.$store.state.userUID +'/' + this.postName + '.mp3').put(file).then(function(){
+     
+            var ID;
+                   db.collection('music').orderBy("postID","desc").limit(1).get().then(querySnapshot =>{
+            querySnapshot.forEach(doc=>{
+                ID = doc.data().postID;
+                  console.log(ID);
+               
+            })
+        })
+            var vm = this;  
+            fb.storage().ref('music/'+ this.$store.state.userUID +'/' + this.postName + '.mp3').put(file).then(function(){
                     console.log("upload success");
                     alert("Upload Success!");
                       fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + vm.postName + '.mp3').getDownloadURL().then(url=>{
@@ -52,7 +60,8 @@ export default {
                     postBio:vm.postBio,
                     postType: vm.postType,
                     postUrl:vm.musicSrc,
-                    postUser:vm.$store.state.userUID
+                    postUser:vm.$store.state.userUID,
+                    postID:ID+1
                 })
                 });
                 })

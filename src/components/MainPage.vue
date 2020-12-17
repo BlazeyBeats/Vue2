@@ -14,12 +14,17 @@
 <div class="musics">
 <div v-for="music in musics" :key="music.postName" class="postcollection">
    
-        <div class="postname">{{music.postName}}</div>
+        <router-link :to="{name:'MusicPage',
+        params:{
+            postID:music.postID,
+        }}">
+            <div class="postname">{{music.postName}}</div>
+        </router-link>
         <div class="postbio">{{music.postBio}}</div>
         <div class="posttype">{{music.postType}}</div>
- 
+</div> 
 </div>
-</div>
+
 </div>
 </template>
 
@@ -33,12 +38,12 @@ data() {
              
         };
     },
-    created(){        
-        db.collection('music').get().then(querySnapshot =>{
-            querySnapshot.forEach(doc=>{
-                console.log(doc.data());
-                  console.log(doc.id);
-                this.musics.push(doc.data())
+    created(){   
+         
+  
+        db.collection('music').orderBy("postID","desc").get().then(querySnapshot =>{
+            querySnapshot.forEach(doc=>{          
+            this.musics.push(doc.data())
             })
         })
 
@@ -83,7 +88,7 @@ data() {
 
 .uploadBtn:hover {
     color: rgb(50, 26, 5);
-
+    
     background-color: white;
     border-color: rgb(50, 26, 5);
     transition: 0.3s;
@@ -92,9 +97,10 @@ data() {
    display: flex;
   flex-direction: row;
    flex-wrap: wrap;
-  
-   padding: 30px 100px;
+  padding: 30px 125px;
+
 }
+
 .postcollection{
     width: 270px;
     height: 320px;
