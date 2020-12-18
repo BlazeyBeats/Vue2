@@ -16,7 +16,7 @@
         <router-link :to="{name:'MusicPage',
         params:{
             postID:music.postID,
-        }}">
+        }}" :key="postID">
             <div class="postname">{{music.postName}}</div>
         </router-link>
         <div class="postbio">{{music.postBio}}</div>
@@ -39,7 +39,7 @@ data() {
     },
     created(){   
          
-  
+        
         db.collection('music').orderBy("postID","desc").get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{          
             this.musics.push(doc.data())

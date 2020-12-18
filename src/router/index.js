@@ -6,6 +6,8 @@ import Profile from "../components/Profile.vue"
 import Manage from "../components/ManageProfile.vue"
 import Upload from "../components/Upload.vue"
 import MusicPage from "../components/MusicPage.vue"
+import OtherProfile from "../components/OtherUserProfile.vue"
+
 import * as firebase from "firebase/app";
 import "firebase/auth";
 
@@ -37,7 +39,13 @@ const routes = [
     path:"/musicpage/:postID",
     name:"MusicPage",
     component:MusicPage
-  }
+  },
+  {
+    path:"/profile/:userID",
+    name:"OtherProfile",
+    component:OtherProfile
+  },
+  
   
 ];
 

@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-    <app-firebasetest v-if="firebasetest"></app-firebasetest>
+    
     <app-navbar-loggedin v-if="loggedIn"></app-navbar-loggedin>
     <app-navbar-loggedout v-else></app-navbar-loggedout>
 
@@ -14,14 +14,14 @@ import NavbarLoggedOut from './components/NavbarLoggedOut';
 import NavbarLoggedIn from './components/NavbarLoggedIn';
 import MainPage from './components/MainPage';
 
-import FirebaseTest from './components/FirebaseTest';
+
 import * as firebase from "firebase/app";
 import "firebase/auth";
 
 
 export default {
     components: {
-        'app-firebasetest': FirebaseTest,
+       
         'app-navbar-loggedout': NavbarLoggedOut,
         'app-navbar-loggedin': NavbarLoggedIn,
         'app-mainpage': MainPage,

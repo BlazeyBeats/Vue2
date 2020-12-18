@@ -5,9 +5,9 @@
 <img v-bind:src="imgSrc" alt="" class="imgSrc">
 </div>
 <div v-else class="circle-pic"></div>
-<div class="profile-name">{{this.$store.state.userName}}</div>
+<div class="profile-name">{{name}}</div>
 <div class="profile-bio">{{bio}}</div>
-<div class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
+
 
 </div>
 </template>
@@ -15,20 +15,21 @@
 <script>
 import {fb,db} from './firebaseinit.js'
 export default {
+    name:'OtherProfile',
   data() {
         return {
+            name:"",
             imgSrc:"",
             bio:""
         };
     },
     created() {
-        var user = fb.auth().currentUser;
         var vm = this;
-        if (user) {
-            db.collection('profiles').doc(user.uid).get().then(doc =>{ 
+        if (this.$route.params.postUserID) {
+            db.collection('profiles').doc(this.$route.params.postUserID).get().then(doc =>{ 
             vm.bio = doc.data().bio;
-            this.$store.state.userProfilePic = doc.data().profilePic;
-            fb.storage().ref('profiles/'+this.$store.state.userUID+'/profile.jpg').getDownloadURL().then(imgUrl=>{
+            vm.name = doc.data().name;
+            fb.storage().ref('profiles/'+this.$route.params.postUserID+'/profile.jpg').getDownloadURL().then(imgUrl=>{
             this.imgSrc = imgUrl;
              })
          })}  
@@ -70,29 +71,5 @@ export default {
     border-radius: 30px;
     color:rgb(50, 26, 5);
 }
-.profile-manage{
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 80px;
-    margin-bottom: 50px;
-  margin-right:300px ;
-}
-.profile-manage button{
-    color: white;
-    font-size: 16px;
-    background-color: rgb(50, 26, 5);
-    padding: 15px;
-    border-style: solid;
-    border-color: rgb(50, 26, 5);
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.3s;
-    outline: none;
-}
-.profile-manage button:hover{
-      color: rgb(50, 26, 5);
-    background-color: rgb(227, 221, 221);
-    border-color: rgb(50, 26, 5);
-    transition: 0.3s;
-}
+
 </style>
