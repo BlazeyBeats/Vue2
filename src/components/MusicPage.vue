@@ -36,8 +36,7 @@ export default {
      }
  },
 created(){
-    this.$store.state.currentPost = this.$route.params.postID;
-    console.log(this.$store.state.currentPost);
+    this.$store.state.currentPost = Number(this.$route.params.postID);
    var vm = this;
    if(this.$store.state.currentPost){
 

@@ -16,7 +16,7 @@
         <router-link :to="{name:'MusicPage',
         params:{
             postID:music.postID,
-        }}" :key="postID">
+        }}">
             <div class="postname">{{music.postName}}</div>
         </router-link>
         <div class="postbio">{{music.postBio}}</div>

@@ -10,7 +10,7 @@ export default new Vuex.Store({
     userUID:"",
     userEmail:"",
     userProfilePic:false,
-    currentPost:""
+    currentPost:"",
   },
   mutations: {
   },
