@@ -9,6 +9,20 @@
 <div class="profile-bio">{{bio}}</div>
 <div class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
 
+<div class="musics">
+<div v-for="music in musics" :key="music.postName" class="postcollection">
+        <div class="postcollection-square"></div>
+        <router-link :to="{name:'MusicPage',
+        params:{
+            postID:music.postID,
+        }}">
+            <div class="postname">{{music.postName}}</div>
+        </router-link>
+        <div class="postbio">{{music.postBio}}</div>
+        <div class="posttype">{{music.postType}}</div>
+</div> 
+</div>
+
 </div>
 </template>
 
@@ -18,7 +32,8 @@ export default {
   data() {
         return {
             imgSrc:"",
-            bio:""
+            bio:"",
+            musics:[],
         };
     },
     created() {
@@ -31,7 +46,15 @@ export default {
             fb.storage().ref('profiles/'+this.$store.state.userUID+'/profile.jpg').getDownloadURL().then(imgUrl=>{
             this.imgSrc = imgUrl;
              })
-         })}  
+         })
+           db.collection('music').where('postUser','==',user.uid).get().then(querySnapshot =>{
+            querySnapshot.forEach(doc=>{          
+            this.musics.push(doc.data())
+            })
+        })
+         
+         }
+        
      },
 }
 </script>
@@ -95,4 +118,35 @@ export default {
     border-color: rgb(50, 26, 5);
     transition: 0.3s;
 }
+
+.musics{
+   display: flex;
+  flex-direction: row;
+   flex-wrap: wrap;
+  padding: 30px 0;
+  margin: 0 120px;
+
+}
+.postcollection-square{
+    width: 220px;
+    height: 220px;
+    background-color: rgb(227, 221, 221);
+     border-radius: 15px;
+     margin-bottom:20px ;
+}
+.postcollection{
+    width: 270px;
+    height: 320px;
+    color: rgb(50, 26, 5);
+    display: flex;
+    align-items:center;
+
+    justify-content:flex-end;
+    flex-direction: column;
+    margin: 20px 30px;
+    padding-bottom: 20px;
+   background-color: white;
+   border-radius: 15px;
+}
+
 </style>

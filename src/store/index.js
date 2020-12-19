@@ -11,6 +11,7 @@ export default new Vuex.Store({
     userEmail:"",
     userProfilePic:false,
     currentPost:"",
+    currentOtherUser:""
   },
   mutations: {
   },
