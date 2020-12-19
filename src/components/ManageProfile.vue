@@ -27,7 +27,7 @@ export default {
     },
     created(){
         var user = fb.auth().currentUser;
-         this.$store.state.userUID = user.uid;
+        this.$store.state.userUID = user.uid;
          
     },
      methods:{

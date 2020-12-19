@@ -47,7 +47,7 @@ export default {
             this.imgSrc = imgUrl;
              })
          })
-           db.collection('music').where('postUser','==',user.uid).get().then(querySnapshot =>{
+           db.collection('music').where('postUser','==',user.uid).orderBy("postID","desc").get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{          
             this.musics.push(doc.data())
             })
