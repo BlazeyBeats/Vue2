@@ -6,17 +6,22 @@
     </div>
     <div class="postinfo">
     <h1>{{postName}}</h1>
-    <h1>{{postBio}}</h1>
-    <router-link :to="{name:'OtherProfile',
-        params:{
-           userID:postUserID,
-        }}">
-        <h1 class="postUser">{{postUser}}</h1>
-    </router-link>
-    <div v-if="imgSrc" class="profile-pic">
-        <img v-bind:src="imgSrc" alt="" class="imgSrc">
+    <h2>{{postType}}</h2>
+    <p>{{postBio}}</p>
+   
+    <div class="postUser">
+      
+        <div v-if="imgSrc" class="profile-pic">
+            <img v-bind:src="imgSrc" alt="" class="imgSrc">
+        </div>
+        <div v-else class="circle-pic"></div>
+        <router-link :to="{name:'OtherProfile',
+            params:{
+                userID:postUserID,
+            }}">
+            <h1>{{postUser}}</h1>
+        </router-link>
     </div>
-    <div v-else class="circle-pic"></div>
 </div>
 
 </div>
@@ -32,6 +37,7 @@ export default {
      return{
         postName:"",
         postBio:"",
+        postType:"",
         postUser:"",
         postUserID:"",
         imgSrc:"",
@@ -49,6 +55,7 @@ created(){
             querySnapshot.forEach(doc=>{ 
             this.postName = doc.data().postName;
             this.postBio = doc.data().postBio;
+            this.postType = doc.data().postType;
             this.musicSrc = doc.data().postUrl;
             this.postUserID = doc.data().postUser;
     if(this.postUserID){
@@ -61,8 +68,6 @@ created(){
     }
     })
     })
-
-
    }
    
     
@@ -80,7 +85,7 @@ created(){
     background-color: white;
     border-radius:20px;
     display: flex;
-    justify-content: space-between;
+ 
     height: 600px;
 }
 .musicsrc{
@@ -103,18 +108,43 @@ audio:focus{
 
 
 .audio{
-   background-color:rgb(247, 247, 247);
-padding:10px 0 10px 0;
-width: 500px;
-border-radius: 0;
+    background-color:rgb(247, 247, 247);
+    padding:10px 0 10px 0;
+    width: 500px;
+    border-radius: 0;
     
 }
-.postinfo {
-    display: flex;
-    justify-content:center;
-   
+.postinfo{
+    margin-left:50px;
+    text-align: left;
 }
+.postinfo h1{
+ font-size: 50px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.postinfo p{
+    font-size:18px;
+    display: flex;
+    justify-content: flex-start;
+  
+    line-height: 28px;
+    margin-bottom: 30px;
+    width: 600px;
+}
+.postinfo h2{
+    font-size:20px;
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 30px;
+}
+
 .postUser{
+    display: flex;
+    align-items: center;
+}
+.postUser h1{
     width: max-content;
     font-size: 20px;
     margin: auto;
@@ -124,18 +154,18 @@ border-radius: 0;
 }
 .imgSrc{
     
-    width: 250px;
-    height: 250px; 
+    width: 50px;
+    height: 50px; 
     border-radius: 50%;
     object-fit: cover;
-      display: flex;
+    display: flex;
     justify-content: center;
     margin: auto;
-    margin-top: 80px;
+    margin-right: 20px;
 }
 .circle-pic{
-    width: 250px;
-    height: 250px; 
+    width: 50px;
+    height: 50px; 
     border-radius: 50%;
     background-color: rgb(50, 26, 5) ;
    display: flex;

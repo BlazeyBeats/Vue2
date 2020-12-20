@@ -17,9 +17,8 @@
         params:{
             postID:music.postID,
         }}">
-            <div class="postname">{{music.postName}}</div>
+        <h1 class="postname">{{music.postName}}</h1>
         </router-link>
-        <div class="postbio">{{music.postBio}}</div>
         <div class="posttype">{{music.postType}}</div>
 </div> 
 </div>
@@ -52,7 +51,7 @@ data() {
 
 <style scoped>
 .introBlock {
-    margin: 0 30px;
+    margin: 10px 70px;
     padding: 180px;
     background-color: white;
     border-radius: 25px;
@@ -85,7 +84,8 @@ data() {
     height: 220px;
     background-color: rgb(227, 221, 221);
      border-radius: 15px;
-     margin-bottom:20px ;
+
+     margin-bottom:10px;
 }
 .postcollection{
     width: 270px;
@@ -93,12 +93,15 @@ data() {
     color: rgb(50, 26, 5);
     display: flex;
     align-items:center;
-
     justify-content:flex-end;
     flex-direction: column;
     margin: 20px 30px;
     padding-bottom: 20px;
    background-color: white;
    border-radius: 15px;
+}
+.postname{
+    font-size:20px;
+
 }
 </style>
