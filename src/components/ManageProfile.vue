@@ -52,8 +52,6 @@ export default {
                 return profileUpdate.update({
                 name:this.name,
                 bio:this.bio   
-            }).then(function() {
-                alert("update success");
             });
             } 
         }, 

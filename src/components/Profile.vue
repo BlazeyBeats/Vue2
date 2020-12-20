@@ -9,7 +9,7 @@
 <div class="profile-bio">{{bio}}</div>
 <div class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
 
-<div class="musics">
+<div v-if="upload" class="musics">
 <div v-for="music in musics" :key="music.postName" class="postcollection">
         <div class="postcollection-square"></div>
         <router-link :to="{name:'MusicPage',
@@ -34,6 +34,7 @@ export default {
             imgSrc:"",
             bio:"",
             musics:[],
+            uploaded:false
         };
     },
     created() {
@@ -49,7 +50,8 @@ export default {
          })
            db.collection('music').where('postUser','==',user.uid).orderBy("postID","desc").get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{          
-            this.musics.push(doc.data())
+            this.musics.push(doc.data());
+            this.uploaded = true;
             })
         })
          
@@ -96,7 +98,7 @@ export default {
 .profile-manage{
     display: flex;
     justify-content: flex-end;
-    margin-top: 80px;
+    margin-top: 30px;
     margin-bottom: 50px;
   margin-right:300px ;
 }
@@ -119,13 +121,14 @@ export default {
     transition: 0.3s;
 }
 
+
 .musics{
    display: flex;
   flex-direction: row;
    flex-wrap: wrap;
-  padding: 30px 0;
-  margin: 0 120px;
+  padding: 30px 120px;
 
+    background-color:rgb(192, 187, 187);
 }
 .postcollection-square{
     width: 220px;

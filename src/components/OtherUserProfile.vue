@@ -8,7 +8,7 @@
 <div class="profile-name">{{name}}</div>
 <div class="profile-bio">{{bio}}</div>
 <div v-if="isthisyou" class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
-<div class="musics">
+<div v-if="uploaded" class="musics">
 <div v-for="music in musics" :key="music.postName" class="postcollection">
         <div class="postcollection-square"></div>
         <router-link :to="{name:'MusicPage',
@@ -28,14 +28,15 @@
 <script>
 import {fb,db} from './firebaseinit.js'
 export default {
-    name:'OtherProfile',
+    name:'Profile',
   data() {
         return {
             name:"",
             imgSrc:"",
             bio:"",
             musics:[],
-            isthisyou:false
+            isthisyou:false,
+            uploaded:false
         };
     },
     created() {
@@ -54,7 +55,8 @@ export default {
          })
             db.collection('music').where('postUser','==',this.$store.state.currentOtherUser).orderBy("postID","desc").get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{          
-            this.musics.push(doc.data())
+            this.musics.push(doc.data());
+            this.uploaded = true;
             })
         })
          }  
@@ -137,9 +139,9 @@ export default {
    display: flex;
   flex-direction: row;
    flex-wrap: wrap;
-  padding: 30px 0;
-  margin: 0 120px;
-
+  padding: 30px 120px;
+  margin-top:40px;
+    background-color:rgb(192, 187, 187);
 }
 .postcollection-square{
     width: 220px;

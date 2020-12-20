@@ -1,5 +1,10 @@
 <template>
-<div class="div">
+<div class="musicpage">
+    <div class="musicsrc">
+        <audio controls :src="musicSrc" alt="" class="audio">
+        </audio>
+    </div>
+    <div class="postinfo">
     <h1>{{postName}}</h1>
     <h1>{{postBio}}</h1>
     <router-link :to="{name:'OtherProfile',
@@ -12,10 +17,8 @@
         <img v-bind:src="imgSrc" alt="" class="imgSrc">
     </div>
     <div v-else class="circle-pic"></div>
+</div>
 
-
-<audio controls :src="musicSrc" alt="" class="musicSrc">
-</audio>
 </div>
 </template>
 
@@ -71,6 +74,46 @@ created(){
 </script>
 
 <style scoped>
+.musicpage{
+    margin: 20px 100px;
+    padding: 20px;
+    background-color: white;
+    border-radius:20px;
+    display: flex;
+    justify-content: space-between;
+    height: 600px;
+}
+.musicsrc{
+    width: 500px;
+    margin:30px;
+    background-color:rgb(227, 221, 221);
+    border-radius:20px;
+    display: flex;
+    align-items: flex-end;
+    justify-content:center ;
+}
+
+audio::-webkit-media-controls-panel {
+     background-color:rgb(247, 247, 247);
+}
+
+audio:focus{
+      outline: none;
+}
+
+
+.audio{
+   background-color:rgb(247, 247, 247);
+padding:10px 0 10px 0;
+width: 500px;
+border-radius: 0;
+    
+}
+.postinfo {
+    display: flex;
+    justify-content:center;
+   
+}
 .postUser{
     width: max-content;
     font-size: 20px;
