@@ -137,7 +137,7 @@ export default {
    display: flex;
   flex-direction: row;
    flex-wrap: wrap;
-  padding: 30px 120px;
+  padding: 30px 80px;
     background-color:rgb(192, 187, 187);
     margin-top: 40px;
 }

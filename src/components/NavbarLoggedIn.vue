@@ -1,9 +1,17 @@
 <template>
 <div>
     <div class="navbar">
+        <div class="navbarLogo">
+            <router-link to="/">
+            <img src="../images/logosvg.svg" alt="">
+            </router-link>
+        </div>
+        
+    <div class="navbarButtons">  
         <button class="upload"><router-link to="/upload">Upload</router-link></button>
         <button v-on:click="signOut" class="signoutBtn"><router-link to="/">Log Out</router-link></button>
         <button class="user"><router-link to="/profile">{{this.$store.state.userName}}</router-link></button>
+    </div>
     </div>
 
 </div>
@@ -53,10 +61,22 @@ export default {
 <style>
 .navbar {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
     padding-top: 20px;
     padding-right: 20px;
+    justify-content: space-between;
 }
+
+.navbarLogo{
+    margin-left: 110px;
+    display: flex;
+   
+}
+.navbarLogo img{
+     width: 40px;
+   cursor: pointer;
+}
+
 
 .navbar button {
     text-decoration: none;

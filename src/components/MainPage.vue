@@ -76,7 +76,7 @@ data() {
   flex-direction: row;
    flex-wrap: wrap;
   padding: 30px 0;
-  margin: 0 120px;
+  margin: 0 80px;
 
 }
 .postcollection-square{

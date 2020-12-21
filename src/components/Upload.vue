@@ -3,13 +3,13 @@
  
     <p>Name :</p>
         <input type="text" v-model="postName"/>
-        <p>Bio :</p>
-        <input type="text" v-model="postBio" />
+        <p >Bio :</p>
+        <input type="text" class="bio" v-model="postBio" />
         <p>Music Type :</p>
          <input type="text" v-model="postType" />
         <p>Choose File :</p>
         <input type="file" v-on:change="chooseFile" class="uploadMusic"/>
-    <button v-on:click="uploadMusic" v-if="upLoad">Upload</button>
+    <button class="uploadButton" v-on:click="uploadMusic" v-if="upLoad">Upload</button>
 </div>
 </template>
 
@@ -70,5 +70,31 @@ export default {
 </script>
 
 <style scoped>
+.upload{
+    width: 400px;
+    margin: auto;
+}
+.uploadButton{
+    color: white;
+    font-size: 16px;
+    background-color: rgb(50, 26, 5);
+    padding: 15px;
+    border-style: solid;
+    border-color: rgb(50, 26, 5);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    outline: none;
+}
 
+.uploadButton:hover{
+    color: rgb(50, 26, 5);
+    background-color: rgb(227, 221, 221);
+    border-color: rgb(50, 26, 5);
+    transition: 0.3s;
+}
+
+.bio{
+    padding-bottom: 60px;
+}
 </style>

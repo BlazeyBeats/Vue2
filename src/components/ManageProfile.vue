@@ -1,14 +1,22 @@
 <template>
 <div class="manage">
    <div class="update-profile">
-    <p>Name :</p>
+    <div class="name">
+        <p>Name :</p>
         <input type="text" v-model="name" />
+    </div>   
+    <div class="bio">
         <p>Bio :</p>
         <input type="text" v-model="bio" />
-        <p>Profile picture :</p>
+    </div>
+    <div class="picture">
+        <p>Profile picture:</p>
         <input type="file" v-on:change="chooseFile" class="uploadImage"/>
     </div>
-    <button v-on:click="updateProfile" >Update</button>
+    <button class="updateProfile" v-on:click="updateProfile" >Update</button>
+    </div>
+   
+    
 
 </div>
 </template>
@@ -21,7 +29,8 @@ export default {
   data() {
         return {
              name:"",
-             bio:""
+             bio:"",
+            
              
         };
     },
@@ -32,6 +41,7 @@ export default {
     },
      methods:{
          updateProfile(){
+             this.processing =true;
              var user = fb.auth().currentUser;
              var profileUpdate = db.collection("profiles").doc(this.$store.state.userUID);
              if (this.name === "") this.name = this.$store.state.userName;
@@ -68,5 +78,79 @@ export default {
 </script>
 
 <style scoped>
+.update-profile{
+    display: flex;
+
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto;
+    width: 400px;
+    height: 400px;
+}
+.name{
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+.name p{
+    margin-right: 30px;
+}
+.name input {
+    padding: 0;
+    margin: 14px 0;
+}
+.bio{
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.bio p{
+    margin-right: 50px; 
+}
+.bio input{
+    padding: 0;
+    margin: 14px 0;
+    padding-bottom: 30px;
+}
+.picture{
+    display: flex;
+    justify-content: center;
+    align-items:center ;
+}
+.picture p{
+    margin-left: 75px;
+    margin-right:0px;
+    width: max-content;
+    text-align: left;
+}
+
+.picture input {
+    padding: 2rem 1.5rem;
+    
+}
+.picture input:focus{
+  outline: none;
+}
+
+.updateProfile{
+    color: white;
+    font-size: 16px;
+    background-color: rgb(50, 26, 5);
+    padding: 15px;
+    border-style: solid;
+    border-color: rgb(50, 26, 5);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    outline: none;
+}
+
+.updateProfile:hover{
+    color: rgb(50, 26, 5);
+    background-color: rgb(227, 221, 221);
+    border-color: rgb(50, 26, 5);
+    transition: 0.3s;
+}
 
 </style>

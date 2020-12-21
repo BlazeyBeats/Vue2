@@ -1,8 +1,17 @@
 <template>
 <div>
     <div class="navbar">
+        <div class="navbarLogo">
+            <router-link to="/">
+            <img src="../images/logosvg.svg" alt="">
+            </router-link>
+        </div>
+
+
+     <div class="navbarButtons">  
         <button v-on:click="popupsignin=!popupsignin;" class="signinBtn">Sign In</button>
         <button v-on:click="popupsignup=!popupsignup;" class="signupBtn">Sign Up</button>
+    </div>
     </div>
     <div v-if="popupsignin" v-on:click="popupsignup=false;popupsignin=false" class="signoverlay"></div>
     <div v-if="popupsignup" v-on:click="popupsignup=false;popupsignin=false" class="signoverlay"></div>
@@ -117,10 +126,13 @@ export default {
 .navbar {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     padding-top: 20px;
     padding-right: 20px;
     margin-right:100px;
 }
+
+
 
 .navbar button {
     font-size: 20px;
