@@ -41,7 +41,6 @@ export default {
     },
      methods:{
          updateProfile(){
-             this.processing =true;
              var user = fb.auth().currentUser;
              var profileUpdate = db.collection("profiles").doc(this.$store.state.userUID);
              if (this.name === "") this.name = this.$store.state.userName;
@@ -57,8 +56,6 @@ export default {
                 });
             }
             if (user) {
-                
-            
                 return profileUpdate.update({
                 name:this.name,
                 bio:this.bio   
