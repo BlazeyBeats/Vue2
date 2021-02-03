@@ -26,11 +26,15 @@
             <button v-on:click="popupEdit=!popupEdit" >Edit</button>
             <button v-on:click="popupDelete=!popupDelete">Delete</button>
         </div>
+        <div v-else>
+            <button v-on:click="popupReport=!popupReport" >Report</button>
+        </div>
 </div>
     </div>
     </div>
         <div v-if="popupEdit" v-on:click="popupEdit=false;popupDelete=false" class="Popoverlay"></div>
         <div v-if="popupDelete" v-on:click="popupEdit=false;popupDelete=false" class="Popoverlay"></div>
+        
 
          <div v-if="popupEdit" class="Edittemplate signintemplate">
         <h1>Edit</h1>
@@ -50,6 +54,22 @@
                 </div>
 
                 <button v-on:click="updateMusic">Update</button>
+            </div>
+        </form>
+       
+    </div>
+
+
+
+        <div v-if="popupDelete" class="Deletetemplate signintemplate">
+        <h1>Delete</h1>
+        <form @submit.prevent="pressed">
+            <div class="input-edit deleteForm">
+                <div>
+                    <p>Are you sure that you want to delete your beautiful masterpiece?</p>     
+                </div>
+                <button v-on:click="deleteMusic">Yes</button>
+                <button v-on:click="popupEdit=false;popupDelete=false">No</button>
             </div>
         </form>
        
@@ -80,6 +100,7 @@ export default {
         popupEdit:false,
         popupDelete:false,
         postId:"",
+        storagePath:"",
         updatepostName:"",
         updatepostBio:"",
         updatepostType:"",
@@ -97,7 +118,8 @@ created(){
             this.postBio = doc.data().postBio;
             this.postType = doc.data().postType;
             this.musicSrc = doc.data().postUrl;
-            this.postUserID = doc.data().postUser; 
+            this.postUserID = doc.data().postUser;
+            this.storagePath = doc.data().storagePath;
             if(user.uid === this.postUserID){
                 this.isthisyou = true;
             }
@@ -132,8 +154,18 @@ created(){
            
 
         },  
-    
-    }
+      deleteMusic(){
+        var vm = this;
+        var storageRef = fb.storage().ref();
+        storageRef.child(this.storagePath).delete().then(()=>{
+            db.collection("music").doc(vm.postId).delete();
+            vm.$router.push('/'); 
+        })
+     
+        
+     }
+    },
+  
   
 }
 </script>
@@ -257,6 +289,18 @@ audio:focus{
     border-radius: 15px;
 }
 
+.Deletetemplate  {
+    left: 50%;
+    top: 50%;
+    width: 700px;
+    height: 320px;
+    margin-top: -160px;
+    margin-left: -350px;
+    position: fixed;
+    background-color: rgb(239, 243, 243);
+    border-radius: 15px;
+}
+
 .signuptemplate  {
     left: 50%;
     top: 50%;
@@ -279,6 +323,21 @@ audio:focus{
     border-radius: 15px 15px 0 0;
     display: flex;
     justify-content: center;
+}
+
+.Deletetemplate h1 {
+    letter-spacing: 1px;
+    color: rgb(50, 26, 5);
+    background-color: rgb(202, 206, 196);
+    margin: 0;
+    padding: 25px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: center;
+}
+
+.deleteForm button{
+    margin:0 10px;
 }
 
 .input-edit p {

@@ -25,6 +25,7 @@ export default {
             postBio:"",
             postType:"",  
             musicSrc:"",
+            musicPath:"",
             upLoad:false   
         };
     },
@@ -46,15 +47,19 @@ export default {
             var vm = this;  
             fb.storage().ref('music/'+ this.$store.state.userUID +'/' + this.postName + '.mp3').put(file).then(function(){
                     alert("Upload Success!");
+                    var storageRef = fb.storage().ref();
                     fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + vm.postName + '.mp3').getDownloadURL().then(url=>{
                     vm.musicSrc = url;
+                    vm.musicPath = storageRef.child('music/'+ vm.$store.state.userUID +'/' + vm.postName + '.mp3').fullPath;
+                    console.log(vm.mu)
                     db.collection("music").add({
                     postName: vm.postName,
                     postBio:vm.postBio,
                     postType: vm.postType,
                     postUrl:vm.musicSrc,
                     postUser:vm.$store.state.userUID,
-                    postID:ID+1
+                    postID:ID+1,
+                    storagePath:vm.musicPath
                 })
                 });
                 })
