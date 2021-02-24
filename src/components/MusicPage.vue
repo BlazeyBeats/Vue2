@@ -32,14 +32,16 @@
 </div>
     </div>
     </div>
-        <div v-if="popupEdit" v-on:click="popupEdit=false;popupDelete=false" class="Popoverlay"></div>
-        <div v-if="popupDelete" v-on:click="popupEdit=false;popupDelete=false" class="Popoverlay"></div>
+        <div v-if="popupEdit" v-on:click="popupEdit=false;popupDelete=false;popupReport=false" class="Popoverlay"></div>
+        <div v-if="popupDelete" v-on:click="popupEdit=false;popupDelete=false;popupReport=false" class="Popoverlay"></div>
+        <div v-if="popupReport" v-on:click="popupReport=false" class="Popoverlay"></div>
+        <div v-if="popupConfirm" v-on:click="popupConfirm=false" class="Popoverlay"></div>
         
 
-         <div v-if="popupEdit" class="Edittemplate signintemplate">
+         <div v-if="popupEdit" class="Edittemplate">
         <h1>Edit</h1>
         <form @submit.prevent="pressed">
-            <div class="input-edit">
+            <div class="input-edit editForm">
                 <div class="songName">
                     <p>Song Name :</p>
                     <input type="text" v-model="updatepostName"/>
@@ -59,9 +61,7 @@
        
     </div>
 
-
-
-        <div v-if="popupDelete" class="Deletetemplate signintemplate">
+        <div v-if="popupDelete" class="Deletetemplate">
         <h1>Delete</h1>
         <form @submit.prevent="pressed">
             <div class="input-edit deleteForm">
@@ -70,6 +70,35 @@
                 </div>
                 <button v-on:click="deleteMusic">Yes</button>
                 <button v-on:click="popupEdit=false;popupDelete=false">No</button>
+            </div>
+        </form>
+       
+    </div>
+
+            <div v-if="popupReport" class="Reporttemplate">
+        <h1>Report</h1>
+        <form @submit.prevent="pressed">
+            <div class="input-edit reportForm">
+                <div>
+                    <p>Why do you want to report this post?</p>     
+                </div>
+               
+                    <button v-on:click="reportOriginal">It's not an original</button>
+                    <button v-on:click="reportInappropriate"  >It's inappropriate</button>
+               
+            </div>
+        </form>
+       
+    </div>
+        <div v-if="popupConfirm" class="Confirmtemplate">
+        <form @submit.prevent="pressed">
+            <div class="input-edit confirmForm">
+                <div>
+                    <p>Thanks for letting us know.</p>     
+                </div>
+               
+                    <button v-on:click="popupConfirm = false">Okay</button>
+               
             </div>
         </form>
        
@@ -99,6 +128,8 @@ export default {
         isthisyou:false,
         popupEdit:false,
         popupDelete:false,
+        popupReport:false,
+        popupConfirm :false,
         postId:"",
         storagePath:"",
         updatepostName:"",
@@ -163,7 +194,38 @@ created(){
         })
      
         
+     },
+     reportOriginal(){
+         this.popupReport = false;
+         this.popupConfirm = true;
+         db.collection('music').doc(this.postId).get().then(doc =>{ 
+        var reportOriginal = doc.data().reportOriginal;
+      
+             return db.collection('music').doc(this.postId).update({
+                reportOriginal:reportOriginal+1,
+                
+        });
+        
+        
+    });
+  
+     },
+      reportInappropriate(){
+         this.popupReport = false;
+         this.popupConfirm = true;
+         db.collection('music').doc(this.postId).get().then(doc =>{ 
+        var reportInappropriate = doc.data().reportInappropriate;
+      
+             return db.collection('music').doc(this.postId).update({
+                reportInappropriate:reportInappropriate+1,
+                
+        });
+        
+        
+    });
+  
      }
+
     },
   
   
@@ -301,17 +363,32 @@ audio:focus{
     border-radius: 15px;
 }
 
-.signuptemplate  {
+.Reporttemplate  {
     left: 50%;
     top: 50%;
     width: 700px;
-    height: 600px;
-    margin-top: -300px;
+    height: 360px;
+    margin-top: -180px;
     margin-left: -350px;
     position: fixed;
     background-color: rgb(239, 243, 243);
     border-radius: 15px;
 }
+
+.Confirmtemplate  {
+    left: 50%;
+    top: 50%;
+    width: 700px;
+    height: 200px;
+    margin-top: -100px;
+    margin-left: -350px;
+    position: fixed;
+    background-color: rgb(239, 243, 243);
+    border-radius: 15px;
+}
+
+
+
 
 
 .Edittemplate h1 {
@@ -336,8 +413,44 @@ audio:focus{
     justify-content: center;
 }
 
+.Reporttemplate h1 {
+    letter-spacing: 1px;
+    color: rgb(50, 26, 5);
+    background-color: rgb(202, 206, 196);
+    margin: 0;
+    padding: 25px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: center;
+}
+
+.Confirmtemplate p {
+    letter-spacing: 1px;
+    color: rgb(50, 26, 5);
+    margin: 0;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+}
+
+
+.editForm button{
+font-size: 30px;
+}
+
 .deleteForm button{
+    font-size: 30px;
     margin:0 10px;
+}
+
+.reportForm button{
+    font-size: 20px;
+    margin:0px 20px;
+}
+
+.confirmForm button{
+    font-size: 20px;
+    margin:0px 20px;
 }
 
 .input-edit p {
@@ -370,7 +483,7 @@ audio:focus{
 
 .input-edit button {
     background-color: rgb(239, 243, 243);
-    font-size: 30px;
+    
     margin-top: 30px;
     padding: 10px 70px;
     border: 2px solid rgb(50, 26, 5);
@@ -380,6 +493,8 @@ audio:focus{
     transition: 0.2s;
     cursor: pointer;
 }
+
+
 
 .input-edit button:hover {
     background-color: rgb(50, 26, 5);

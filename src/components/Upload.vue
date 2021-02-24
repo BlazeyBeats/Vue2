@@ -51,7 +51,7 @@ export default {
                     fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + vm.postName + '.mp3').getDownloadURL().then(url=>{
                     vm.musicSrc = url;
                     vm.musicPath = storageRef.child('music/'+ vm.$store.state.userUID +'/' + vm.postName + '.mp3').fullPath;
-                    console.log(vm.mu)
+                   
                     db.collection("music").add({
                     postName: vm.postName,
                     postBio:vm.postBio,
@@ -59,8 +59,11 @@ export default {
                     postUrl:vm.musicSrc,
                     postUser:vm.$store.state.userUID,
                     postID:ID+1,
-                    storagePath:vm.musicPath
+                    storagePath:vm.musicPath,
+                    reportOriginal:0,
+                    reportInappropriate:0
                 })
+                     vm.$router.push('');
                 });
                 })
         },  
