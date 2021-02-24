@@ -9,6 +9,18 @@
         <p>Bio :</p>
         <input type="text" v-model="bio" />
     </div>
+      <div class="facebook">
+        <p>Facebook :</p>
+        <input type="text" v-model="facebook" />
+    </div>
+     <div class="instagram">
+        <p>Instagram :</p>
+        <input type="text" v-model="instagram" />
+    </div>
+     <div class="twitter">
+        <p>Twitter :</p>
+        <input type="text" v-model="twitter" />
+    </div>
     <div class="picture">
         <p>Profile picture:</p>
         <input type="file" v-on:change="chooseFile" class="uploadImage"/>
@@ -30,6 +42,9 @@ export default {
         return {
              name:"",
              bio:"",
+             facebook:'',
+            instagram:'',
+            twitter:''
             
              
         };
@@ -43,6 +58,25 @@ export default {
          updateProfile(){
              var user = fb.auth().currentUser;
              var profileUpdate = db.collection("profiles").doc(this.$store.state.userUID);
+       if(this.facebook != ''){
+        return profileUpdate.update({
+            Facebook: this.facebook
+        })
+       }
+        if(this.instagram != ''){
+        return profileUpdate.update({
+            Instagram: this.instagram
+        })
+       }
+   if(this.twitter != ''){
+        return profileUpdate.update({
+            Twitter: this.twitter
+        })
+       }
+
+
+
+
              if (this.name === "") this.name = this.$store.state.userName;
              else this.$store.state.name = this.name;
               if (this.bio === "") this.bio = this.$store.state.bio;

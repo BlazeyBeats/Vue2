@@ -7,6 +7,12 @@
 <div v-else class="circle-pic"></div>
 <div class="profile-name">{{this.$store.state.userName}}</div>
 <div class="profile-bio">{{bio}}</div>
+<div class="social-links">
+    <a :href="facebook" v-if="facebook !=''" target="_blank"><img src="../images/Facebook.svg" alt=""></a>
+    <a :href="instagram" v-if="instagram !=''" target="_blank"><img src="../images/Instagram.svg" alt=""></a>
+    <a :href="twitter" v-if="twitter !=''" target="_blank"><img src="../images/Twitter.svg" alt=""></a>
+</div>
+
 <div class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
 
 <div v-if="uploaded" class="musics">
@@ -33,7 +39,10 @@ export default {
             imgSrc:"",
             bio:"",
             musics:[],
-            uploaded:false
+            uploaded:false,
+            facebook:'',
+            instagram:'',
+            twitter:''
         };
     },
     created() {
@@ -41,6 +50,9 @@ export default {
         var vm = this;
         if (user) {
             db.collection('profiles').doc(user.uid).get().then(doc =>{ 
+            vm.facebook = doc.data().Facebook;
+            vm.instagram = doc.data().Instagram;
+            vm.twitter = doc.data().Twitter;
             vm.bio = doc.data().bio;
             this.$store.state.userProfilePic = doc.data().profilePic;
             fb.storage().ref('profiles/'+this.$store.state.userUID+'/profile.jpg').getDownloadURL().then(imgUrl=>{
@@ -94,6 +106,19 @@ export default {
     border-radius: 30px;
     color:rgb(50, 26, 5);
 }
+
+.social-links img{
+    width: 45px;
+   margin: 25px 10px 10px 10px;
+    transition:0.2s ;
+}
+
+.social-links img:hover{
+   transition:0.2s ;
+   opacity: 0.6;
+}
+
+
 .profile-manage{
     display: flex;
     justify-content: flex-end;
@@ -153,6 +178,5 @@ export default {
 }
 .postname{
     font-size:20px;
-
 }
 </style>

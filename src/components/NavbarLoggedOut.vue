@@ -113,7 +113,10 @@ export default {
                     db.collection("profiles").doc(user.user.uid).set({
                         name: this.name,
                         bio:"",
-                        profilePic: false
+                        profilePic: false,
+                        Facebook:"",
+                        Instagram:"",
+                        Twitter:""
                     })
                 })
                 .catch(error => (this.error = error));}
