@@ -32,10 +32,9 @@ export default {
             postBio:"",
             postType:"",  
             musicSrc:"",
-            musicPath:"",
             ImgSrc:"",
-            ImgPath:"",
-            upLoad:false   
+            upLoad:false,
+            imageupLoad:false  
         };
     },
     created(){
@@ -70,30 +69,35 @@ export default {
             })
 
             fb.storage().ref('music/'+ this.$store.state.userUID +'/' + currentFirestore +'/' + this.postName + '.mp3').put(Musicfile).then(function(){
-                    var storageRef = fb.storage().ref();
                     fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + currentFirestore +'/' + vm.postName + '.mp3').getDownloadURL().then(url=>{
                     vm.musicSrc = url;
-                    vm.musicPath = storageRef.child('music/'+ vm.$store.state.userUID +'/' + currentFirestore +'/' + vm.postName + '.mp3').fullPath; 
+                   
            db.collection('music').doc(currentFirestore).update({
                 musicSrc:vm.musicSrc,
-                musicPath:vm.musicPath,
             });
             });
                 })
 
-              fb.storage().ref('music/'+ this.$store.state.userUID +'/' + currentFirestore +'/' + this.postName + '.jpg').put(Imgfile).then(function(){
-                  alert('Upload success!')
-                    var storageRef = fb.storage().ref();
+
+            if(vm.imageupLoad){
+                     fb.storage().ref('music/'+ this.$store.state.userUID +'/' + currentFirestore +'/' + this.postName + '.jpg').put(Imgfile).then(function(){
+                  alert('Upload success!');  
                     fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + currentFirestore +'/' + vm.postName + '.jpg').getDownloadURL().then(url=>{
                     vm.ImgSrc = url;
-                    vm.ImgPath = storageRef.child('music/'+ vm.$store.state.userUID +'/' + currentFirestore +'/' + vm.postName + '.jpg').fullPath;   
+                    
            db.collection('music').doc(currentFirestore).update({
                 ImgSrc:vm.ImgSrc,
-                ImgPath:vm.ImgPath,
             });
-                vm.$router.push('');
+               
                 });
                 })
+            }
+            else {
+                 db.collection('music').doc(currentFirestore).update({
+                ImgSrc:false,
+            }); 
+            }
+       
 
             });
 
@@ -102,10 +106,11 @@ export default {
         },  
 
         chooseImgFile(e){
+            var vm = this;
             if(e.target.files[0]){
             Imgfile = e.target.files[0];
-            console.log(Imgfile);
-            }
+            vm.imageupLoad = true;
+            } 
         },
         chooseMusicFile(e){
             var vm = this;
