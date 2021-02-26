@@ -7,8 +7,10 @@
         <input type="text" class="bio" v-model="postBio" />
         <p>Music Type :</p>
          <input type="text" v-model="postType" />
-        <p>Choose File :</p>
-        <input type="file" v-on:change="chooseFile" class="uploadMusic"/>
+         <p>Choose Picture File :</p>
+        <input type="file" v-on:change="chooseImgFile" class="uploadMusic"/>
+        <p>Choose Music File :</p>
+        <input type="file" v-on:change="chooseMusicFile" class="uploadMusic"/>
     <button class="uploadButton" v-on:click="uploadMusic" v-if="upLoad">Upload</button>
 </div>
 </template>
@@ -16,7 +18,12 @@
 <script>
 import {fb,db} from './firebaseinit.js'
 
-let file = {};
+
+
+let Musicfile = {};
+let Imgfile ={};
+var currentFirestore;
+
 
 export default {
  data() {
@@ -26,6 +33,8 @@ export default {
             postType:"",  
             musicSrc:"",
             musicPath:"",
+            ImgSrc:"",
+            ImgPath:"",
             upLoad:false   
         };
     },
@@ -38,39 +47,70 @@ export default {
     
         uploadMusic(){
      
+            var vm = this;
             var ID;
             db.collection('music').orderBy("postID","desc").limit(1).get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{
                 ID = doc.data().postID;
             })
-        })
-            var vm = this;  
-            fb.storage().ref('music/'+ this.$store.state.userUID +'/' + this.postName + '.mp3').put(file).then(function(){
-                    alert("Upload Success!");
-                    var storageRef = fb.storage().ref();
-                    fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + vm.postName + '.mp3').getDownloadURL().then(url=>{
-                    vm.musicSrc = url;
-                    vm.musicPath = storageRef.child('music/'+ vm.$store.state.userUID +'/' + vm.postName + '.mp3').fullPath;
-                   
-                    db.collection("music").add({
+            db.collection("music").add({
                     postName: vm.postName,
                     postBio:vm.postBio,
                     postType: vm.postType,
-                    postUrl:vm.musicSrc,
                     postUser:vm.$store.state.userUID,
                     postID:ID+1,
-                    storagePath:vm.musicPath,
                     reportOriginal:0,
                     reportInappropriate:0
+            });
+
+            db.collection('music').orderBy("postID","desc").limit(1).get().then(querySnapshot =>{
+            querySnapshot.forEach(doc=>{
+                currentFirestore = doc.id;
+                console.log(currentFirestore);
+            })
+
+            fb.storage().ref('music/'+ this.$store.state.userUID +'/' + currentFirestore +'/' + this.postName + '.mp3').put(Musicfile).then(function(){
+                    var storageRef = fb.storage().ref();
+                    fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + currentFirestore +'/' + vm.postName + '.mp3').getDownloadURL().then(url=>{
+                    vm.musicSrc = url;
+                    vm.musicPath = storageRef.child('music/'+ vm.$store.state.userUID +'/' + currentFirestore +'/' + vm.postName + '.mp3').fullPath; 
+           db.collection('music').doc(currentFirestore).update({
+                musicSrc:vm.musicSrc,
+                musicPath:vm.musicPath,
+            });
+            });
                 })
-                     vm.$router.push('');
+
+              fb.storage().ref('music/'+ this.$store.state.userUID +'/' + currentFirestore +'/' + this.postName + '.jpg').put(Imgfile).then(function(){
+                  alert('Upload success!')
+                    var storageRef = fb.storage().ref();
+                    fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + currentFirestore +'/' + vm.postName + '.jpg').getDownloadURL().then(url=>{
+                    vm.ImgSrc = url;
+                    vm.ImgPath = storageRef.child('music/'+ vm.$store.state.userUID +'/' + currentFirestore +'/' + vm.postName + '.jpg').fullPath;   
+           db.collection('music').doc(currentFirestore).update({
+                ImgSrc:vm.ImgSrc,
+                ImgPath:vm.ImgPath,
+            });
+                vm.$router.push('');
                 });
                 })
+
+            });
+
+        });
+
         },  
-        chooseFile(e){
+
+        chooseImgFile(e){
+            if(e.target.files[0]){
+            Imgfile = e.target.files[0];
+            console.log(Imgfile);
+            }
+        },
+        chooseMusicFile(e){
             var vm = this;
             if(e.target.files[0]){
-            file = e.target.files[0];
+            Musicfile = e.target.files[0];
             vm.upLoad = true;   
         }}
      }
