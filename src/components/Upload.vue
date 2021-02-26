@@ -68,8 +68,9 @@ export default {
                 console.log(currentFirestore);
             })
 
-            fb.storage().ref('music/'+ this.$store.state.userUID +'/' + currentFirestore +'/' + this.postName + '.mp3').put(Musicfile).then(function(){
-                    fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + currentFirestore +'/' + vm.postName + '.mp3').getDownloadURL().then(url=>{
+            fb.storage().ref('music/'+ this.$store.state.userUID +'/' + currentFirestore +'/' + 'Music.mp3').put(Musicfile).then(function(){
+                 alert('Upload success!');  
+                    fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + currentFirestore +'/' +  'Music.mp3').getDownloadURL().then(url=>{
                     vm.musicSrc = url;
                    
            db.collection('music').doc(currentFirestore).update({
@@ -80,9 +81,9 @@ export default {
 
 
             if(vm.imageupLoad){
-                     fb.storage().ref('music/'+ this.$store.state.userUID +'/' + currentFirestore +'/' + this.postName + '.jpg').put(Imgfile).then(function(){
-                  alert('Upload success!');  
-                    fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + currentFirestore +'/' + vm.postName + '.jpg').getDownloadURL().then(url=>{
+                     fb.storage().ref('music/'+ this.$store.state.userUID +'/' + currentFirestore +'/' + 'Img.jpg').put(Imgfile).then(function(){
+                 
+                    fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + currentFirestore +'/' + 'Img.jpg').getDownloadURL().then(url=>{
                     vm.ImgSrc = url;
                     
            db.collection('music').doc(currentFirestore).update({
@@ -94,7 +95,7 @@ export default {
             }
             else {
                  db.collection('music').doc(currentFirestore).update({
-                ImgSrc:false,
+                ImgSrc:"https://firebasestorage.googleapis.com/v0/b/vue2-41a3c.appspot.com/o/S__46333955.jpg?alt=media&token=4d8d9eef-2b1b-435f-a8a7-6519728dacab",
             }); 
             }
        

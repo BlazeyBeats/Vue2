@@ -12,7 +12,7 @@
 </div>
 <div class="musics">
 <div v-for="music in musics" :key="music.postName" class="postcollection">
-        <div class="postcollection-square"></div>
+       <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
         <router-link :to="{name:'MusicPage',
         params:{
             postID:music.postID,
@@ -32,7 +32,6 @@ export default {
 data() {
         return {
             musics:[],
-           
              
         };
     },

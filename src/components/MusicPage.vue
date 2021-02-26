@@ -1,7 +1,8 @@
 <template>
 <div>
 <div class="musicpage">
-    <div class="musicsrc">
+    <div>
+        <img :src="imgSrc" alt="" class="musicsrc">
         <audio controls :src="musicSrc" alt="" class="audio">
         </audio>
     </div>
@@ -12,8 +13,8 @@
    
     <div class="postUser">
       
-        <div v-if="imgSrc" class="profile-pic">
-            <img v-bind:src="imgSrc" alt="" class="imgSrc">
+        <div v-if="profileSrc" class="profile-pic">
+            <img v-bind:src="profileSrc" alt="" class="imgSrc">
         </div>
         <div v-else class="circle-pic"></div>
         <router-link :to="{name:'OtherProfile',
@@ -54,6 +55,9 @@
                     <p>Music Type :</p>
                     <input type="text" v-model="updatepostType" />
                 </div>
+                <p>Choose Picture File :</p>
+                <input type="file" v-on:change="chooseImgFile" class="uploadMusic"/>
+
 
                 <button v-on:click="updateMusic">Update</button>
             </div>
@@ -112,6 +116,7 @@
 
 <script>
 
+let Imgfile ={};
 import {fb,db} from './firebaseinit.js';
 
 export default {
@@ -124,6 +129,7 @@ export default {
         postUser:"",
         postUserID:"",
         imgSrc:"",
+        profileSrc:"",
         musicSrc:"",
         isthisyou:false,
         popupEdit:false,
@@ -131,7 +137,7 @@ export default {
         popupReport:false,
         popupConfirm :false,
         postId:"",
-        storagePath:"",
+        imageupLoad:false,
         updatepostName:"",
         updatepostBio:"",
         updatepostType:"",
@@ -148,9 +154,9 @@ created(){
             this.postName = doc.data().postName;
             this.postBio = doc.data().postBio;
             this.postType = doc.data().postType;
-            this.musicSrc = doc.data().postUrl;
+            this.musicSrc = doc.data().musicSrc;
+            this.imgSrc = doc.data().ImgSrc;
             this.postUserID = doc.data().postUser;
-            this.storagePath = doc.data().storagePath;
             if(user.uid === this.postUserID){
                 this.isthisyou = true;
             }
@@ -159,7 +165,7 @@ created(){
         vm.postUser = doc.data().name;
     });
     fb.storage().ref("profiles/"+this.postUserID+"/profile.jpg").getDownloadURL().then(imgUrl=>{
-    this.imgSrc = imgUrl;
+    this.profileSrc = imgUrl;
     })
     }
     })
@@ -168,29 +174,64 @@ created(){
  },
     methods:{
         
+
+          chooseImgFile(e){
+            var vm = this;
+            if(e.target.files[0]){
+            Imgfile = e.target.files[0];
+            vm.imageupLoad = true;
+            } 
+        },
+
         updateMusic(){
-           
+           var vm = this;
              if (this.updatepostName === "") this.updatepostName = this.postName;
              else this.postName = this.updatepostName;
               if (this.updatepostBio === "") this.updatepostBio = this.postBio;
              else this.postBio = this.updatepostBio;
             if (this.updatepostType === "") this.updatepostType = this.postType;
              else this.postType = this.updatepostType;
-             this.popupEdit = false;
-            return db.collection('music').doc(this.postId).update({
-                postName:this.updatepostName,
-                postBio:this.updatepostBio,
-                postType:this.updatepostType 
+            if(vm.imageupLoad){
+                fb.storage().ref('music/'+ this.$store.state.userUID +'/' + this.postId +'/' +'Img.jpg').put(Imgfile).then(function(){
+                 
+                fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + vm.postId +'/' + 'Img.jpg').getDownloadURL().then(url=>{
+                vm.imgSrc = url;
+
+           db.collection('music').doc(vm.postId).update({
+                ImgSrc:vm.imgSrc,
+                postName:vm.updatepostName,
+                postBio:vm.updatepostBio,
+                postType:vm.updatepostType 
             });
+               
+                });
+                })
+
+                 this.popupEdit = false;
+            } else{
+
+                db.collection('music').doc(this.postId).update({
+                    postName:this.updatepostName,
+                    postBio:this.updatepostBio,
+                    postType:this.updatepostType 
+            });
+             this.popupEdit = false;
+            }
+
+
            
 
         },  
       deleteMusic(){
         var vm = this;
         var storageRef = fb.storage().ref();
-        storageRef.child(this.storagePath).delete().then(()=>{
+        console.log(vm.$store.state.userUID);
+        console.log( vm.postId);
+        storageRef.child('music/'+ this.$store.state.userUID +'/' + this.postId +'/' +'Img.jpg').delete().then(()=>{
+            storageRef.child('music/'+ this.$store.state.userUID +'/' + this.postId +'/' + 'Music.mp3').delete().then(()=>{
             db.collection("music").doc(vm.postId).delete();
             vm.$router.push('/'); 
+        })
         })
      
         
@@ -244,7 +285,7 @@ created(){
 }
 .musicsrc{
     width: 500px;
-    margin:30px;
+    margin:30px 30px -30px 30px;
     background-color:rgb(227, 221, 221);
     border-radius:20px;
     display: flex;
@@ -456,8 +497,8 @@ font-size: 30px;
 .input-edit p {
     color: rgb(50, 26, 5);
     font-size: 22px;
-    margin-top: 30px;
-    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     margin-left: 30px;
     display: flex;
     justify-content: flex-start;
