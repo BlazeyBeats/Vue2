@@ -116,7 +116,10 @@ export default {
                         profilePic: false,
                         Facebook:"",
                         Instagram:"",
-                        Twitter:""
+                        Twitter:"",
+                        LikedPosts:[],
+                        Following:[],
+                        Followers:[]
                     })
                 })
                 .catch(error => (this.error = error));}

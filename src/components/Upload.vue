@@ -59,7 +59,8 @@ export default {
                     postUser:vm.$store.state.userUID,
                     postID:ID+1,
                     reportOriginal:0,
-                    reportInappropriate:0
+                    reportInappropriate:0,
+                    Likes:[]
             });
 
             db.collection('music').orderBy("postID","desc").limit(1).get().then(querySnapshot =>{

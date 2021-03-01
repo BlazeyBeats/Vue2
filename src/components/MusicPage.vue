@@ -26,9 +26,12 @@
         <div v-if="isthisyou">
             <button v-on:click="popupEdit=!popupEdit" >Edit</button>
             <button v-on:click="popupDelete=!popupDelete">Delete</button>
+           
         </div>
         <div v-else>
             <button v-on:click="popupReport=!popupReport" >Report</button>
+             <div v-if="like"><button v-on:click="addLike">Like</button></div>
+            <div v-else><button v-on:click="removeLike">Removelike</button></div>
         </div>
 </div>
     </div>
@@ -117,7 +120,7 @@
 <script>
 
 let Imgfile ={};
-import {fb,db} from './firebaseinit.js';
+import {fb,db,firebase} from './firebaseinit.js';
 
 export default {
  name:'MusicPage',
@@ -138,6 +141,7 @@ export default {
         popupConfirm :false,
         postId:"",
         imageupLoad:false,
+        like:true,
         updatepostName:"",
         updatepostBio:"",
         updatepostType:"",
@@ -147,6 +151,7 @@ created(){
     this.$store.state.currentPost = Number(this.$route.params.postID);
     var vm = this;
     var user = fb.auth().currentUser;
+    var LikeArray=[];
     if(this.$store.state.currentPost){
     db.collection("music").where('postID','==',this.$store.state.currentPost).get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{ 
@@ -157,6 +162,19 @@ created(){
             this.musicSrc = doc.data().musicSrc;
             this.imgSrc = doc.data().ImgSrc;
             this.postUserID = doc.data().postUser;
+            LikeArray = doc.data().Likes;
+          
+
+            for(var i=0; i<LikeArray.length;i++){
+                var name = LikeArray[i];
+                if(name == user.uid ){
+                    this.like = false;
+                    break;
+                }else{
+                    this.like = true;
+                }
+            }
+
             if(user.uid === this.postUserID){
                 this.isthisyou = true;
             }
@@ -265,6 +283,26 @@ created(){
         
     });
   
+     },
+     addLike(){
+         var user = fb.auth().currentUser;
+         db.collection('music').doc(this.postId).update({
+            Likes: firebase.firestore.FieldValue.arrayUnion(user.uid)
+        });
+          db.collection('profiles').doc(user.uid).update({
+            LikedPosts: firebase.firestore.FieldValue.arrayUnion(this.postId)
+        });
+        this.like = false;
+     },
+     removeLike(){
+         var user = fb.auth().currentUser;
+         db.collection('music').doc(this.postId).update({
+            Likes: firebase.firestore.FieldValue.arrayRemove(user.uid)
+        });
+          db.collection('profiles').doc(user.uid).update({
+            LikedPosts: firebase.firestore.FieldValue.arrayRemove(this.postId)
+        });
+        this.like = true;
      }
 
     },

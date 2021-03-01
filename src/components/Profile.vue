@@ -15,7 +15,11 @@
 
 <div class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
 
-<div v-if="uploaded" class="musics">
+ <button v-if="uploaded" v-on:click="OwnPosts=true;OwnLikes=false">Posts</button>
+<button v-if="likes" v-on:click="OwnPosts=false;OwnLikes=true">Likes</button>
+
+<div v-if="OwnPosts">
+    <div v-if="uploaded" class="musics">
 <div v-for="music in musics" :key="music.postName" class="postcollection">
          <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
         <router-link :to="{name:'MusicPage',
@@ -27,6 +31,25 @@
         <div class="posttype">{{music.postType}}</div>
 </div> 
 </div>
+</div>
+
+<div v-if="OwnLikes">
+    <div v-if="likes" class="musics">
+    <div v-for="LikedPost in LikedPosts" :key="LikedPost.postName" class="postcollection">
+         <img v-bind:src="LikedPost.ImgSrc" alt="" class="postcollection-square">
+        <router-link :to="{name:'MusicPage',
+        params:{
+            postID:LikedPost.postID,
+        }}">
+            <h1 class="postname">{{LikedPost.postName}}</h1>
+        </router-link>
+        <div class="posttype">{{LikedPost.postType}}</div>
+</div> 
+</div>
+</div>
+
+
+
 
 </div>
 </template>
@@ -39,7 +62,11 @@ export default {
             imgSrc:"",
             bio:"",
             musics:[],
+            LikedPosts:[],
             uploaded:false,
+            likes:false,
+            OwnPosts:true,
+            OwnLikes:false,
             facebook:'',
             instagram:'',
             twitter:''
@@ -48,12 +75,28 @@ export default {
     created() {
         var user = fb.auth().currentUser;
         var vm = this;
+        var LikedPosts =[];
         if (user) {
             db.collection('profiles').doc(user.uid).get().then(doc =>{ 
             vm.facebook = doc.data().Facebook;
             vm.instagram = doc.data().Instagram;
             vm.twitter = doc.data().Twitter;
             vm.bio = doc.data().bio;
+            LikedPosts = doc.data().LikedPosts;
+
+            
+            if(LikedPosts){
+                var i = Number(LikedPosts.length)-1;
+                for(i; i>=0;i--){
+                db.collection('music').doc(LikedPosts[i]).get().then(doc =>{
+              this.LikedPosts.push(doc.data());
+              this.likes = true;
+        })
+            }
+
+            }
+           
+           
             this.$store.state.userProfilePic = doc.data().profilePic;
             fb.storage().ref('profiles/'+this.$store.state.userUID+'/profile.jpg').getDownloadURL().then(imgUrl=>{
             this.imgSrc = imgUrl;
@@ -64,9 +107,10 @@ export default {
             this.musics.push(doc.data());
             this.uploaded = true;
             })
-        })
-         
+        }) 
          }
+
+
         
      },
 }
