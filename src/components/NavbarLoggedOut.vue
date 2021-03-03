@@ -111,6 +111,7 @@ export default {
                 fb.auth().createUserWithEmailAndPassword(this.email, this.password)
                 .then((user) => {
                     db.collection("profiles").doc(user.user.uid).set({
+                        userUID:user.user.uid,
                         name: this.name,
                         bio:"",
                         profilePic:"https://firebasestorage.googleapis.com/v0/b/vue2-41a3c.appspot.com/o/Red.jpg?alt=media&token=b6ee019f-d2c8-4e26-b734-e315b4a99cd6",
@@ -120,8 +121,8 @@ export default {
                         LikedPosts:[],
                         Following:[],
                         Followers:[],
-
                     })
+                    
                 })
                 .catch(error => (this.error = error));}
         }

@@ -14,9 +14,9 @@
 
 <div class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
 
- <button v-if="uploaded" v-on:click="OwnPosts=true;OwnLikes=false">Posts</button>
-<button v-if="likes" v-on:click="OwnPosts=false;OwnLikes=true">Likes</button>
-<button v-if="following" v-on:click="OwnFollowing=false;OwnFollowing=true">Following</button>
+ <button v-if="uploaded" v-on:click="OwnPosts=true;OwnLikes=false;OwnFollowing=false">Posts</button>
+<button v-if="likes" v-on:click="OwnPosts=false;OwnLikes=true;OwnFollowing=false">Likes</button>
+<button v-if="following" v-on:click="OwnPosts=false;OwnLikes=false;;OwnFollowing=true">Following</button>
 
 
 <div v-if="OwnPosts">
@@ -36,8 +36,8 @@
 
 <div v-if="OwnLikes">
     <div v-if="likes" class="musics">
-    <div v-for="Following in Followings" :key="Following.postName" class="postcollection">
-        <img v-bind:src="Following.ImgSrc" alt="" class="postcollection-square">
+    <div v-for="LikedPost in LikedPosts" :key="LikedPost.postName" class="postcollection">
+        <img v-bind:src="LikedPost.ImgSrc" alt="" class="postcollection-square">
         <router-link :to="{name:'MusicPage',
         params:{
             postID:LikedPost.postID,
@@ -51,15 +51,14 @@
 
 <div v-if="OwnFollowing">
     <div v-if="following" class="musics">
-    <div v-for="LikedPost in LikedPosts" :key="LikedPost.postName" class="postcollection">
-         <img v-bind:src="LikedPost.ImgSrc" alt="" class="postcollection-square">
-        <router-link :to="{name:'MusicPage',
+    <div v-for="Following in Followings" :key="Following.name" class="followingcollection">
+         <img v-bind:src="Following.profilePic" alt="" class="followingcollection-square">
+        <router-link :to="{name:'OtherProfile',
         params:{
-            postID:LikedPost.postID,
+            userID:Following.userUID,
         }}">
-            <h1 class="postname">{{LikedPost.postName}}</h1>
+            <h1 class="postname">{{Following.name}}</h1>
         </router-link>
-        <div class="posttype">{{LikedPost.postType}}</div>
 </div> 
 </div>
 </div>
@@ -81,7 +80,7 @@ export default {
             Followings:[],
             uploaded:false,
             likes:false,
-            following:true,
+            following:false,
             OwnPosts:true,
             OwnLikes:false,
             OwnFollowing:false,
@@ -121,6 +120,7 @@ export default {
                     db.collection('profiles').doc(Following[j]).get().then(doc =>{
                     this.Followings.push(doc.data());
                     this.following = true;
+
                     })
                 }
             }
@@ -213,7 +213,6 @@ export default {
   padding: 30px 80px;
   
     background-color:rgb(192, 187, 187);
-   
 }
 .postcollection-square{
     width: 220px;
@@ -238,5 +237,23 @@ export default {
 }
 .postname{
     font-size:20px;
+}
+.followingcollection{
+   width: 270px;
+    height: 320px;
+    color: rgb(50, 26, 5);
+    display: flex;
+    align-items:center;
+    justify-content:flex-end;
+    flex-direction: column;
+    margin: 20px 30px;
+    padding-bottom: 20px;
+    border-radius: 15px;
+}
+
+.followingcollection-square{
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
 }
 </style>
