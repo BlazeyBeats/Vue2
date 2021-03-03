@@ -12,7 +12,7 @@
         <button v-on:click="signOut" class="signoutBtn"><router-link to="/">Log Out</router-link></button>
         <router-link to="/profile" class="imgRouter">
        
-            <img v-bind:src="imgSrc" alt="" class="imgSrc">
+            <img v-bind:src="this.$store.state.userProfilePic" alt="" class="imgSrc">
       
         </router-link>
         
@@ -44,16 +44,7 @@ export default {
      })} 
 
         db.collection('profiles').doc(user.uid).get().then((doc)=>{
-            var profilepic = doc.data().profilePic
-            
-            if ( profilepic == true) {
-                fb.storage().ref('profiles/'+this.$store.state.userUID+'/profile.jpg').getDownloadURL().then(imgUrl=>{
-                this.imgSrc = imgUrl;
-             })
-            } else{
-                this.imgSrc = "https://firebasestorage.googleapis.com/v0/b/vue2-41a3c.appspot.com/o/Red.jpg?alt=media&token=b6ee019f-d2c8-4e26-b734-e315b4a99cd6"
-            }
-          
+            this.$store.state.userProfilePic = doc.data().profilePic;
         })
    
      

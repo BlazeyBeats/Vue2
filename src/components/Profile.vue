@@ -1,7 +1,7 @@
 <template>
 <div class="profile">
 
-<img v-bind:src="imgSrc" alt="" class="imgSrc">
+<img v-bind:src="this.$store.state.userProfilePic" alt="" class="imgSrc">
 
 
 <div class="profile-name">{{this.$store.state.userName}}</div>
@@ -16,6 +16,8 @@
 
  <button v-if="uploaded" v-on:click="OwnPosts=true;OwnLikes=false">Posts</button>
 <button v-if="likes" v-on:click="OwnPosts=false;OwnLikes=true">Likes</button>
+<button v-if="following" v-on:click="OwnFollowing=false;OwnFollowing=true">Following</button>
+
 
 <div v-if="OwnPosts">
     <div v-if="uploaded" class="musics">
@@ -34,6 +36,21 @@
 
 <div v-if="OwnLikes">
     <div v-if="likes" class="musics">
+    <div v-for="Following in Followings" :key="Following.postName" class="postcollection">
+        <img v-bind:src="Following.ImgSrc" alt="" class="postcollection-square">
+        <router-link :to="{name:'MusicPage',
+        params:{
+            postID:LikedPost.postID,
+        }}">
+            <h1 class="postname">{{LikedPost.postName}}</h1>
+        </router-link>
+        <div class="posttype">{{LikedPost.postType}}</div>
+</div> 
+</div>
+</div>
+
+<div v-if="OwnFollowing">
+    <div v-if="following" class="musics">
     <div v-for="LikedPost in LikedPosts" :key="LikedPost.postName" class="postcollection">
          <img v-bind:src="LikedPost.ImgSrc" alt="" class="postcollection-square">
         <router-link :to="{name:'MusicPage',
@@ -58,14 +75,16 @@ import {fb,db} from './firebaseinit.js'
 export default {
   data() {
         return {
-            imgSrc:"",
             bio:"",
             musics:[],
             LikedPosts:[],
+            Followings:[],
             uploaded:false,
             likes:false,
+            following:true,
             OwnPosts:true,
             OwnLikes:false,
+            OwnFollowing:false,
             facebook:'',
             instagram:'',
             twitter:''
@@ -75,35 +94,38 @@ export default {
         var user = fb.auth().currentUser;
         var vm = this;
         var LikedPosts =[];
+        var Following =[];
         if (user) {
             db.collection('profiles').doc(user.uid).get().then(doc =>{ 
             vm.facebook = doc.data().Facebook;
             vm.instagram = doc.data().Instagram;
             vm.twitter = doc.data().Twitter;
             vm.bio = doc.data().bio;
+            this.$store.state.userProfilePic = doc.data().profilePic;
             LikedPosts = doc.data().LikedPosts;
-
+            Following = doc.data().Following;
             
             if(LikedPosts){
                 var i = Number(LikedPosts.length)-1;
                 for(i; i>=0;i--){
-                db.collection('music').doc(LikedPosts[i]).get().then(doc =>{
-              this.LikedPosts.push(doc.data());
-              this.likes = true;
-        })
+                    db.collection('music').doc(LikedPosts[i]).get().then(doc =>{
+                    this.LikedPosts.push(doc.data());
+                    this.likes = true;
+                    })
+                }
             }
 
+            if(Following){
+                var j = Number(Following.length)-1;
+                for(j; j>=0;j--){
+                    db.collection('profiles').doc(Following[j]).get().then(doc =>{
+                    this.Followings.push(doc.data());
+                    this.following = true;
+                    })
+                }
             }
            
-        var profilepic = doc.data().profilePic
-            
-            if ( profilepic == true) {
-                fb.storage().ref('profiles/'+this.$store.state.userUID+'/profile.jpg').getDownloadURL().then(imgUrl=>{
-                this.imgSrc = imgUrl;
-             })
-            } else{
-                this.imgSrc = "https://firebasestorage.googleapis.com/v0/b/vue2-41a3c.appspot.com/o/Red.jpg?alt=media&token=b6ee019f-d2c8-4e26-b734-e315b4a99cd6"
-            }
+       
          })
            db.collection('music').where('postUser','==',user.uid).orderBy("postID","desc").get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{          

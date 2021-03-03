@@ -36,7 +36,7 @@
 <script>
 import {fb,db} from './firebaseinit.js'
 let file = {};
-var userProfilePic = false;
+var profilepicUpload = false;
 export default {
   data() {
         return {
@@ -44,7 +44,8 @@ export default {
              bio:"",
              facebook:'',
             instagram:'',
-            twitter:''
+            twitter:'',
+            imgSrc:''
             
              
         };
@@ -52,12 +53,16 @@ export default {
     created(){
         var user = fb.auth().currentUser;
         this.$store.state.userUID = user.uid;
-         
+        db.collection('profiles').doc(user.uid).get().then(doc =>{ 
+            this.$store.state.bio = doc.data().bio;
+            this.$store.state.userName = doc.data().name;
+         })
     },
      methods:{
          updateProfile(){
              var user = fb.auth().currentUser;
-             var profileUpdate = db.collection("profiles").doc(this.$store.state.userUID);
+             var vm = this;
+             var profileUpdate = db.collection("profiles").doc(user.uid);
        if(this.facebook != ''){
         return profileUpdate.update({
             Facebook: this.facebook
@@ -75,29 +80,39 @@ export default {
        }
 
              if (this.name === "") this.name = this.$store.state.userName;
-             else this.$store.state.name = this.name;
+             else this.$store.state.userName = this.name;
               if (this.bio === "") this.bio = this.$store.state.bio;
              else this.$store.state.bio = this.bio;
-             if(userProfilePic){
-                fb.storage().ref('profiles/'+ this.$store.state.userUID + '/profile.jpg').put(file).then(function(){
-                    alert("upload success");
-                    return profileUpdate.update({
-                        profilePic:true
+             if(profilepicUpload){
+                 console.log(profilepicUpload)
+                fb.storage().ref('profiles/'+ user.uid + '/profile.jpg').put(file).then(function(){
+                    fb.storage().ref('profiles/'+ user.uid + '/profile.jpg').getDownloadURL().then(url=>{
+                    vm.imgSrc = url;
+                    vm.$store.state.userProfilePic = vm.imgSrc;
+                    db.collection('profiles').doc(user.uid).update({
+                        profilePic:vm.imgSrc    
                     });
+                   
+                });
+                    
+                         
                 });
             }
             if (user) {
-                return profileUpdate.update({
+               
+                profileUpdate.update({
                 name:this.name,
                 bio:this.bio   
             });
+                 this.$router.push('/profile');
             } 
+            
         }, 
         chooseFile(e){
           
             if(e.target.files[0]){
             file = e.target.files[0];
-            userProfilePic = true;
+            profilepicUpload = true;
             }
             
         }

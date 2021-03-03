@@ -80,7 +80,7 @@ export default {
             email: null,
             password: null,
             error: "",
-             name:"",
+            name:"",
             
         }
     },
@@ -113,13 +113,14 @@ export default {
                     db.collection("profiles").doc(user.user.uid).set({
                         name: this.name,
                         bio:"",
-                        profilePic: false,
+                        profilePic:"https://firebasestorage.googleapis.com/v0/b/vue2-41a3c.appspot.com/o/Red.jpg?alt=media&token=b6ee019f-d2c8-4e26-b734-e315b4a99cd6",
                         Facebook:"",
                         Instagram:"",
                         Twitter:"",
                         LikedPosts:[],
                         Following:[],
-                        Followers:[]
+                        Followers:[],
+
                     })
                 })
                 .catch(error => (this.error = error));}

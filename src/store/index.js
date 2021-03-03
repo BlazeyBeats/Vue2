@@ -7,10 +7,12 @@ export default new Vuex.Store({
   state: { 
     userloggedin:false,
     userName:"",
+    bio:"",
     userUID:"",
     userEmail:"",
     currentPost:"",
-    currentOtherUser:""
+    currentOtherUser:"",
+    userProfilePic:""
   },
   mutations: {
   },
