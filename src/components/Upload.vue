@@ -96,7 +96,7 @@ export default {
             }
             else {
                  db.collection('music').doc(currentFirestore).update({
-                ImgSrc:"https://firebasestorage.googleapis.com/v0/b/vue2-41a3c.appspot.com/o/S__46333955.jpg?alt=media&token=4d8d9eef-2b1b-435f-a8a7-6519728dacab",
+                ImgSrc:"https://firebasestorage.googleapis.com/v0/b/vue2-41a3c.appspot.com/o/Denji.jpg?alt=media&token=0e754707-0876-4d40-aadd-c1e6cbbd0fe3",
             }); 
             }
        

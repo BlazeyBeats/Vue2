@@ -10,7 +10,12 @@
     <div class="navbarButtons">  
         <button class="upload"><router-link to="/upload">Upload</router-link></button>
         <button v-on:click="signOut" class="signoutBtn"><router-link to="/">Log Out</router-link></button>
-        <button class="user"><router-link to="/profile">{{this.$store.state.userName}}</router-link></button>
+        <router-link to="/profile" class="imgRouter">
+       
+            <img v-bind:src="imgSrc" alt="" class="imgSrc">
+      
+        </router-link>
+        
     </div>
     </div>
 
@@ -24,7 +29,7 @@ import {fb,db} from './firebaseinit.js'
 export default {
      data() {
         return {
-           
+           imgSrc:""
         }
     },
     
@@ -38,6 +43,19 @@ export default {
         vm.name = this.$store.state.userName;
      })} 
 
+        db.collection('profiles').doc(user.uid).get().then((doc)=>{
+            var profilepic = doc.data().profilePic
+            
+            if ( profilepic == true) {
+                fb.storage().ref('profiles/'+this.$store.state.userUID+'/profile.jpg').getDownloadURL().then(imgUrl=>{
+                this.imgSrc = imgUrl;
+             })
+            } else{
+                this.imgSrc = "https://firebasestorage.googleapis.com/v0/b/vue2-41a3c.appspot.com/o/Red.jpg?alt=media&token=b6ee019f-d2c8-4e26-b734-e315b4a99cd6"
+            }
+          
+        })
+   
      
      },
   
@@ -91,5 +109,28 @@ a{
     text-decoration: none;
     color: rgb(50, 26, 5);
 }
+
+.navbarButtons{
+    display: flex;
+    justify-content: center;
+    align-items:center ;
+}
+
+.imgRouter{
+     width: 50px;
+    height: 50px;
+    object-fit: cover;
+     display: flex;
+    justify-content: center;
+    margin: auto;
+    margin-left:30px;
+    cursor: pointer;
+}
+.imgSrc{
+     
+     border-radius: 50%;
+     
+}
+
 
 </style>

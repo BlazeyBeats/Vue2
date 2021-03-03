@@ -74,9 +74,6 @@ export default {
         })
        }
 
-
-
-
              if (this.name === "") this.name = this.$store.state.userName;
              else this.$store.state.name = this.name;
               if (this.bio === "") this.bio = this.$store.state.bio;

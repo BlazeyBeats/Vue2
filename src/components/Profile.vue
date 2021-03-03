@@ -1,10 +1,9 @@
 <template>
 <div class="profile">
 
-<div v-if="this.$store.state.userProfilePic" class="profile-pic">
 <img v-bind:src="imgSrc" alt="" class="imgSrc">
-</div>
-<div v-else class="circle-pic"></div>
+
+
 <div class="profile-name">{{this.$store.state.userName}}</div>
 <div class="profile-bio">{{bio}}</div>
 <div class="social-links">
@@ -96,11 +95,15 @@ export default {
 
             }
            
-           
-            this.$store.state.userProfilePic = doc.data().profilePic;
-            fb.storage().ref('profiles/'+this.$store.state.userUID+'/profile.jpg').getDownloadURL().then(imgUrl=>{
-            this.imgSrc = imgUrl;
+        var profilepic = doc.data().profilePic
+            
+            if ( profilepic == true) {
+                fb.storage().ref('profiles/'+this.$store.state.userUID+'/profile.jpg').getDownloadURL().then(imgUrl=>{
+                this.imgSrc = imgUrl;
              })
+            } else{
+                this.imgSrc = "https://firebasestorage.googleapis.com/v0/b/vue2-41a3c.appspot.com/o/Red.jpg?alt=media&token=b6ee019f-d2c8-4e26-b734-e315b4a99cd6"
+            }
          })
            db.collection('music').where('postUser','==',user.uid).orderBy("postID","desc").get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{          
@@ -129,16 +132,7 @@ export default {
     margin-top: 80px;
 }
 
-.circle-pic{
-    width: 250px;
-    height: 250px;
-    background-color: rgb(50, 26, 5) ;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    margin: auto;
-    margin-top: 80px;
-}
+
 .profile-name{
     font-size: 35px;
     background-color: rgb(180, 167, 156) ;

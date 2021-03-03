@@ -245,12 +245,16 @@ created(){
         var storageRef = fb.storage().ref();
         console.log(vm.$store.state.userUID);
         console.log( vm.postId);
-        storageRef.child('music/'+ this.$store.state.userUID +'/' + this.postId +'/' +'Img.jpg').delete().then(()=>{
-            storageRef.child('music/'+ this.$store.state.userUID +'/' + this.postId +'/' + 'Music.mp3').delete().then(()=>{
-            db.collection("music").doc(vm.postId).delete();
-            vm.$router.push('/'); 
+
+        db.collection("music").doc(vm.postId).delete().then(()=>{
+            storageRef.child('music/'+ this.$store.state.userUID +'/' + this.postId +'/' +'Img.jpg').delete().then(()=>{
+                storageRef.child('music/'+ this.$store.state.userUID +'/' + this.postId +'/' + 'Music.mp3').delete();
+                 vm.$router.push('/'); 
+            })
         })
-        })
+
+
+        
      
         
      },
