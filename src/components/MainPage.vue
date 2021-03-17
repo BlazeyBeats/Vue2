@@ -11,13 +11,26 @@
 </div>
 <div class="guideNav">
     
-    <button v-on:click="newPosts=true;following=false">New</button>
-    <button>Hot</button>
-    <div v-if="followingFlag"><button v-on:click="following=true;newPosts=false">Following</button></div>
+    <button v-on:click="newPosts=true;following=false;hotPosts=false">New</button>
+    <button v-on:click="hotPosts=true;following=false;newPosts=false">Hot</button>
+    <div v-if="followingFlag"><button v-on:click="following=true;newPosts=false;hotPosts=false">Following</button></div>
 </div>
 
 <div class="musics" v-if="newPosts">
 <div v-for="music in musicsNew" :key="music.postName" class="postcollection">
+       <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
+        <router-link :to="{name:'MusicPage',
+        params:{
+            postID:music.postID,
+        }}">
+        <h1 class="postname">{{music.postName}}</h1>
+        </router-link>
+        <div class="posttype">{{music.postType}}</div>
+</div> 
+</div>
+
+<div class="musics" v-if="hotPosts">
+<div v-for="music in musicsHot" :key="music.postName" class="postcollection">
        <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
         <router-link :to="{name:'MusicPage',
         params:{
@@ -55,6 +68,8 @@ data() {
         return {
             musicsNew:[],
             musicsFollowing:[],
+            musicsHot:[],
+            hotPosts:false,
             newPosts:true,
             followingFlag:false,
             following:false 
@@ -65,12 +80,18 @@ data() {
         var vm = this;
         var musicID = [];
         var followingPosts =[];
+       
           db.collection('music').orderBy("postID","desc").get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{          
             this.musicsNew.push(doc.data());
             })
         })
 
+          db.collection('music').where("LikeCount",">",0).orderBy("LikeCount","desc").limit(5).get().then(querySnapshot =>{
+            querySnapshot.forEach(doc=>{          
+            this.musicsHot.push(doc.data());
+            })
+        })
         if (user) {
            
             db.collection('profiles').doc(user.uid).get().then(doc =>{ 

@@ -325,23 +325,39 @@ created(){
      },
      addLike(){
          var user = fb.auth().currentUser;
-         db.collection('music').doc(this.postId).update({
-            Likes: firebase.firestore.FieldValue.arrayUnion(user.uid)
+
+        db.collection('music').doc(this.postId).get().then(doc =>{ 
+        var LikeCount = doc.data().LikeCount;
+        db.collection('music').doc(this.postId).update({
+            Likes: firebase.firestore.FieldValue.arrayUnion(user.uid),
+            LikeCount:LikeCount+1
         });
           db.collection('profiles').doc(user.uid).update({
             LikedPosts: firebase.firestore.FieldValue.arrayUnion(this.postId)
         });
         this.like = false;
+        
+    });
+         
      },
      removeLike(){
          var user = fb.auth().currentUser;
+
+        db.collection('music').doc(this.postId).get().then(doc =>{ 
+       var LikeCount = doc.data().LikeCount;
+      
          db.collection('music').doc(this.postId).update({
-            Likes: firebase.firestore.FieldValue.arrayRemove(user.uid)
+            Likes: firebase.firestore.FieldValue.arrayRemove(user.uid),
+            LikeCount:LikeCount-1
         });
           db.collection('profiles').doc(user.uid).update({
             LikedPosts: firebase.firestore.FieldValue.arrayRemove(this.postId)
         });
         this.like = true;
+        
+        
+    });
+      
      },
      addComment(){
          var date = new Date(); 

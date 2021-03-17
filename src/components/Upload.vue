@@ -60,7 +60,8 @@ export default {
                     postID:ID+1,
                     reportOriginal:0,
                     reportInappropriate:0,
-                    Likes:[]
+                    Likes:[],
+                    LikeCount:0
             });
 
             db.collection('music').orderBy("postID","desc").limit(1).get().then(querySnapshot =>{
