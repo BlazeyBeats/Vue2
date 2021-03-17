@@ -36,6 +36,7 @@
 <script>
 import {fb,db} from './firebaseinit.js'
 let file = {};
+var commentLoop=[];
 var profilepicUpload = false;
 export default {
   data() {
@@ -53,6 +54,16 @@ export default {
     created(){
         var user = fb.auth().currentUser;
         this.$store.state.userUID = user.uid;
+       
+
+        db.collection('comments').where('user','==',user.uid).get().then(querySnapshot =>{
+            querySnapshot.forEach(doc=>{          
+            commentLoop.push(doc.id)
+            
+            })
+            console.log(commentLoop)
+        })
+        
         db.collection('profiles').doc(user.uid).get().then(doc =>{ 
             this.$store.state.bio = doc.data().bio;
             this.$store.state.userName = doc.data().name;
@@ -63,6 +74,8 @@ export default {
              var user = fb.auth().currentUser;
              var vm = this;
              var profileUpdate = db.collection("profiles").doc(user.uid);
+             
+            
        if(this.facebook != ''){
         return profileUpdate.update({
             Facebook: this.facebook
@@ -83,8 +96,9 @@ export default {
              else this.$store.state.userName = this.name;
               if (this.bio === "") this.bio = this.$store.state.bio;
              else this.$store.state.bio = this.bio;
+
              if(profilepicUpload){
-                 console.log(profilepicUpload)
+               
                 fb.storage().ref('profiles/'+ user.uid + '/profile.jpg').put(file).then(function(){
                     fb.storage().ref('profiles/'+ user.uid + '/profile.jpg').getDownloadURL().then(url=>{
                     vm.imgSrc = url;
@@ -92,6 +106,15 @@ export default {
                     db.collection('profiles').doc(user.uid).update({
                         profilePic:vm.imgSrc    
                     });
+
+                if(commentLoop){
+               
+                for(var j=0; j<commentLoop.length;j++){
+                    db.collection('comments').doc(commentLoop[j]).update({
+                        profilePic:vm.imgSrc 
+                    });
+                }
+            }
                    
                 });
                     
@@ -99,7 +122,14 @@ export default {
                 });
             }
             if (user) {
+                   if(commentLoop){
                
+                for(var i=0; i<commentLoop.length;i++){
+                    db.collection('comments').doc(commentLoop[i]).update({
+                         name:this.name, 
+                    });
+                }
+            }
                 profileUpdate.update({
                 name:this.name,
                 bio:this.bio   

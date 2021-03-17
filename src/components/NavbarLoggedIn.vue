@@ -8,8 +8,8 @@
         </div>
         
     <div class="navbarButtons">  
-        <button class="upload"><router-link to="/upload">Upload</router-link></button>
-        <button v-on:click="signOut" class="signoutBtn"><router-link to="/">Log Out</router-link></button>
+        <button class="upload"><router-link to="/upload">上傳</router-link></button>
+        <button v-on:click="signOut" class="signoutBtn"><router-link to="/">登出</router-link></button>
         <router-link to="/profile" class="imgRouter">
        
             <img v-bind:src="this.$store.state.userProfilePic" alt="" class="imgSrc">
@@ -61,6 +61,7 @@ export default {
                 .then(() => {
                this.$store.state.userUID = null;
                this.$store.state.userName = null;
+               this.$store.state.userloggedin = false;
                 });
         }
     }, 

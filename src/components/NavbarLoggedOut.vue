@@ -96,7 +96,7 @@ export default {
                     console.log(data);
                     var user = fb.auth().currentUser;
                     this.$store.state.userUID = user.uid;
-                 
+                    this.$store.state.userloggedin = true;
                 })
                 .catch(error => {
                     this.error = error;

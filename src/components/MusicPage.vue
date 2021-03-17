@@ -68,6 +68,24 @@
        
     </div>
 
+<div class="messageboard">
+    <input type="text" v-model="comment"/>
+    <button v-on:click="addComment">Post</button>
+</div>
+
+<div v-for="comment in commentArray" :key="comment.comment" class="commentSection">
+    <div class="commentUser">
+     <img v-bind:src="comment.profilePic" alt="" class="commentImg">
+        <router-link :to="{name:'OtherProfile',
+        params:{
+            userID:comment.user,
+        }}">
+        <p class="commentName">{{comment.name}}</p>
+        </router-link>
+    </div>
+    <div class="commentContent">{{comment.comment}}</div>
+</div>
+
         <div v-if="popupDelete" class="Deletetemplate">
         <h1>Delete</h1>
         <form @submit.prevent="pressed">
@@ -145,6 +163,8 @@ export default {
         updatepostName:"",
         updatepostBio:"",
         updatepostType:"",
+        comment:"",
+        commentArray:[]
      }
  },
 created(){
@@ -152,6 +172,7 @@ created(){
     var vm = this;
     var user = fb.auth().currentUser;
     var LikeArray=[];
+   
     if(this.$store.state.currentPost){
     db.collection("music").where('postID','==',this.$store.state.currentPost).get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{ 
@@ -187,7 +208,21 @@ created(){
     })
     }
     })
+
+        db.collection("comments").where('postID','==',this.postId).orderBy('date','desc').onSnapshot((querySnapshot)=>{
+       let allcomments=[]
+        querySnapshot.forEach(doc=>{
+            allcomments.push(doc.data())
+        })
+       this.commentArray = allcomments
+        console.log(this.commentArray)
     })
+
+    })
+
+
+
+
    }
  },
     methods:{
@@ -307,7 +342,30 @@ created(){
             LikedPosts: firebase.firestore.FieldValue.arrayRemove(this.postId)
         });
         this.like = true;
-     }
+     },
+     addComment(){
+         var date = new Date(); 
+       
+         var user = fb.auth().currentUser;
+         var name;
+         var profilePic;
+         
+        db.collection('profiles').doc(user.uid).get().then(doc=>{
+            name = doc.data().name;
+            profilePic = doc.data().profilePic;
+               db.collection("comments").doc().set({
+            name:name,
+            profilePic:profilePic,
+            user:user.uid,
+            date:date,
+            comment:this.comment,
+            postID:this.postId
+        });
+        this.comment=""
+          })
+    
+      
+  }
 
     },
   
@@ -586,6 +644,31 @@ font-size: 30px;
 .songName .songBio .songType {
     display: flex;
     justify-content: flex-start;
+}
+
+.commentSection{
+    width: 400px;
+    display: flex;
+    justify-content: flex-start;
+    align-items:center;
+   
+}
+
+.commentUser{
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.commentImg{
+    width: 40px;
+    height: 40px;
+    border-radius:50%;
+    margin-right:20px;
+}
+
+.commentName{
+    font-weight: bold;
 }
 
 

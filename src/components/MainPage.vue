@@ -4,14 +4,20 @@
     <div class="introBlock">
         <div class="introcontentleft">
 
-            <p>Upload your music</p>
-            <p>Make friends</p>
+            
       
         </div>
     </div>
 </div>
-<div class="musics">
-<div v-for="music in musics" :key="music.postName" class="postcollection">
+<div class="guideNav">
+    
+    <button v-on:click="newPosts=true;following=false">New</button>
+    <button>Hot</button>
+    <div v-if="followingFlag"><button v-on:click="following=true;newPosts=false">Following</button></div>
+</div>
+
+<div class="musics" v-if="newPosts">
+<div v-for="music in musicsNew" :key="music.postName" class="postcollection">
        <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
         <router-link :to="{name:'MusicPage',
         params:{
@@ -23,26 +29,104 @@
 </div> 
 </div>
 
+<div class="musics" v-if="following">
+<div v-for="music in musicsFollowing" :key="music.postName" class="postcollection">
+       <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
+        <router-link :to="{name:'MusicPage',
+        params:{
+            postID:music.postID,
+        }}">
+        <h1 class="postname">{{music.postName}}</h1>
+        </router-link>
+        <div class="posttype">{{music.postType}}</div>
+</div> 
+</div>
+
+
+
 </div>
 </template>
 
 <script>
-import {db} from './firebaseinit.js'
+import {db,fb} from './firebaseinit.js'
+
 export default {
 data() {
         return {
-            musics:[],
-             
+            musicsNew:[],
+            musicsFollowing:[],
+            newPosts:true,
+            followingFlag:false,
+            following:false 
         };
     },
     created(){   
-         
-        
-        db.collection('music').orderBy("postID","desc").get().then(querySnapshot =>{
+        var user = fb.auth().currentUser;
+        var vm = this;
+        var musicID = [];
+        var followingPosts =[];
+          db.collection('music').orderBy("postID","desc").get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{          
-            this.musics.push(doc.data())
+            this.musicsNew.push(doc.data());
             })
         })
+
+        if (user) {
+           
+            db.collection('profiles').doc(user.uid).get().then(doc =>{ 
+            var Following = doc.data().Following;
+            db.collection('music').orderBy("postID","desc").get().then(querySnapshot =>{
+            querySnapshot.forEach(doc=>{          
+            musicID.push(doc.id);
+            })
+        
+            
+            if(Following){
+                
+               vm.followingFlag = true;
+                for (var i=0;i<Following.length;i++){
+                    db.collection('music').where('postUser','==',Following[i]).get().then(querySnapshot =>{
+                    querySnapshot.forEach(doc=>{          
+                    followingPosts.push(doc.id);
+                    
+                    })
+                }) 
+                }
+                if (followingPosts){
+                    
+                  
+                    setTimeout(function(){
+                        
+                       for(var j=0; j<musicID.length;j++){
+                        for(i=0;i<followingPosts.length;i++){
+
+                       if(musicID[j]===followingPosts[i]){
+                            
+                            db.collection('music').doc(musicID[j]).get().then(doc =>{
+                               
+                            vm.musicsFollowing.push(doc.data());
+                            
+                            
+                            })
+                       }
+                    }
+
+                    }
+                  
+                    
+                    }, 1000)
+                    ;
+                }
+            
+             
+                
+            }
+            })
+       
+         })
+     }  
+        
+      
 
     }
 }
@@ -51,9 +135,9 @@ data() {
 <style scoped>
 .introBlock {
     margin: 10px 70px;
-    padding: 180px;
+    height: 280px;
     background-color: white;
-    border-radius: 25px;
+    border-radius: 10px;
 }
 
 .introcontentleft {
@@ -82,7 +166,7 @@ data() {
     width: 220px;
     height: 220px;
     background-color: rgb(227, 221, 221);
-     border-radius: 15px;
+     border-radius: 5px;
 
      margin-bottom:10px;
 }
@@ -96,8 +180,8 @@ data() {
     flex-direction: column;
     margin: 20px 30px;
     padding-bottom: 20px;
-   background-color: white;
-   border-radius: 15px;
+   background-color: #D3CCC2;
+   border-radius: 5px;
 }
 .postname{
     font-size:20px;

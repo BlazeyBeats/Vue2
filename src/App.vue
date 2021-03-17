@@ -1,7 +1,7 @@
 <template>
 <div id="app">
     
-    <app-navbar-loggedin v-if="loggedIn"></app-navbar-loggedin>
+    <app-navbar-loggedin v-if="this.$store.state.userloggedin"></app-navbar-loggedin>
     <app-navbar-loggedout v-else></app-navbar-loggedout>
 
     <router-view><app-mainpage></app-mainpage></router-view>
@@ -37,13 +37,13 @@ export default {
             firebase.auth().onAuthStateChanged(user => {
                 if (user) {
                     // User is signed in.
-                 
-                    this.loggedIn = true;
+                    this.$store.state.userloggedin = true;
+                    
                     
                 } else {
                     // No user is signed in.
-                    this.loggedIn = false;
-                    
+                   
+                    this.$store.state.userloggedin = false;
                 }
                
             });
@@ -61,7 +61,6 @@ export default {
     },
     data() {
         return {
-            loggedIn: false,
             firebasetest:false
         };
     }
@@ -72,7 +71,7 @@ export default {
 body {
     margin: 0;
 
-    background-color: rgb(227, 221, 221);
+    background-color: #FFF6F6;
     ;
 }
 
