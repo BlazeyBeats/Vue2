@@ -12,7 +12,9 @@ export default new Vuex.Store({
     userEmail:"",
     currentPost:"",
     currentOtherUser:"",
-    userProfilePic:""
+    userProfilePic:"",
+    openchat:false,
+    messageUser:""
   },
   mutations: {
   },

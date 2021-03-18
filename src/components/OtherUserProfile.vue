@@ -16,8 +16,10 @@
 
 <div v-if="isthisyou" class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
 <div v-else class="profile-manage">
+    <div><button v-on:click="openchat">Message</button></div>
     <div v-if="following"><button v-on:click="unFollow">Unfollow</button></div>
     <div v-else><button v-on:click="Follow">Follow</button></div>
+    
 </div>
 <div v-if="uploaded" class="musics">
 <div v-for="music in musics" :key="music.postName" class="postcollection">
@@ -114,6 +116,11 @@ export default {
             Followers: firebase.firestore.FieldValue.arrayRemove(user.uid)
         });
         this.following = false;
+         },
+         openchat(){
+             this.$store.state.openchat = true;
+             this.$store.state.messageUser = this.$store.state.currentOtherUser;
+             
          }
 
      }
@@ -196,6 +203,7 @@ export default {
     cursor: pointer;
     transition: 0.3s;
     outline: none;
+    margin-left: 20px;
 }
 .profile-manage button:hover{
       color: rgb(50, 26, 5);

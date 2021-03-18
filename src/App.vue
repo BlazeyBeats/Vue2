@@ -5,7 +5,7 @@
     <app-navbar-loggedout v-else></app-navbar-loggedout>
 
     <router-view><app-mainpage></app-mainpage></router-view>
-   
+    <app-chatroom></app-chatroom>
 </div>
 </template>
 
@@ -13,7 +13,7 @@
 import NavbarLoggedOut from './components/NavbarLoggedOut';
 import NavbarLoggedIn from './components/NavbarLoggedIn';
 import MainPage from './components/MainPage';
-
+import ChatRoom from './components/Chatroom';
 
 import * as firebase from "firebase/app";
 import "firebase/auth";
@@ -26,6 +26,7 @@ export default {
         'app-navbar-loggedout': NavbarLoggedOut,
         'app-navbar-loggedin': NavbarLoggedIn,
         'app-mainpage': MainPage,
+        'app-chatroom':ChatRoom
         
     },
     mounted() {
@@ -83,4 +84,6 @@ body {
     color: #2c3e50;
     margin: -0px !important;
 }
+
+
 </style>
