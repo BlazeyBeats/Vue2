@@ -23,7 +23,8 @@
             }}">
             <h1>{{postUser}}</h1>
         </router-link>
-        <div v-if="isthisyou">
+        <div v-if="this.$store.state.userloggedin">
+              <div v-if="isthisyou">
             <button v-on:click="popupEdit=!popupEdit" >Edit</button>
             <button v-on:click="popupDelete=!popupDelete">Delete</button>
            
@@ -33,6 +34,8 @@
              <div v-if="like"><button v-on:click="addLike">Like</button></div>
             <div v-else><button v-on:click="removeLike">Removelike</button></div>
         </div>
+        </div>
+      
 </div>
     </div>
     </div>
@@ -167,8 +170,18 @@ export default {
         commentArray:[]
      }
  },
+ watch: {
+    '$store.state.userloggedin': function () {
+      this.doStuff();
+    }
+  },
 created(){
-    this.$store.state.currentPost = Number(this.$route.params.postID);
+    this.doStuff();
+    
+ },
+    methods:{
+        doStuff(){
+            this.$store.state.currentPost = Number(this.$route.params.postID);
     var vm = this;
     var user = fb.auth().currentUser;
     var LikeArray=[];
@@ -184,9 +197,9 @@ created(){
             this.imgSrc = doc.data().ImgSrc;
             this.postUserID = doc.data().postUser;
             LikeArray = doc.data().Likes;
-          
-
-            for(var i=0; i<LikeArray.length;i++){
+            console.log(this.postUserID);
+            if(user){
+                   for(var i=0; i<LikeArray.length;i++){
                 var name = LikeArray[i];
                 if(name == user.uid ){
                     this.like = false;
@@ -195,18 +208,22 @@ created(){
                     this.like = true;
                 }
             }
-
             if(user.uid === this.postUserID){
                 this.isthisyou = true;
             }
-    if(this.postUserID){
+            }
+         
+
+            
+    
     db.collection("profiles").doc(this.postUserID).get().then(doc =>{ 
         vm.postUser = doc.data().name;
+        console.log(vm.postUser);
     });
     fb.storage().ref("profiles/"+this.postUserID+"/profile.jpg").getDownloadURL().then(imgUrl=>{
     this.profileSrc = imgUrl;
     })
-    }
+    
     })
 
         db.collection("comments").where('postID','==',this.postId).orderBy('date','desc').onSnapshot((querySnapshot)=>{
@@ -224,9 +241,7 @@ created(){
 
 
    }
- },
-    methods:{
-        
+        },
 
           chooseImgFile(e){
             var vm = this;

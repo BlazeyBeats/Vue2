@@ -20,11 +20,9 @@
                 <div v-for="chat in messagesArray" :key="chat.message" class="messageSection">
                 <div class="messageUser">
                     <img v-bind:src="chat.profilePic" alt="" class="messageImg">
-                    
-                        <p class="messageName">{{chat.name}}</p>
-                   
-                </div>
+               
                     <div class="messageContent">{{chat.message}}</div>
+                    </div>
                 </div>
 
                 <div class="messagebox">
@@ -245,6 +243,18 @@ export default {
 .messageSection{
     width: 292px;
     
+}
+.messageUser{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 10px;
+}
+.messageUser img{
+    width: 30px;
+    border-radius: 50%;
+    margin-left:10px;
+    margin-right:10px;
 }
 .messageImg{
     width: 20px;
