@@ -13,7 +13,8 @@
     
     <button v-on:click="newPosts=true;following=false;hotPosts=false">New</button>
     <button v-on:click="hotPosts=true;following=false;newPosts=false">Hot</button>
-    <div v-if="followingFlag"><button v-on:click="following=true;newPosts=false;hotPosts=false">Following</button></div>
+    <div v-if="this.$store.state.userloggedin"><div v-if="followingFlag"><button v-on:click="following=true;newPosts=false;hotPosts=false">Following</button></div></div>
+    
 </div>
 
 <div class="musics" v-if="newPosts">
@@ -42,7 +43,9 @@
 </div> 
 </div>
 
-<div class="musics" v-if="following">
+<div v-if="this.$store.state.userloggedin">
+
+    <div class="musics" v-if="following">
 <div v-for="music in musicsFollowing" :key="music.postName" class="postcollection">
        <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
         <router-link :to="{name:'MusicPage',
@@ -54,10 +57,12 @@
         <div class="posttype">{{music.postType}}</div>
 </div> 
 </div>
-
-
+</div>
 
 </div>
+
+
+
 </template>
 
 <script>
@@ -74,6 +79,13 @@ data() {
             followingFlag:false,
             following:false 
         };
+    },
+    watch:{
+        '$store.state.userloggedin': function () {
+      this.newPosts = true;
+      this.hotPosts = false;
+      
+    }
     },
     created(){   
         var user = fb.auth().currentUser;
