@@ -55,8 +55,18 @@ export default {
             following:false
         };
     },
+   watch: {
+    '$route.params.userID': function () {
+      this.doStuff();
+    }
+  },
     created() {
-        var vm = this;
+        this.doStuff();
+        
+     },
+     methods:{
+         doStuff(){
+             var vm = this;
         var user = fb.auth().currentUser;
         var followArray=[];
         if(this.$route.params.userID === this.$store.state.userUID){
@@ -93,8 +103,8 @@ export default {
             })
         })
          }  
-     },
-     methods:{
+         },
+
          Follow(){
           
             var user = fb.auth().currentUser;

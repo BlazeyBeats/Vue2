@@ -7,22 +7,24 @@
         <div class="activeChat" v-if="this.$store.state.openchat">
             <div class="chatUser">
                 <img v-bind:src="imgSrc" alt="" class="imgSrc">
+                <router-link :to="{name:'OtherProfile',
+                    params:{
+                        userID:this.$store.state.messageUser,
+                    }}">
                 <div class="chatName">{{this.name}}</div>
+                </router-link>
                 <div class="cross" v-on:click="closechat"></div>
             </div>
-            <div class="messageboard">
+            <div id="container" class="messageboard">
 
-                <div v-for="chat in messagesArray" :key="chat.message" class="messageSection" v-chat-scroll>
-                <div class="commentUser">
+                <div v-for="chat in messagesArray" :key="chat.message" class="messageSection">
+                <div class="messageUser">
                     <img v-bind:src="chat.profilePic" alt="" class="messageImg">
-                    <router-link :to="{name:'OtherProfile',
-                    params:{
-                        userID:chat.user,
-                    }}">
-                        <p class="commentName">{{chat.name}}</p>
-                    </router-link>
+                    
+                        <p class="messageName">{{chat.name}}</p>
+                   
                 </div>
-                    <div class="commentContent">{{chat.message}}</div>
+                    <div class="messageContent">{{chat.message}}</div>
                 </div>
 
                 <div class="messagebox">
@@ -150,9 +152,14 @@ export default {
             message:this.messages,
             
         });
-        this.messages=""
+        this.messages="",
+        this.scrollToEnd();
           })
-      }
+      },
+      scrollToEnd() {    	
+      var container = this.$el.querySelector("#container");
+      container.scrollTop = container.scrollHeight;
+    },
         
     }
  
