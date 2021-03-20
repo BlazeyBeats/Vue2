@@ -1,9 +1,21 @@
 .<template>
     <div class="chatroom">
         <div class="notActive">
-            <div class="plus" v-on:click="opencontacts"></div>
+            <div class="plus" v-on:click="opencontact=!opencontact"></div>
         </div>
-        <div class="activeContacts" v-if="opencontact"></div>
+
+        <div class="activeContacts" v-if="opencontact">
+              <div v-for="contact in contacts" :key="contact.name" class="contactSection">
+                <div class="contactUser" v-bind:data-id = "contact.userUID" v-on:click=" callchat">
+                   
+               
+                      
+                             <img v-bind:src="contact.profilePic" alt="" class="contactImg">
+                        <p class="contactname">{{contact.name}}</p>
+                    </div>
+                </div>
+        </div>
+
         <div class="activeChat" v-if="this.$store.state.openchat">
             <div class="chatUser">
                 <img v-bind:src="imgSrc" alt="" class="imgSrc">
@@ -17,7 +29,7 @@
             </div>
             <div id="container" class="messageboard">
 
-                <div v-for="chat in messagesArray" :key="chat.message" class="messageSection">
+                <div v-for="(chat, idx) in messagesArray" :key="idx" class="messageSection">
                 <div class="messageUser">
                     <img v-bind:src="chat.profilePic" alt="" class="messageImg">
                
@@ -43,14 +55,43 @@ export default {
             name:"",
             imgSrc:"",
             messages:"",
-            messagesArray:[]
+            messagesArray:[],
+            contacts:[],
         };
     },
     created(){
+         var user = fb.auth().currentUser;
+         var contacts = [];
+        db.collection('profiles').doc(user.uid)
+        .onSnapshot((doc) => {
+        contacts = doc.data().messagesTime
        
+
+         if(contacts){
+             this.contacts = [];
+                var j = Number(contacts.length)-1;
+                for(j; j>=0;j--){
+                    db.collection('profiles').doc(contacts[j]).get().then(doc =>{
+                    this.contacts.push(doc.data());
+                    
+                    })
+                }
+            }
+
+
+
+
+    });
+
     },
     watch:{
         '$store.state.messageUser': function() {
+
+            this.name ="";
+            this.imgSrc="";
+            this.messages="";
+            this.messagesArray= [];
+
             var user = fb.auth().currentUser;
          var vm = this;
         if (this.$store.state.messageUser) {
@@ -68,7 +109,7 @@ export default {
             allmessages.push(doc.data())
         })
        this.messagesArray = allmessages;
-        console.log(this.messagesArray);
+        
     })
 
         
@@ -80,9 +121,17 @@ export default {
             
             this.opencontact = true;
         },
+
         closechat(){
             this.$store.state.openchat = false;
         },
+
+        callchat(){
+            
+            this.$store.state.messageUser = event.target.dataset.id;
+            this.$store.state.openchat = true;
+        },
+
         message() {
             
           var date = new Date(); 
@@ -173,8 +222,39 @@ export default {
     right: 30px;
     
 }
+.activeContacts{
+position: fixed;
+    bottom: 20px;
+    right: 100px;
+    width: 270px;
+    height: 360px;
+    background-color: white;
+   -webkit-box-shadow: 0 0 15px #a7a7a7;
+	-moz-box-shadow: 0 0 15px #a7a7a7;
+	box-shadow: 0 0 15px #a7a7a7;
+}
+
+.contactUser{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding:10px 18px 10px 18px;
+    transition: 0.2s;
+    cursor: pointer;
+   
+}
+.contactUser:hover{
+ background-color: rgb(226, 226, 226);
+ transition: 0.2s;
+}
+
+.contactImg{
+    width: 42px;
+    border-radius:50%;
+    margin-right:10px;
+}
 .activeChat{
-     position: fixed;
+    position: fixed;
     bottom: 20px;
     right: 100px;
     width: 300px;

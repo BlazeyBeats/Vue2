@@ -69,6 +69,7 @@ export default {
      methods:{
          doStuff(){
              var vm = this;
+             this.musics = [];
         var user = fb.auth().currentUser;
         var followArray=[];
         if(this.$route.params.userID === this.$store.state.userUID){
