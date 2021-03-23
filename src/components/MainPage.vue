@@ -88,6 +88,7 @@ data() {
       this.newPosts = true;
       this.hotPosts = false;
       this.following = false;
+      this.musicsFollowing = [];
       var user = fb.auth().currentUser;
         var vm = this;
         var musicID = [];
@@ -139,6 +140,7 @@ data() {
     }
     },
     created(){
+        this.musicsFollowing = [];
         this.newPosts = true;
       this.hotPosts = false;
        this.following = false;
@@ -323,6 +325,7 @@ data() {
     
 }
 .guideButtons button{
+   text-align: center;
     padding: 7px 17px 7px 17px;
     margin-right: 20px;
     font-size: 15px;
@@ -332,5 +335,8 @@ data() {
     cursor: pointer;
     outline: none;
     transition: 0.2s;
+    box-shadow: 1px 4px 10px #d6d6d6;
+    color:rgb(50, 26, 5);
+    letter-spacing: 1px;
 }
 </style>
