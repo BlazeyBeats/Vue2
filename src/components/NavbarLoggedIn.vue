@@ -83,7 +83,7 @@ export default {
    
 }
 .navbarLogo img{
-     width: 40px;
+     width: 140px;
    cursor: pointer;
 }
 

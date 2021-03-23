@@ -10,11 +10,13 @@
     </div>
 </div>
 <div class="guideNav">
-    
-    <button v-on:click="newPosts=true;following=false;hotPosts=false">New</button>
-    <button v-on:click="hotPosts=true;following=false;newPosts=false">Hot</button>
-    <div v-if="this.$store.state.userloggedin"><div v-if="followingFlag"><button v-on:click="following=true;newPosts=false;hotPosts=false">Following</button></div></div>
-    
+    <div class="guideButtons">
+         <button v-on:click="newPosts=true;following=false;hotPosts=false" v-bind:class="{ active: newPosts }">最新</button>
+    <button v-on:click="hotPosts=true;following=false;newPosts=false" v-bind:class="{ active: hotPosts }">熱門</button>
+    <div v-if="this.$store.state.userloggedin"><div v-if="followingFlag"><button v-on:click="following=true;newPosts=false;hotPosts=false" v-bind:class="{ active: following }">追蹤</button></div></div>
+    </div>
+   
+    <div class ="guideSearch"><input type="text"></div>
 </div>
 
 <div class="musics" v-if="newPosts">
@@ -114,9 +116,11 @@ data() {
             })
         
             
-            if(Following){
-                
-               vm.followingFlag = true;
+            if(Following.length==0){
+                vm.followingFlag = false;
+            }
+            else{
+                vm.followingFlag = true;
                 for (var i=0;i<Following.length;i++){
                     db.collection('music').where('postUser','==',Following[i]).get().then(querySnapshot =>{
                     querySnapshot.forEach(doc=>{          
@@ -126,8 +130,8 @@ data() {
                 }) 
                 }
                 if (followingPosts){
+                     
                     
-                  
                     setTimeout(function(){
                         
                        for(var j=0; j<musicID.length;j++){
@@ -188,11 +192,12 @@ data() {
 }
 
 .musics{
-   display: flex;
-  flex-direction: row;
-   flex-wrap: wrap;
-  padding: 30px 0;
-  margin: 0 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    padding: 30px 0;
+    margin: 0 95px;
 
 }
 .postcollection-square{
@@ -219,5 +224,37 @@ data() {
 .postname{
     font-size:20px;
 
+}
+.guideNav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+.guideButtons .active{
+    background-color:rgb(50, 26, 5);
+    color: #FFF6F6;
+    outline: none;
+    transition: 0.2s;
+}
+.guideButtons{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  
+    
+}
+.guideButtons button{
+    padding: 7px 17px 7px 17px;
+    margin-right: 20px;
+    font-size: 15px;
+    border-radius: 22px;
+    background-color: #FFF6F6;
+    border-color: rgb(50, 26, 5);
+    cursor: pointer;
+    outline: none;
+    transition: 0.2s;
 }
 </style>

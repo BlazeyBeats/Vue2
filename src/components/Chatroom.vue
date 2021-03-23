@@ -1,6 +1,6 @@
 .<template>
     <div class="chatroom">
-        <div class="notActive">
+        <div class="notActive" v-if="this.$store.state.userloggedin">
             <div class="plus" v-on:click="opencontact=!opencontact"></div>
         </div>
 
@@ -59,14 +59,22 @@ export default {
             contacts:[],
         };
     },
+
     created(){
-         var user = fb.auth().currentUser;
+        
+ 
+    },
+    watch:{
+         '$store.state.userloggedin': function () {
+     var user = fb.auth().currentUser;
          var contacts = [];
         db.collection('profiles').doc(user.uid)
         .onSnapshot((doc) => {
         contacts = doc.data().messagesTime
        
-
+        if(user){
+            this.notActive = true;
+        }
          if(contacts){
              this.contacts = [];
                 var j = Number(contacts.length)-1;
@@ -82,9 +90,8 @@ export default {
 
 
     });
-
+      
     },
-    watch:{
         '$store.state.messageUser': function() {
 
             this.name ="";
