@@ -16,24 +16,24 @@
     <div v-if="this.$store.state.userloggedin"><div v-if="followingFlag"><button v-on:click="following=true;newPosts=false;hotPosts=false" v-bind:class="{ active: following }">追蹤</button></div></div>
     </div>
    
-    <div class ="guideSearch"><input type="text"></div>
+    <div class ="guideSearch"><input type="text" v-model="search" placeholder="search music" @keyup.enter="searchMusic"></div>
 </div>
 
 <div class="musics" v-if="newPosts">
-<div v-for="music in musicsNew" :key="music.postName" class="postcollection">
+<div v-for="(music,idx) in filteredMusicNew" :key="idx" class="postcollection">
        <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
         <router-link :to="{name:'MusicPage',
         params:{
             postID:music.postID,
         }}">
-        <h1 class="postname">{{music.postName}}</h1>
+        <h1 class="postname">{{music.postName | capitalize}}</h1>
         </router-link>
-        <div class="posttype">{{music.postType}}</div>
+        <div class="posttype">{{music.postType | capitalize}}</div>
 </div> 
 </div>
 
 <div class="musics" v-if="hotPosts">
-<div v-for="music in musicsHot" :key="music.postName" class="postcollection">
+<div v-for="(music,idx) in filteredMusicHot" :key="idx" class="postcollection">
        <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
         <router-link :to="{name:'MusicPage',
         params:{
@@ -41,14 +41,14 @@
         }}">
         <h1 class="postname">{{music.postName}}</h1>
         </router-link>
-        <div class="posttype">{{music.postType}}</div>
+        <div class="posttype">{{music.postType | capitalize}}</div>
 </div> 
 </div>
 
 <div v-if="this.$store.state.userloggedin">
 
     <div class="musics" v-if="following">
-<div v-for="music in musicsFollowing" :key="music.postName" class="postcollection">
+<div v-for="(music,idx) in filteredMusicFollowing" :key="idx" class="postcollection">
        <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
         <router-link :to="{name:'MusicPage',
         params:{
@@ -56,7 +56,7 @@
         }}">
         <h1 class="postname">{{music.postName}}</h1>
         </router-link>
-        <div class="posttype">{{music.postType}}</div>
+        <div class="posttype">{{music.postType | capitalize}}</div>
 </div> 
 </div>
 </div>
@@ -79,34 +79,20 @@ data() {
             hotPosts:false,
             newPosts:true,
             followingFlag:false,
-            following:false 
+            following:false,
+            search:''
         };
     },
     watch:{
         '$store.state.userloggedin': function () {
       this.newPosts = true;
       this.hotPosts = false;
-      
-    }
-    },
-    created(){   
-        var user = fb.auth().currentUser;
+      this.following = false;
+      var user = fb.auth().currentUser;
         var vm = this;
         var musicID = [];
         var followingPosts =[];
-       
-          db.collection('music').orderBy("postID","desc").get().then(querySnapshot =>{
-            querySnapshot.forEach(doc=>{          
-            this.musicsNew.push(doc.data());
-            })
-        })
-
-          db.collection('music').where("LikeCount",">",0).orderBy("LikeCount","desc").limit(5).get().then(querySnapshot =>{
-            querySnapshot.forEach(doc=>{          
-            this.musicsHot.push(doc.data());
-            })
-        })
-        if (user) {
+      if (user) {
            
             db.collection('profiles').doc(user.uid).get().then(doc =>{ 
             var Following = doc.data().Following;
@@ -130,41 +116,131 @@ data() {
                 }) 
                 }
                 if (followingPosts){
-                     
-                    
                     setTimeout(function(){
-                        
                        for(var j=0; j<musicID.length;j++){
                         for(i=0;i<followingPosts.length;i++){
 
                        if(musicID[j]===followingPosts[i]){
                             
-                            db.collection('music').doc(musicID[j]).get().then(doc =>{
-                               
-                            vm.musicsFollowing.push(doc.data());
-                            
-                            
+                            db.collection('music').doc(musicID[j]).get().then(doc =>{     
+                            vm.musicsFollowing.push(doc.data());   
                             })
                        }
                     }
-
-                    }
-                  
-                    
+                    } 
                     }, 1000)
                     ;
-                }
-            
-             
-                
+                }   
             }
             })
        
          })
      }  
+    }
+    },
+    created(){
+        this.newPosts = true;
+      this.hotPosts = false;
+       this.following = false;
+         var user = fb.auth().currentUser;
+        var vm = this;
+        var musicID = [];
+        var followingPosts =[];
+      if (user) {
+           
+            db.collection('profiles').doc(user.uid).get().then(doc =>{ 
+            var Following = doc.data().Following;
+            db.collection('music').orderBy("postID","desc").get().then(querySnapshot =>{
+            querySnapshot.forEach(doc=>{          
+            musicID.push(doc.id);
+            })
+        
+            
+            if(Following.length==0){
+                vm.followingFlag = false;
+            }
+            else{
+                vm.followingFlag = true;
+                for (var i=0;i<Following.length;i++){
+                    db.collection('music').where('postUser','==',Following[i]).get().then(querySnapshot =>{
+                    querySnapshot.forEach(doc=>{          
+                    followingPosts.push(doc.id);
+                    
+                    })
+                }) 
+                }
+                if (followingPosts){
+                    setTimeout(function(){
+                       for(var j=0; j<musicID.length;j++){
+                        for(i=0;i<followingPosts.length;i++){
+
+                       if(musicID[j]===followingPosts[i]){
+                            
+                            db.collection('music').doc(musicID[j]).get().then(doc =>{     
+                            vm.musicsFollowing.push(doc.data());   
+                            })
+                       }
+                    }
+                    } 
+                    }, 1000)
+                    ;
+                }   
+            }
+            })
+       
+         })
+     } 
+       
+          db.collection('music').orderBy("postID","desc").get().then(querySnapshot =>{
+            querySnapshot.forEach(doc=>{          
+            this.musicsNew.push(doc.data());
+            })
+        })
+
+          db.collection('music').where("LikeCount",">",0).orderBy("LikeCount","desc").limit(5).get().then(querySnapshot =>{
+            querySnapshot.forEach(doc=>{          
+            this.musicsHot.push(doc.data());
+            })
+        })
+        
         
       
 
+    },
+    methods:{
+        searchMusic(){
+            
+            
+           
+            db.collection('types').doc(this.search.toLowerCase().trim()).get().then((doc) => {
+            if (doc.exists) {
+        console.log("Document data:", doc.data());
+        } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+        }
+        })
+        }
+    },
+    computed:{
+        filteredMusicNew:function(){
+            return this.musicsNew.filter((music)=>{
+                return music.postName.toLowerCase().includes(this.search.toLowerCase())
+               || music.postType.toLowerCase().includes(this.search.toLowerCase())
+            })
+        },
+        filteredMusicHot:function(){
+            return this.musicsHot.filter((music)=>{
+                return music.postName.toLowerCase().includes(this.search.toLowerCase())
+               || music.postType.toLowerCase().includes(this.search.toLowerCase())
+            })
+        },
+        filteredMusicFollowing:function(){
+            return this.musicsFollowing.filter((music)=>{
+                return music.postName.toLowerCase().includes(this.search.toLowerCase())
+               || music.postType.toLowerCase().includes(this.search.toLowerCase())
+            })
+        },
     }
 }
 </script>

@@ -8,7 +8,7 @@
     </div>
     <div class="postinfo">
     <h1>{{postName}}</h1>
-    <h2>{{postType}}</h2>
+    <h2>{{postType |to-uppercase}}</h2>
     <p>{{postBio}}</p>
    
     <div class="postUser">
@@ -197,7 +197,7 @@ created(){
             this.imgSrc = doc.data().ImgSrc;
             this.postUserID = doc.data().postUser;
             LikeArray = doc.data().Likes;
-            console.log(this.postUserID);
+            
             if(user){
                    for(var i=0; i<LikeArray.length;i++){
                 var name = LikeArray[i];
@@ -218,7 +218,7 @@ created(){
     
     db.collection("profiles").doc(this.postUserID).get().then(doc =>{ 
         vm.postUser = doc.data().name;
-        console.log(vm.postUser);
+        
     });
     fb.storage().ref("profiles/"+this.postUserID+"/profile.jpg").getDownloadURL().then(imgUrl=>{
     this.profileSrc = imgUrl;
@@ -232,7 +232,7 @@ created(){
             allcomments.push(doc.data())
         })
        this.commentArray = allcomments
-        console.log(this.commentArray)
+        
     })
 
     })
@@ -300,7 +300,10 @@ created(){
             storageRef.child('music/'+ this.$store.state.userUID +'/' + this.postId +'/' +'Img.jpg').delete().then(()=>{
                 storageRef.child('music/'+ this.$store.state.userUID +'/' + this.postId +'/' + 'Music.mp3').delete();
                  vm.$router.push('/'); 
-            })
+            });
+            db.collection('types').doc(vm.postType).update({
+            posts: firebase.firestore.FieldValue.arrayRemove(this.postId)
+            });
         })
 
 

@@ -5,7 +5,7 @@
         </div>
 
         <div class="activeContacts" v-if="opencontact">
-              <div v-for="contact in contacts" :key="contact.name" class="contactSection">
+              <div v-for="(contact,idx) in contacts" :key="idx" class="contactSection">
                 <div class="contactUser" v-bind:data-id = "contact.userUID" v-on:click=" callchat">
                    
                

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import {fb,db} from './firebaseinit.js'
+import {fb,db,firebase} from './firebaseinit.js'
 
 
 
@@ -45,7 +45,7 @@ export default {
     methods:{
     
         uploadMusic(){
-     
+            this.postType = this.postType.toLowerCase().trim();
             var vm = this;
             var ID;
             db.collection('music').orderBy("postID","desc").limit(1).get().then(querySnapshot =>{
@@ -63,12 +63,19 @@ export default {
                     Likes:[],
                     LikeCount:0
             });
-
+         
+            db.collection("types").doc(vm.postType).set({
+                posts:[]
+            });
             db.collection('music').orderBy("postID","desc").limit(1).get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{
                 currentFirestore = doc.id;
-                console.log(currentFirestore);
+             
             })
+
+            db.collection('types').doc(vm.postType).update({
+            posts: firebase.firestore.FieldValue.arrayUnion(currentFirestore)
+            });
 
             fb.storage().ref('music/'+ this.$store.state.userUID +'/' + currentFirestore +'/' + 'Music.mp3').put(Musicfile).then(function(){ 
                     fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + currentFirestore +'/' +  'Music.mp3').getDownloadURL().then(url=>{
