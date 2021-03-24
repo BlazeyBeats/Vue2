@@ -14,10 +14,17 @@
 
 <div class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
 
- <button v-if="uploaded" v-on:click="OwnPosts=true;OwnLikes=false;OwnFollowing=false">Posts</button>
-<button v-if="likes" v-on:click="OwnPosts=false;OwnLikes=true;OwnFollowing=false">Likes</button>
-<button v-if="following" v-on:click="OwnPosts=false;OwnLikes=false;;OwnFollowing=true">Following</button>
 
+
+
+<div class="musicContents">
+    <div class="guideNav">
+        <div class="guideButtons">
+    <button v-if="uploaded" v-on:click="OwnPosts=true;OwnLikes=false;OwnFollowing=false" v-bind:class="{ active: OwnPosts }">Posts</button>
+    <button v-if="likes" v-on:click="OwnPosts=false;OwnLikes=true;OwnFollowing=false" v-bind:class="{ active: OwnLikes }">Likes</button>
+    <button v-if="following" v-on:click="OwnPosts=false;OwnLikes=false;;OwnFollowing=true" v-bind:class="{ active: OwnFollowing }">Following</button>
+</div>
+    </div>
 
 <div v-if="OwnPosts">
     <div v-if="uploaded" class="musics">
@@ -62,6 +69,9 @@
 </div> 
 </div>
 </div>
+
+</div>
+
 
 
 
@@ -205,14 +215,51 @@ export default {
     transition: 0.3s;
 }
 
-
+.musicContents{
+    background-color:rgb(192, 187, 187);
+}
+.guideNav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    margin-left: 100px;
+    margin-right: 100px;
+}
+.guideButtons .active{
+    background-color:rgb(50, 26, 5);
+    color: #FFF6F6;
+    outline: none;
+    transition: 0.2s;
+}
+.guideButtons{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 40px;
+    
+}
+.guideButtons button{
+   text-align: center;
+    padding: 7px 17px 7px 17px;
+    margin-right: 20px;
+    font-size: 15px;
+    border-radius: 22px;
+    background-color:#FFF6F6;
+    border-color: rgb(50, 26, 5);
+    cursor: pointer;
+    outline: none;
+    transition: 0.2s;
+    box-shadow: 1px 4px 10px #929292;
+    color:rgb(50, 26, 5);
+    letter-spacing: 1px;
+}
 .musics{
    display: flex;
   flex-direction: row;
    flex-wrap: wrap;
   padding: 30px 80px;
-  
-    background-color:rgb(192, 187, 187);
+   
 }
 .postcollection-square{
     width: 220px;

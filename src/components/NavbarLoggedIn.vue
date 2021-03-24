@@ -35,14 +35,14 @@ export default {
     
      created() {
         var user = fb.auth().currentUser;
-      var vm = this;
-       this.$store.state.userUID = user.uid;
-      if (user) {
-     db.collection('profiles').doc(user.uid).get().then(doc =>{
-        this.$store.state.userName = doc.data().name;
-        vm.name = this.$store.state.userName;
+        var vm = this;
+        this.$store.state.userUID = user.uid;
+        if (user) {
+            db.collection('profiles').doc(user.uid).get().then(doc =>{
+            this.$store.state.userName = doc.data().name;
+            vm.name = this.$store.state.userName;
      })} 
-
+    
         db.collection('profiles').doc(user.uid).get().then((doc)=>{
             this.$store.state.userProfilePic = doc.data().profilePic;
         })
@@ -62,6 +62,7 @@ export default {
                this.$store.state.userUID = null;
                this.$store.state.userName = null;
                this.$store.state.userloggedin = false;
+               this.imgSrc = "";
                 });
         }
     }, 
@@ -83,7 +84,7 @@ export default {
    
 }
 .navbarLogo img{
-     width: 140px;
+    width: 140px;
    cursor: pointer;
 }
 

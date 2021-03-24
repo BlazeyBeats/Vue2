@@ -11,7 +11,7 @@
 </div>
 <div class="guideNav">
     <div class="guideButtons">
-         <button v-on:click="newPosts=true;following=false;hotPosts=false" v-bind:class="{ active: newPosts }">最新</button>
+    <button v-on:click="newPosts=true;following=false;hotPosts=false" v-bind:class="{ active: newPosts }">最新</button>
     <button v-on:click="hotPosts=true;following=false;newPosts=false" v-bind:class="{ active: hotPosts }">熱門</button>
     <div v-if="this.$store.state.userloggedin"><div v-if="followingFlag"><button v-on:click="following=true;newPosts=false;hotPosts=false" v-bind:class="{ active: following }">追蹤</button></div></div>
     </div>
@@ -68,6 +68,8 @@
 </template>
 
 <script>
+
+
 import {db,fb} from './firebaseinit.js'
 
 export default {
@@ -80,119 +82,51 @@ data() {
             newPosts:true,
             followingFlag:false,
             following:false,
-            search:''
+            search:'',
+            
         };
     },
     watch:{
         '$store.state.userloggedin': function () {
-      this.newPosts = true;
-      this.hotPosts = false;
-      this.following = false;
-      this.musicsFollowing = [];
-      var user = fb.auth().currentUser;
-        var vm = this;
-        var musicID = [];
-        var followingPosts =[];
-      if (user) {
-           
-            db.collection('profiles').doc(user.uid).get().then(doc =>{ 
+          this.musicsFollowing = [];
+          this.followingFlag = false;
+          var user = fb.auth().currentUser;
+          var vm = this;
+          if (user){
+           db.collection('profiles').doc(user.uid).get().then(doc =>{ 
             var Following = doc.data().Following;
-            db.collection('music').orderBy("postID","desc").get().then(querySnapshot =>{
-            querySnapshot.forEach(doc=>{          
-            musicID.push(doc.id);
-            })
-        
-            
-            if(Following.length==0){
+           if(Following.length==0){
                 vm.followingFlag = false;
+            }else{
+              
+              vm.followingFlag = true;
+            
             }
-            else{
-                vm.followingFlag = true;
-                for (var i=0;i<Following.length;i++){
-                    db.collection('music').where('postUser','==',Following[i]).get().then(querySnapshot =>{
-                    querySnapshot.forEach(doc=>{          
-                    followingPosts.push(doc.id);
-                    
-                    })
-                }) 
-                }
-                if (followingPosts){
-                    setTimeout(function(){
-                       for(var j=0; j<musicID.length;j++){
-                        for(i=0;i<followingPosts.length;i++){
-
-                       if(musicID[j]===followingPosts[i]){
-                            
-                            db.collection('music').doc(musicID[j]).get().then(doc =>{     
-                            vm.musicsFollowing.push(doc.data());   
-                            })
-                       }
-                    }
-                    } 
-                    }, 1000)
-                    ;
-                }   
-            }
-            })
        
          })
-     }  
-    }
+      }
+       
+    },
+        'followingFlag':function(){
+          this.getfollowingData();
+        }
     },
     created(){
-        this.musicsFollowing = [];
-        this.newPosts = true;
-      this.hotPosts = false;
-       this.following = false;
-         var user = fb.auth().currentUser;
-        var vm = this;
-        var musicID = [];
-        var followingPosts =[];
-      if (user) {
-           
-            db.collection('profiles').doc(user.uid).get().then(doc =>{ 
+      var user = fb.auth().currentUser;
+      var vm = this;
+      if (user){
+           db.collection('profiles').doc(user.uid).get().then(doc =>{ 
             var Following = doc.data().Following;
-            db.collection('music').orderBy("postID","desc").get().then(querySnapshot =>{
-            querySnapshot.forEach(doc=>{          
-            musicID.push(doc.id);
-            })
-        
-            
-            if(Following.length==0){
+           if(Following.length==0){
                 vm.followingFlag = false;
+            }else{
+              
+              vm.followingFlag = true;
+            
             }
-            else{
-                vm.followingFlag = true;
-                for (var i=0;i<Following.length;i++){
-                    db.collection('music').where('postUser','==',Following[i]).get().then(querySnapshot =>{
-                    querySnapshot.forEach(doc=>{          
-                    followingPosts.push(doc.id);
-                    
-                    })
-                }) 
-                }
-                if (followingPosts){
-                    setTimeout(function(){
-                       for(var j=0; j<musicID.length;j++){
-                        for(i=0;i<followingPosts.length;i++){
-
-                       if(musicID[j]===followingPosts[i]){
-                            
-                            db.collection('music').doc(musicID[j]).get().then(doc =>{     
-                            vm.musicsFollowing.push(doc.data());   
-                            })
-                       }
-                    }
-                    } 
-                    }, 1000)
-                    ;
-                }   
-            }
-            })
        
          })
-     } 
-       
+      }
           db.collection('music').orderBy("postID","desc").get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{          
             this.musicsNew.push(doc.data());
@@ -210,6 +144,67 @@ data() {
 
     },
     methods:{
+        getfollowingData(){
+          this.newPosts = true;
+          this.hotPosts = false;
+          this.following = false;
+         
+           
+      
+      var user = fb.auth().currentUser;
+        var vm = this;
+        var musicID = [];
+        var followingPosts =[];
+      if (user) {
+          
+            this.musicsFollowing = [];
+            db.collection('profiles').doc(user.uid).get().then(doc =>{ 
+            var Following = doc.data().Following;
+            db.collection('music').orderBy("postID","desc").get().then(querySnapshot =>{
+            querySnapshot.forEach(doc=>{          
+            musicID.push(doc.id);
+            })
+        
+            
+            if(Following.length==0){
+                vm.followingFlag = false;
+            }
+            else{
+                vm.followingFlag = true;
+                for (var i=0;i<Following.length;i++){
+                    db.collection('music').where('postUser','==',Following[i]).get().then(querySnapshot =>{
+                    querySnapshot.forEach(doc=>{          
+                    followingPosts.push(doc.id);
+                    
+                    })
+                }) 
+                }
+                if (followingPosts){
+                    
+                    setTimeout(function(){
+                        this.musicsFollowing = [];
+                       for(var j=0; j<musicID.length;j++){
+                        for(i=0;i<followingPosts.length;i++){
+
+                       if(musicID[j]===followingPosts[i]){
+                            
+                            db.collection('music').doc(musicID[j]).get().then(doc =>{     
+                            vm.musicsFollowing.push(doc.data());   
+                            })
+                       }
+                    }
+                    } console.log(vm.musicsFollowing);
+                    }, 1000)
+                    ;
+                }   
+            }
+            })
+       
+         })
+     } 
+          
+       
+        },
         searchMusic(){
             
             
