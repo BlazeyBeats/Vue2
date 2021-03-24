@@ -3,9 +3,7 @@
 <div class="intro">
     <div class="introBlock">
         <div class="introcontentleft">
-
-            
-      
+            <img class="logoLeft" src="../images/logoword_svg.svg" alt="">
         </div>
     </div>
 </div>
@@ -243,19 +241,30 @@ data() {
 </script>
 
 <style scoped>
+a{
+    text-decoration: none;
+    color: rgb(50, 26, 5);
+}
 .introBlock {
     margin: 10px 70px;
     height: 280px;
-    background-color: white;
+    background-color: #e8dfda;
     border-radius: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .introcontentleft {
     width: 300px;
     display: flex;
     align-items: flex-start;
-    justify-content: flex-start;
+    justify-content: center;
     flex-direction: column;
+}
+
+.logoLeft{
+    width: 400px;
+    margin-left:100px;
 }
 
 .introcontentleft p {
@@ -308,6 +317,7 @@ data() {
 }
 .guideButtons .active{
     background-color:rgb(50, 26, 5);
+    border:2px solid rgb(50, 26, 5);
     color: #FFF6F6;
     outline: none;
     transition: 0.2s;
@@ -325,13 +335,34 @@ data() {
     margin-right: 20px;
     font-size: 15px;
     border-radius: 22px;
-    background-color: #FFF6F6;
-    border-color: rgb(50, 26, 5);
+    background-color: #e8dfda;
+    border:2px solid #e8dfda;
     cursor: pointer;
     outline: none;
     transition: 0.2s;
-    box-shadow: 1px 4px 10px #d6d6d6;
+    box-shadow: 1px 4px 10px #a5a5a5;
     color:rgb(50, 26, 5);
     letter-spacing: 1px;
+}
+
+.guideSearch input{
+    outline: none;
+    height: 35px;
+    width: 200px;
+    background-color: #FFF6F6;
+    border:2px solid rgb(50, 26, 5);
+    border-radius:30px;
+    font-size:16px;
+}
+
+.guideSearch input::placeholder{
+    color: gray;
+    padding-left: 10px;
+    
+    transition: 0.1s;
+}
+.guideSearch  input:focus::placeholder {
+   opacity: 0;
+   transition: 0.1s; 
 }
 </style>

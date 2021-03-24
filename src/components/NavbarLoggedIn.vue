@@ -7,9 +7,9 @@
             </router-link>
         </div>
         
-    <div class="navbarButtons">  
-        <button class="upload"><router-link to="/upload">上傳</router-link></button>
-        <button v-on:click="signOut" class="signoutBtn"><router-link to="/">登出</router-link></button>
+    <div class="navbarLoginButtons">  
+        <router-link to="/upload"><button class="upload"><img src="../images/uploadsvg.svg"><p>上傳</p></button></router-link>
+        <router-link to="/"><button v-on:click="signOut" class="signoutBtn">登出</button></router-link>
         <router-link to="/profile" class="imgRouter">
        
             <img v-bind:src="this.$store.state.userProfilePic" alt="" class="imgSrc">
@@ -73,10 +73,11 @@ export default {
 .navbar {
     display: flex;
     align-items: center;
-    padding-top: 20px;
-    padding-right: 20px;
+    padding: 40px 0px 40px 0px;
     justify-content: space-between;
+    margin-right:100px;
 }
+
 
 .navbarLogo{
     margin-left: 110px;
@@ -84,36 +85,83 @@ export default {
    
 }
 .navbarLogo img{
-    width: 140px;
+    width: 60px;
    cursor: pointer;
 }
 
-
-.navbar button {
-    text-decoration: none;
-    font-size: 20px;
-    margin: 30px 10px;
-    border: none;
-    outline: none;
-    background: transparent;
-    cursor: pointer;
-}
 a{
-    text-decoration: none;
-    color: rgb(50, 26, 5);
+   text-decoration: none;
 }
 
-.navbarButtons{
+.navbarLoginButtons{
     display: flex;
     justify-content: center;
-    align-items:center ;
+    align-items:center;
+    outline: none;
+}
+.navbarLoginButtons a{
+    margin-left:30px;
+}
+.navbar button {
+    
+    font-size: 20px;
+   
+    outline: none;
+    
+   
 }
 
+
+.navbarLoginButtons .upload{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3px 14px 3px 17px;
+    border: 2px solid rgb(50, 26, 5);
+    border-radius: 25px;
+    background-color: rgb(50, 26, 5);
+    color:#FFF6F6 ;
+    letter-spacing: 2px;
+    transition: 0.2s;
+    outline: none;
+    cursor: pointer;
+  
+}
+.navbarLoginButtons .upload img{
+    width: 25px;
+    margin-right:10px;
+    
+}
+
+
+
+.navbarLoginButtons .upload p{
+   font-size: 20px;
+   margin: 0;
+}
+.navbarLoginButtons .upload:hover{
+   transition: 0.2s;
+    background-color: #FFF6F6;
+    color:rgb(50, 26, 5);
+    
+}
+
+
+
+.signoutBtn{
+   padding: 3px 17px 3px 20px;
+  outline: none;
+  border: 2px solid #e8dfda;
+  border-radius: 25px;
+  background-color: #e8dfda;
+  color:rgb(50, 26, 5);
+    cursor: pointer;
+}
 .imgRouter{
-     width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
     object-fit: cover;
-     display: flex;
+    display: flex;
     justify-content: center;
     margin: auto;
     margin-left:30px;
