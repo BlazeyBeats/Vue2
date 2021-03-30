@@ -166,27 +166,15 @@ export default {
     margin-top: 80px;
 }
 .profile-name{
-    font-size: 35px;
-    background-color: rgb(180, 167, 156) ;
+    font-size: 40px;
     padding: 12px 40px;
     display: flex;
     justify-content: center;
-    margin: 40px auto;
+    margin: 10px auto;
     width:max-content;
-    border-radius: 30px;
     color:rgb(50, 26, 5);
 }
-.profile-name{
-    font-size: 35px;
-    background-color: rgb(180, 167, 156) ;
-    padding: 12px 40px;
-    display: flex;
-    justify-content: center;
-    margin: 40px auto;
-    width:max-content;
-    border-radius: 30px;
-    color:rgb(50, 26, 5);
-}
+
 
 .social-links img{
     width: 45px;

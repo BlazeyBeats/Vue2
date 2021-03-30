@@ -34,6 +34,7 @@ export default {
     },
     
      created() {
+        this.$store.state.userProfilePic = ''
         var user = fb.auth().currentUser;
         var vm = this;
         this.$store.state.userUID = user.uid;
@@ -59,6 +60,7 @@ export default {
                 .auth()
                 .signOut()
                 .then(() => {
+                this.$store.state.userProfilePic = ""
                this.$store.state.userUID = null;
                this.$store.state.userName = null;
                this.$store.state.userloggedin = false;

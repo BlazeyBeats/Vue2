@@ -5,19 +5,23 @@
         <div class="introcontentleft">
             <img class="logoLeft" src="../images/logoword_svg.svg" alt="">
         </div>
+        <div class="introcontentright">
+            <img class="logoRight" src="../images/homepicsvg.svg" alt="">
+        </div>
     </div>
 </div>
 <div class="guideNav">
     <div class="guideButtons">
     <button v-on:click="newPosts=true;following=false;hotPosts=false" v-bind:class="{ active: newPosts }">最新</button>
     <button v-on:click="hotPosts=true;following=false;newPosts=false" v-bind:class="{ active: hotPosts }">熱門</button>
-    <div v-if="this.$store.state.userloggedin"><div v-if="followingFlag"><button v-on:click="following=true;newPosts=false;hotPosts=false" v-bind:class="{ active: following }">追蹤</button></div></div>
+    <div v-if="this.$store.state.userloggedin"><div v-if="followingFlag"><button v-on:click="following=true;newPosts=false;hotPosts=false" v-bind:class="{ active: following }">追蹤中</button></div></div>
     </div>
    
-    <div class ="guideSearch"><input type="text" v-model="search" placeholder="search music" @keyup.enter="searchMusic"></div>
+    <div class ="guideSearch"><img src="../images/searchsvg.svg" alt="" class="searchSvg"><input type="text" v-model="search" placeholder="search music" @keyup.enter="searchMusic"></div>
 </div>
 
-<div class="musics" v-if="newPosts">
+<div class="mainpageMusic">
+    <div class="musics" v-if="newPosts">
 <div v-for="(music,idx) in filteredMusicNew" :key="idx" class="postcollection">
        <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
         <router-link :to="{name:'MusicPage',
@@ -57,6 +61,8 @@
         <div class="posttype">{{music.postType | capitalize}}</div>
 </div> 
 </div>
+</div>
+
 </div>
 
 </div>
@@ -252,6 +258,7 @@ a{
     border-radius: 10px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .introcontentleft {
@@ -262,6 +269,15 @@ a{
     flex-direction: column;
 }
 
+.introcontentright{
+    width: 450px;
+    margin-right: 100px;
+}
+
+.logoRight{
+    width: 450px;
+    
+}
 .logoLeft{
     width: 400px;
     margin-left:100px;
@@ -273,10 +289,16 @@ a{
     margin-top: 0;
 }
 
+.mainpageMusic {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: auto;
+}
 .musics{
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content:flex-start;
     flex-wrap: wrap;
     padding: 30px 0;
     margin: 0 95px;
@@ -286,9 +308,8 @@ a{
     width: 220px;
     height: 220px;
     background-color: rgb(227, 221, 221);
-     border-radius: 5px;
-
-     margin-bottom:10px;
+    border-radius: 5px;
+    margin-bottom:10px;
 }
 .postcollection{
     width: 270px;
@@ -345,13 +366,25 @@ a{
     letter-spacing: 1px;
 }
 
+.guideSearch {
+     outline: none;
+     border:2px solid rgb(50, 26, 5);
+    border-radius:30px;
+    display: flex;
+    align-items: center;
+}
+.searchSvg{
+    width: 25px;
+    margin-left:10px;
+}
 .guideSearch input{
-    outline: none;
+    margin-left:8px;
+   outline: none;
     height: 35px;
     width: 200px;
+   border-radius:30px;
     background-color: #FFF6F6;
-    border:2px solid rgb(50, 26, 5);
-    border-radius:30px;
+   border: none;
     font-size:16px;
 }
 

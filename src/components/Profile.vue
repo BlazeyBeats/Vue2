@@ -5,6 +5,7 @@
 
 
 <div class="profile-name">{{this.$store.state.userName}}</div>
+<div class="card" v-bind:class="{'cardCreator':card == 'Creator' ,'cardMember':card == 'Member'}"><div v-bind:class="{'circleCreator':card == 'Creator' ,'circleMember':card == 'Member'}"></div>{{this.card}}</div>
 <div class="profile-bio">{{bio}}</div>
 <div class="social-links">
     <a :href="facebook" v-if="facebook !=''" target="_blank"><img src="../images/Facebook.svg" alt=""></a>
@@ -12,17 +13,17 @@
     <a :href="twitter" v-if="twitter !=''" target="_blank"><img src="../images/Twitter.svg" alt=""></a>
 </div>
 
-<div class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
+<div class="profile-manage"><router-link to="/manage"><button>編輯資料</button></router-link></div>
 
 
 
 
 <div class="musicContents">
-    <div class="guideNav">
+    <div class="guideNav" v-if="uploaded || likes || following">
         <div class="guideButtons">
-    <button v-if="uploaded" v-on:click="OwnPosts=true;OwnLikes=false;OwnFollowing=false" v-bind:class="{ active: OwnPosts }">Posts</button>
-    <button v-if="likes" v-on:click="OwnPosts=false;OwnLikes=true;OwnFollowing=false" v-bind:class="{ active: OwnLikes }">Likes</button>
-    <button v-if="following" v-on:click="OwnPosts=false;OwnLikes=false;;OwnFollowing=true" v-bind:class="{ active: OwnFollowing }">Following</button>
+    <button v-if="uploaded" v-on:click="OwnPosts=true;OwnLikes=false;OwnFollowing=false" v-bind:class="{ active: OwnPosts }">音樂</button>
+    <button v-if="likes" v-on:click="OwnPosts=false;OwnLikes=true;OwnFollowing=false" v-bind:class="{ active: OwnLikes }">收藏</button>
+    <button v-if="following" v-on:click="OwnPosts=false;OwnLikes=false;;OwnFollowing=true" v-bind:class="{ active: OwnFollowing }">追蹤中</button>
 </div>
     </div>
 
@@ -96,8 +97,12 @@ export default {
             OwnFollowing:false,
             facebook:'',
             instagram:'',
-            twitter:''
+            twitter:'',
+            card:''
         };
+    },
+    watch:{
+
     },
     created() {
         var user = fb.auth().currentUser;
@@ -120,7 +125,7 @@ export default {
                     db.collection('music').doc(LikedPosts[i]).get().then(doc =>{
                     this.LikedPosts.push(doc.data());
                     this.likes = true;
-                    })
+                    })   
                 }
             }
 
@@ -141,7 +146,20 @@ export default {
             querySnapshot.forEach(doc=>{          
             this.musics.push(doc.data());
             this.uploaded = true;
+            this.OwnLikes = false;  
             })
+           
+            if(this.uploaded){
+                this.card = "Creator";
+               
+            }else{
+               this.card = "Member";
+              this.OwnLikes =  true;
+            }
+
+            
+
+           
         }) 
          }
 
@@ -166,16 +184,54 @@ export default {
 
 
 .profile-name{
-    font-size: 35px;
-    background-color: rgb(180, 167, 156) ;
-    padding: 12px 40px;
+    font-size: 45px;
+    
     display: flex;
     justify-content: center;
-    margin: 40px auto;
+    margin: 15px auto;
     width:max-content;
-    border-radius: 30px;
     color:rgb(50, 26, 5);
 }
+
+.card{
+    font-size:20px;
+    width: max-content;
+    display: flex;
+    justify-content: center;
+    margin: 10px auto;
+    align-items: center;
+    letter-spacing: 1px;
+}
+.circleCreator{
+    width: 20px;
+    height: 20px;
+    background-color:#e8dfda;
+    border-radius: 50%;
+    margin-right:8px;
+}
+.cardCreator{
+    background-color: rgb(50, 26, 5);
+    color:#e8dfda;
+    padding:8px 12px;
+    border:2px solid rgb(50, 26, 5);
+    border-radius: 35px;
+}
+
+.circleMember{
+    width: 20px;
+    height: 20px;
+    background-color:rgb(50, 26, 5);
+    border-radius: 50%;
+    margin-right:8px;
+}
+.cardMember{
+    background-color: #FFF6F6;
+    color:rgb(50, 26, 5);
+    padding:8px 12px;
+    border:2px solid #FFF6F6;
+    border-radius: 35px;
+}
+
 
 .social-links img{
     width: 45px;
@@ -189,34 +245,35 @@ export default {
 }
 
 
+
 .profile-manage{
     display: flex;
     justify-content: flex-end;
-    margin-top: 30px;
-    margin-bottom: 50px;
-  margin-right:300px ;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    margin-right:200px ;
 }
 .profile-manage button{
-    color: white;
+    color: #FFF6F6;
     font-size: 16px;
     background-color: rgb(50, 26, 5);
-    padding: 15px;
+    padding: 10px 15px;
     border-style: solid;
     border-color: rgb(50, 26, 5);
-    border-radius: 10px;
+    border-radius: 35px;
     cursor: pointer;
     transition: 0.3s;
     outline: none;
 }
 .profile-manage button:hover{
-      color: rgb(50, 26, 5);
+    color: rgb(50, 26, 5);
     background-color: rgb(227, 221, 221);
     border-color: rgb(50, 26, 5);
     transition: 0.3s;
 }
 
 .musicContents{
-    background-color:rgb(192, 187, 187);
+    background-color:#FFF6F6;
 }
 .guideNav{
     display: flex;
@@ -228,6 +285,7 @@ export default {
 }
 .guideButtons .active{
     background-color:rgb(50, 26, 5);
+    border:2px solid rgb(50, 26, 5);
     color: #FFF6F6;
     outline: none;
     transition: 0.2s;
@@ -240,17 +298,17 @@ export default {
     
 }
 .guideButtons button{
-   text-align: center;
+  text-align: center;
     padding: 7px 17px 7px 17px;
     margin-right: 20px;
     font-size: 15px;
     border-radius: 22px;
-    background-color:#FFF6F6;
-    border-color: rgb(50, 26, 5);
+    background-color: #e8dfda;
+    border:2px solid #e8dfda;
     cursor: pointer;
     outline: none;
     transition: 0.2s;
-    box-shadow: 1px 4px 10px #929292;
+    box-shadow: 1px 4px 10px #a5a5a5;
     color:rgb(50, 26, 5);
     letter-spacing: 1px;
 }
@@ -264,7 +322,7 @@ export default {
 .postcollection-square{
     width: 220px;
     height: 220px;
-    background-color: rgb(227, 221, 221);
+    background-color: #D3CCC2;
      border-radius: 15px;
 
      margin-bottom:10px;
@@ -279,7 +337,7 @@ export default {
     flex-direction: column;
     margin: 20px 30px;
     padding-bottom: 20px;
-   background-color: white;
+   background-color: #D3CCC2;
    border-radius: 15px;
 }
 .postname{
