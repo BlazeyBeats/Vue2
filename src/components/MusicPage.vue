@@ -697,6 +697,7 @@ font-size: 30px;
 .commentImg{
     width: 40px;
     height: 40px;
+    object-fit: cover;
     border-radius:50%;
     margin-right:20px;
 }

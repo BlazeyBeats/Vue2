@@ -10,7 +10,7 @@
 <div class="social-links">
     <a :href="facebook" v-if="facebook !=''" target="_blank"><img src="../images/Facebook.svg" alt=""></a>
     <a :href="instagram" v-if="instagram !=''" target="_blank"><img src="../images/Instagram.svg" alt=""></a>
-    <a :href="twitter" v-if="twitter !=''" target="_blank"><img src="../images/Twitter.svg" alt=""></a>
+   
 </div>
 
 <div class="profile-manage"><router-link to="/manage"><button>編輯資料</button></router-link></div>
@@ -97,7 +97,7 @@ export default {
             OwnFollowing:false,
             facebook:'',
             instagram:'',
-            twitter:'',
+            
             card:''
         };
     },
@@ -113,7 +113,7 @@ export default {
             db.collection('profiles').doc(user.uid).get().then(doc =>{ 
             vm.facebook = doc.data().Facebook;
             vm.instagram = doc.data().Instagram;
-            vm.twitter = doc.data().Twitter;
+           
             vm.bio = doc.data().bio;
             this.$store.state.userProfilePic = doc.data().profilePic;
             LikedPosts = doc.data().LikedPosts;
@@ -138,8 +138,7 @@ export default {
                     db.collection('profiles').doc(Following[j]).get().then(doc =>{
                     this.Followings.push(doc.data());
                     this.following = true;
-                    console.log(this.uploaded);
-                    console.log(this.OwnLikes)
+                   
                     if(this.uploaded ===false && this.OwnLikes ===false){
                         this.OwnFollowing = true;
                     }
@@ -189,7 +188,7 @@ export default {
      display: flex;
     justify-content: center;
     margin: auto;
-    margin-top: 80px;
+    margin-top: 40px;
 }
 
 
@@ -242,6 +241,9 @@ export default {
     border-radius: 35px;
 }
 
+.profile-bio{
+    margin: 20px 0px;
+}
 
 .social-links img{
     width: 45px;
@@ -259,13 +261,13 @@ export default {
 .profile-manage{
     display: flex;
     justify-content: flex-end;
-    margin-top: 40px;
-    margin-bottom: 30px;
+    margin-bottom: 70px;
     margin-right:200px ;
 }
 .profile-manage button{
     color: #FFF6F6;
     font-size: 16px;
+    letter-spacing: 1px;
     background-color: rgb(50, 26, 5);
     padding: 10px 15px;
     border-style: solid;
@@ -369,6 +371,7 @@ export default {
 .followingcollection-square{
     width: 220px;
     height: 220px;
+    object-fit: cover;
     border-radius: 50%;
 }
 </style>

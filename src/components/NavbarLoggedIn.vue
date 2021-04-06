@@ -8,7 +8,7 @@
         </div>
         
     <div class="navbarLoginButtons">  
-        <router-link to="/upload"><button class="upload"><img src="../images/uploadsvg.svg"><p>上傳</p></button></router-link>
+        <router-link to="/upload" ><button class="upload" v-bind:class="{'uploadHover':$route.path == '/profile' || $route.path =='/profile/:userID' || $route.path =='/manage'}"><img src="../images/uploadsvg.svg"><p>上傳</p></button></router-link>
         <router-link to="/"><button v-on:click="signOut" class="signoutBtn">登出</button></router-link>
         <router-link to="/profile" class="imgRouter">
        
@@ -113,6 +113,11 @@ a{
    
 }
 
+.uploadHover:hover{
+
+background-color: #e8dfda !important;
+
+}
 
 .navbarLoginButtons .upload{
     display: flex;
@@ -159,14 +164,14 @@ a{
   color:rgb(50, 26, 5);
     cursor: pointer;
 }
-.imgRouter{
+.imgRouter img{
     width: 55px;
     height: 55px;
     object-fit: cover;
     display: flex;
     justify-content: center;
     margin: auto;
-    margin-left:30px;
+    
     cursor: pointer;
 }
 .imgSrc{

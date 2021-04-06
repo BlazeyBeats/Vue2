@@ -6,6 +6,7 @@
 </div>
 <div v-else class="circle-pic"></div>
 <div class="profile-name">{{name}}</div>
+<div class="card" v-bind:class="{'cardCreator':card == 'Creator' ,'cardMember':card == 'Member'}"><div v-bind:class="{'circleCreator':card == 'Creator' ,'circleMember':card == 'Member'}"></div>{{this.card}}</div>
 <div class="profile-bio">{{bio}}</div>
 <div class="social-links">
     <a :href="facebook" v-if="facebook !=''" target="_blank"><img src="../images/Facebook.svg" alt=""></a>
@@ -54,7 +55,8 @@ export default {
             facebook:'',
             instagram:'',
             twitter:'',
-            following:false
+            following:false,
+            card:''
         };
     },
    watch: {
@@ -105,7 +107,14 @@ export default {
             querySnapshot.forEach(doc=>{          
             this.musics.push(doc.data());
             this.uploaded = true;
+            
             })
+              if(this.uploaded){
+                this.card = "Creator";
+               
+            }else{
+               this.card = "Member";
+            }
         })
          }  
          },
@@ -145,14 +154,14 @@ export default {
 <style scoped>
 
 .imgSrc{
-     width: 250px;
+    width: 250px;
     height: 250px;
      border-radius: 50%;
      object-fit: cover;
      display: flex;
     justify-content: center;
     margin: auto;
-    margin-top: 80px;
+    margin-top: 40px;
 }
 
 .circle-pic{
@@ -173,6 +182,45 @@ export default {
     margin: 10px auto;
     width:max-content;
     color:rgb(50, 26, 5);
+}
+
+.card{
+    font-size:20px;
+    width: max-content;
+    display: flex;
+    justify-content: center;
+    margin: 10px auto;
+    align-items: center;
+    letter-spacing: 1px;
+}
+.circleCreator{
+    width: 20px;
+    height: 20px;
+    background-color:#e8dfda;
+    border-radius: 50%;
+    margin-right:8px;
+}
+.cardCreator{
+    background-color: rgb(50, 26, 5);
+    color:#e8dfda;
+    padding:8px 12px;
+    border:2px solid rgb(50, 26, 5);
+    border-radius: 35px;
+}
+
+.circleMember{
+    width: 20px;
+    height: 20px;
+    background-color:rgb(50, 26, 5);
+    border-radius: 50%;
+    margin-right:8px;
+}
+.cardMember{
+    background-color: #FFF6F6;
+    color:rgb(50, 26, 5);
+    padding:8px 12px;
+    border:2px solid #FFF6F6;
+    border-radius: 35px;
 }
 
 

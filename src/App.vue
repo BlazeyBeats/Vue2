@@ -1,5 +1,5 @@
 <template>
-<div id="app" v-bind:class="{'color':$route.path == '/profile' || $route.path =='/profile/:userID'}">
+<div id="app" v-bind:class="{'color':$route.path == '/profile' || $route.path =='/profile/:userID' || $route.path =='/manage'}">
     
     <app-navbar-loggedin v-if="this.$store.state.userloggedin"></app-navbar-loggedin>
     <app-navbar-loggedout v-else></app-navbar-loggedout>
@@ -69,6 +69,7 @@ export default {
 </script>  
 
 <style lang="scss">
+
 a{
     text-decoration: none;
     color: rgb(50, 26, 5);
@@ -88,6 +89,7 @@ body {
     color: #2c3e50;
     margin: -0px !important;
     background-color: #FFF6F6;
+    
 }
 
 
