@@ -102,7 +102,7 @@ export default {
         };
     },
     watch:{
-
+  
     },
     created() {
         var user = fb.auth().currentUser;
@@ -125,6 +125,9 @@ export default {
                     db.collection('music').doc(LikedPosts[i]).get().then(doc =>{
                     this.LikedPosts.push(doc.data());
                     this.likes = true;
+                    if(this.uploaded ===false){
+                        this.OwnLikes = true;
+                    }
                     })   
                 }
             }
@@ -135,7 +138,11 @@ export default {
                     db.collection('profiles').doc(Following[j]).get().then(doc =>{
                     this.Followings.push(doc.data());
                     this.following = true;
-
+                    console.log(this.uploaded);
+                    console.log(this.OwnLikes)
+                    if(this.uploaded ===false && this.OwnLikes ===false){
+                        this.OwnFollowing = true;
+                    }
                     })
                 }
             }
@@ -154,7 +161,6 @@ export default {
                
             }else{
                this.card = "Member";
-              this.OwnLikes =  true;
             }
 
             
@@ -166,6 +172,10 @@ export default {
 
         
      },
+    mounted(){
+        
+        
+    }
 }
 </script>
 
