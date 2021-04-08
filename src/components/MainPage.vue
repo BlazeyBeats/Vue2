@@ -31,7 +31,10 @@
         <h1 class="postname">{{music.postName | capitalize}}</h1>
         </router-link>
         <div class="posttype">{{music.postType | capitalize}}</div>
-</div> 
+</div>
+<div class="flexgrow"></div>
+<div class="flexgrow"></div>
+<div class="flexgrow"></div>
 </div>
 
 <div class="musics" v-if="hotPosts">
@@ -44,12 +47,15 @@
         <h1 class="postname">{{music.postName}}</h1>
         </router-link>
         <div class="posttype">{{music.postType | capitalize}}</div>
-</div> 
+</div>
+<div class="flexgrow"></div>
+<div class="flexgrow"></div>
+<div class="flexgrow"></div>
 </div>
 
-<div v-if="this.$store.state.userloggedin">
 
-    <div class="musics" v-if="following">
+
+<div class="musics" v-if="following && this.$store.state.userloggedin">
 <div v-for="(music,idx) in filteredMusicFollowing" :key="idx" class="postcollection">
        <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
         <router-link :to="{name:'MusicPage',
@@ -60,8 +66,11 @@
         </router-link>
         <div class="posttype">{{music.postType | capitalize}}</div>
 </div> 
+<div class="flexgrow"></div>
+<div class="flexgrow"></div>
+<div class="flexgrow"></div>
 </div>
-</div>
+
 
 </div>
 
@@ -115,6 +124,7 @@ data() {
           this.getfollowingData();
         }
     },
+ 
     created(){
       var user = fb.auth().currentUser;
       var vm = this;
@@ -252,7 +262,7 @@ a{
     color: rgb(50, 26, 5);
 }
 .introBlock {
-    margin: 10px 70px;
+    margin: 10px 100px;
     height: 280px;
     background-color: #e8dfda;
     border-radius: 10px;
@@ -298,11 +308,17 @@ a{
 .musics{
     display: flex;
     flex-direction: row;
-    justify-content:flex-start;
+    justify-content:space-between;
     flex-wrap: wrap;
+    width: max-content;
     padding: 30px 0;
-    margin: 0 95px;
+    margin: 0 65px;
 
+}
+
+.flexgrow{
+    margin: 20px 30px;
+    width: 270px;
 }
 .postcollection-square{
     width: 220px;
@@ -337,8 +353,8 @@ a{
     margin-right: 100px;
 }
 .guideButtons .active{
-    background-color:rgb(50, 26, 5);
-    border:2px solid rgb(50, 26, 5);
+    background-color:#513E41;
+    border:2px solid #513E41;
     color: #FFF6F6;
     outline: none;
     transition: 0.2s;

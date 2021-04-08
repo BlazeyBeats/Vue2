@@ -1,19 +1,20 @@
 <template>
 <div class="profile">
 
-<img v-bind:src="this.$store.state.userProfilePic" alt="" class="imgSrc">
-
-
+<div class="profile-data">
+    <img v-bind:src="this.$store.state.userProfilePic" alt="" class="imgSrc">
 <div class="profile-name">{{this.$store.state.userName}}</div>
-<div class="card" v-bind:class="{'cardCreator':card == 'Creator' ,'cardMember':card == 'Member'}"><div v-bind:class="{'circleCreator':card == 'Creator' ,'circleMember':card == 'Member'}"></div>{{this.card}}</div>
-<div class="profile-bio">{{bio}}</div>
+
+
 <div class="social-links">
     <a :href="facebook" v-if="facebook !=''" target="_blank"><img src="../images/Facebook.svg" alt=""></a>
     <a :href="instagram" v-if="instagram !=''" target="_blank"><img src="../images/Instagram.svg" alt=""></a>
    
 </div>
-
+<div class="profile-bio">{{bio}}</div>
 <div class="profile-manage"><router-link to="/manage"><button>編輯資料</button></router-link></div>
+</div>
+
 
 
 
@@ -179,25 +180,32 @@ export default {
 </script>
 
 <style scoped>
-
+.profile{
+    display: flex;
+    justify-content: flex-start;
+    height: max-content;
+}
+.profile-data{
+    margin-left: 150px;
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
 .imgSrc{
-     width: 250px;
+    width: 250px;
     height: 250px;
-     border-radius: 50%;
-     object-fit: cover;
-     display: flex;
+    border-radius: 50%;
+    object-fit: cover;
+    display: flex;
     justify-content: center;
-    margin: auto;
     margin-top: 40px;
 }
 
 
 .profile-name{
-    font-size: 45px;
-    
-    display: flex;
-    justify-content: center;
-    margin: 15px auto;
+    font-size: 48px;
+    margin-top: 10px;
     width:max-content;
     color:rgb(50, 26, 5);
 }
@@ -242,12 +250,16 @@ export default {
 }
 
 .profile-bio{
-    margin: 20px 0px;
+    margin-top: 10px;
+    font-size:18px;
+    text-align: left;
+    line-height: 30px;
+    width: 300px;
 }
 
 .social-links img{
     width: 45px;
-   margin: 25px 10px 10px 10px;
+   margin: 10px 10px 0px 0px;
     transition:0.2s ;
 }
 
@@ -256,48 +268,45 @@ export default {
    opacity: 0.6;
 }
 
-
-
 .profile-manage{
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 70px;
-    margin-right:200px ;
+   
+    margin-top:20px;
+    margin-bottom: 50px;
 }
 .profile-manage button{
-    color: #FFF6F6;
+    border-radius: 25px;
+    padding: 10px 15px;
+    color: rgb(50, 26, 5);
     font-size: 16px;
     letter-spacing: 1px;
-    background-color: rgb(50, 26, 5);
-    padding: 10px 15px;
-    border-style: solid;
-    border-color: rgb(50, 26, 5);
-    border-radius: 35px;
+    background-color: #e8dfda;  
+    border:2px solid rgb(50, 26, 5);
     cursor: pointer;
     transition: 0.3s;
     outline: none;
 }
 .profile-manage button:hover{
     color: rgb(50, 26, 5);
-    background-color: rgb(227, 221, 221);
+    
     border-color: rgb(50, 26, 5);
     transition: 0.3s;
 }
 
 .musicContents{
-    background-color:#FFF6F6;
+    
+    margin-left: 60px;
+    width:800px;
 }
 .guideNav{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom:30px;
     
-    margin-left: 100px;
-    margin-right: 100px;
 }
 .guideButtons .active{
-    background-color:rgb(50, 26, 5);
-    border:2px solid rgb(50, 26, 5);
+    background-color:#513E41;
+    border:2px solid #513E41;
     color: #FFF6F6;
     outline: none;
     transition: 0.2s;
@@ -328,11 +337,11 @@ export default {
    display: flex;
   flex-direction: row;
    flex-wrap: wrap;
-  padding: 30px 80px;
+justify-content: space-between;
    
 }
 .postcollection-square{
-    width: 220px;
+    width: 200px;
     height: 220px;
     background-color: #D3CCC2;
      border-radius: 15px;
@@ -340,14 +349,14 @@ export default {
      margin-bottom:10px;
 }
 .postcollection{
-    width: 270px;
+    width: 250px;
     height: 320px;
     color: rgb(50, 26, 5);
     display: flex;
     align-items:center;
     justify-content:flex-end;
     flex-direction: column;
-    margin: 20px 30px;
+    margin: 10px 0px;
     padding-bottom: 20px;
    background-color: #D3CCC2;
    border-radius: 15px;
@@ -356,21 +365,21 @@ export default {
     font-size:20px;
 }
 .followingcollection{
-   width: 270px;
-    height: 320px;
+    width: max-content;
+    height: max-content;
     color: rgb(50, 26, 5);
     display: flex;
     align-items:center;
-    justify-content:flex-end;
+    justify-content:center;
     flex-direction: column;
-    margin: 20px 30px;
+    margin: 20px 0px;
     padding-bottom: 20px;
     border-radius: 15px;
 }
 
 .followingcollection-square{
-    width: 220px;
-    height: 220px;
+    width: 180px;
+    height: 180px;
     object-fit: cover;
     border-radius: 50%;
 }

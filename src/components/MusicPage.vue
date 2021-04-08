@@ -7,9 +7,9 @@
         </audio>
     </div>
     <div class="postinfo">
-    <h1>{{postName}}</h1>
-    <h2>{{postType |to-uppercase}}</h2>
-    <p>{{postBio}}</p>
+    <h1>{{postName | capitalize}}</h1>
+    <h2>{{postType | capitalize}}</h2>
+    <p>{{postBio | capitalize}}</p>
    
     <div class="postUser">
       
@@ -496,7 +496,7 @@ audio:focus{
     width: 50px;
     height: 50px; 
     border-radius: 50%;
-    background-color: rgb(50, 26, 5) ;
+    background-color: #513E41 ;
    display: flex;
     justify-content: center;
     margin: auto;

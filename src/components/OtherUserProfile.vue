@@ -1,22 +1,23 @@
 <template>
 <div class="profile">
+<div class="profile-data">
+    <img v-bind:src="imgSrc" alt="" class="imgSrc">
 
-<div v-if="this.imgSrc" class="profile-pic">
-<img v-bind:src="imgSrc" alt="" class="imgSrc">
-</div>
-<div v-else class="circle-pic"></div>
-<div class="profile-name">{{name}}</div>
-<div class="card" v-bind:class="{'cardCreator':card == 'Creator' ,'cardMember':card == 'Member'}"><div v-bind:class="{'circleCreator':card == 'Creator' ,'circleMember':card == 'Member'}"></div>{{this.card}}</div>
-<div class="profile-bio">{{bio}}</div>
-<div class="social-links">
+    <div class="profile-name">{{name}}</div>
+
+    <div class="social-links">
     <a :href="facebook" v-if="facebook !=''" target="_blank"><img src="../images/Facebook.svg" alt=""></a>
     <a :href="instagram" v-if="instagram !=''" target="_blank"><img src="../images/Instagram.svg" alt=""></a>
     <a :href="twitter" v-if="twitter !=''" target="_blank"><img src="../images/Twitter.svg" alt=""></a>
+    </div>
+    <div class="profile-bio">{{bio}}</div>
+
+    <div v-if="this.$store.state.userloggedin">
+    <div v-if="isthisyou" class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
+    <div v-else class="profile-manage">
 </div>
 
-<div v-if="this.$store.state.userloggedin">
-    <div v-if="isthisyou" class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
-<div v-else class="profile-manage">
+
     <div><button v-on:click="openchat">Message</button></div>
     <div v-if="following"><button v-on:click="unFollow">Unfollow</button></div>
     <div v-else><button v-on:click="Follow">Follow</button></div>
@@ -152,17 +153,28 @@ export default {
 </script>
 
 <style scoped>
-
+.profile{
+    display: flex;
+    justify-content: flex-start;
+    height: max-content;
+}
+.profile-data{
+    margin-left: 150px;
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
 .imgSrc{
     width: 250px;
     height: 250px;
-     border-radius: 50%;
-     object-fit: cover;
-     display: flex;
+    border-radius: 50%;
+    object-fit: cover;
+    display: flex;
     justify-content: center;
-    margin: auto;
     margin-top: 40px;
 }
+
 
 .circle-pic{
     width: 250px;
@@ -175,14 +187,12 @@ export default {
     margin-top: 80px;
 }
 .profile-name{
-    font-size: 40px;
-    padding: 12px 40px;
-    display: flex;
-    justify-content: center;
-    margin: 10px auto;
+    font-size: 48px;
+    margin-top: 10px;
     width:max-content;
     color:rgb(50, 26, 5);
 }
+
 
 .card{
     font-size:20px;
@@ -236,64 +246,84 @@ export default {
 }
 
 
+.profile-bio{
+    margin-top: 10px;
+    font-size:18px;
+    text-align: left;
+    line-height: 30px;
+    width: 300px;
+}
+
+.social-links img{
+    width: 45px;
+   margin: 10px 10px 0px 0px;
+    transition:0.2s ;
+}
+
+.social-links img:hover{
+   transition:0.2s ;
+   opacity: 0.6;
+}
+
 .profile-manage{
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 80px;
+   
+    margin-top:20px;
     margin-bottom: 50px;
-  margin-right:300px ;
 }
 .profile-manage button{
-    color: white;
+    border-radius: 25px;
+    padding: 10px 15px;
+    color: rgb(50, 26, 5);
     font-size: 16px;
-    background-color: rgb(50, 26, 5);
-    padding: 15px;
-    border-style: solid;
-    border-color: rgb(50, 26, 5);
-    border-radius: 10px;
+    letter-spacing: 1px;
+    background-color: #e8dfda;  
+    border:2px solid rgb(50, 26, 5);
     cursor: pointer;
     transition: 0.3s;
     outline: none;
-    margin-left: 20px;
 }
 .profile-manage button:hover{
-      color: rgb(50, 26, 5);
-    background-color: rgb(227, 221, 221);
+    color: rgb(50, 26, 5);
+    
     border-color: rgb(50, 26, 5);
     transition: 0.3s;
+}
+
+.musicContents{
+    
+    margin-left: 60px;
+    width:800px;
 }
 .musics{
    display: flex;
   flex-direction: row;
    flex-wrap: wrap;
-  padding: 30px 80px;
-    background-color:rgb(192, 187, 187);
-    margin-top: 40px;
+justify-content: space-between;
+   
 }
 .postcollection-square{
-    width: 220px;
+    width: 200px;
     height: 220px;
-    background-color: rgb(227, 221, 221);
+    background-color: #D3CCC2;
      border-radius: 15px;
 
      margin-bottom:10px;
 }
 .postcollection{
-    width: 270px;
+    width: 250px;
     height: 320px;
     color: rgb(50, 26, 5);
     display: flex;
     align-items:center;
     justify-content:flex-end;
     flex-direction: column;
-    margin: 20px 30px;
+    margin: 10px 0px;
     padding-bottom: 20px;
-   background-color: white;
+   background-color: #D3CCC2;
    border-radius: 15px;
 }
 .postname{
     font-size:20px;
-
 }
 
 </style>

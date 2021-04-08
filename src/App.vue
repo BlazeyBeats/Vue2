@@ -76,6 +76,7 @@ a{
 }
 .color {
  background-color:#e8dfda !important;
+ 
 }
 body {
     margin: 0;
