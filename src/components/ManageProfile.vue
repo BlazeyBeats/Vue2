@@ -305,10 +305,10 @@ object-fit: cover;
    letter-spacing: 1px;
     color: white;
     font-size: 16px;
-    background-color: rgb(50, 26, 5);
+    background-color: #513E41;
     padding: 10px 15px;
     border-style: solid;
-    border-color: rgb(50, 26, 5);
+    border-color: #513E41;
     border-radius: 35px;
     cursor: pointer;
     transition: 0.3s;
@@ -316,9 +316,9 @@ object-fit: cover;
 }
 
 .updateProfile:hover{
-    color: rgb(50, 26, 5);
+    color: #513E41;
     background-color: rgb(227, 221, 221);
-    border-color: rgb(50, 26, 5);
+    border-color: #513E41;
     transition: 0.3s;
 }
 

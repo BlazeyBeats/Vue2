@@ -337,7 +337,7 @@ a{
     flex-direction: column;
     margin: 20px 30px;
     padding-bottom: 20px;
-   background-color: #D3CCC2;
+   background-color: #e8dfda;
    border-radius: 5px;
 }
 .postname{
@@ -406,7 +406,7 @@ a{
 
 .guideSearch input::placeholder{
     color: gray;
-    padding-left: 10px;
+    
     
     transition: 0.1s;
 }

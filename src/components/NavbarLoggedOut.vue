@@ -160,18 +160,18 @@ export default {
 }
 .signinBtn{
     padding: 3px 17px 3px 20px;
-     border: 2px solid rgb(50, 26, 5);
+     border: 2px solid #513E41;
      border-radius: 25px;
      color:#FFF6F6;
-     background-color: rgb(50, 26, 5);
+     background-color: #513E41;
     letter-spacing: 2px;
     transition: 0.2s;
     
    
 }
 .signinBtn:hover{
-    border: 2px solid rgb(50, 26, 5);
-     color:rgb(50, 26, 5);
+    border: 2px solid #513E41;
+     color:#513E41;
      background-color: #FFF6F6;
      transition: 0.2s;
 }
@@ -179,7 +179,7 @@ export default {
     margin-right: 75px;
     margin-left:30px;
     border: none;
-    color: rgb(50, 26, 5);
+    color: #513E41;
     background-color:#FFF6F6;
 }
 
@@ -222,7 +222,7 @@ export default {
 .signtemplate h1 {
     font-size: 40px;
     letter-spacing: 2px;
-    color: rgb(50, 26, 5);
+    color: #513E41;
     background-color: #bdb6ac;
     margin: 0;
     padding: 25px;
@@ -238,7 +238,7 @@ export default {
 }
 
 .input-email-password p {
-    color: rgb(50, 26, 5);
+    color: #513E41;
     font-size: 20px;
     margin-top: 25px;
     margin-bottom: 15px;
@@ -250,11 +250,10 @@ export default {
 
 .input-email-password input {
     font-size: 18px;
-    padding-left: 10px;
+    padding-left: 20px;
     background-color: rgb(239, 243, 243);
     width: 430px;
     height: 50px;
-    
     border: 2px solid #bdb6ac;
     border-radius: 55px;
     outline: none;
@@ -262,7 +261,7 @@ export default {
 
 .input-email-password input::placeholder {
     color: gray;
-    padding-left: 10px;
+   
     transition: 0.1s;
 }
 
@@ -278,7 +277,7 @@ export default {
     margin: 40px 100px 0px 90px;
    
     padding: 15px 50px;
-    border: 2px solid rgb(50, 26, 5);
+    border: 2px solid #513E41;
     border-radius: 40px;
     outline: none;
     letter-spacing: 1px;
@@ -287,7 +286,7 @@ export default {
 }
 
 .input-email-password button:hover {
-    background-color: rgb(50, 26, 5);
+    background-color: #513E41;
     color: rgb(239, 243, 243);
 }
 

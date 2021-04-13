@@ -25,8 +25,9 @@
     <button v-if="uploaded" v-on:click="OwnPosts=true;OwnLikes=false;OwnFollowing=false" v-bind:class="{ active: OwnPosts }">音樂</button>
     <button v-if="likes" v-on:click="OwnPosts=false;OwnLikes=true;OwnFollowing=false" v-bind:class="{ active: OwnLikes }">收藏</button>
     <button v-if="following" v-on:click="OwnPosts=false;OwnLikes=false;;OwnFollowing=true" v-bind:class="{ active: OwnFollowing }">追蹤中</button>
-</div>
     </div>
+    </div>
+    <div v-else>尚無資料</div>
 
 <div v-if="OwnPosts">
     <div v-if="uploaded" class="musics">
@@ -36,9 +37,9 @@
         params:{
             postID:music.postID,
         }}">
-            <h1 class="postname">{{music.postName}}</h1>
+            <h1 class="postname">{{music.postName | capitalize}}</h1>
         </router-link>
-        <div class="posttype">{{music.postType}}</div>
+        <div class="posttype">{{music.postType | capitalize}}</div>
 </div> 
 </div>
 </div>
@@ -51,22 +52,22 @@
         params:{
             postID:LikedPost.postID,
         }}">
-            <h1 class="postname">{{LikedPost.postName}}</h1>
+            <h1 class="postname">{{LikedPost.postName | capitalize}}</h1>
         </router-link>
-        <div class="posttype">{{LikedPost.postType}}</div>
+        <div class="posttype">{{LikedPost.postType | capitalize}}</div>
 </div> 
 </div>
 </div>
 
 <div v-if="OwnFollowing">
-    <div v-if="following" class="musics">
+    <div v-if="following" class="following">
     <div v-for="Following in Followings" :key="Following.name" class="followingcollection">
          <img v-bind:src="Following.profilePic" alt="" class="followingcollection-square">
         <router-link :to="{name:'OtherProfile',
         params:{
             userID:Following.userUID,
         }}">
-            <h1 class="postname">{{Following.name}}</h1>
+            <h1 class="postname">{{Following.name | capitalize}}</h1>
         </router-link>
 </div> 
 </div>
@@ -98,7 +99,6 @@ export default {
             OwnFollowing:false,
             facebook:'',
             instagram:'',
-            
             card:''
         };
     },
@@ -110,6 +110,7 @@ export default {
         var vm = this;
         var LikedPosts =[];
         var Following =[];
+      
         if (user) {
             db.collection('profiles').doc(user.uid).get().then(doc =>{ 
             vm.facebook = doc.data().Facebook;
@@ -153,7 +154,8 @@ export default {
             querySnapshot.forEach(doc=>{          
             this.musics.push(doc.data());
             this.uploaded = true;
-            this.OwnLikes = false;  
+            this.OwnLikes = false; 
+            this.OwnFollowing = false; 
             })
            
             if(this.uploaded){
@@ -191,6 +193,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    height: 90vh;
 }
 .imgSrc{
     width: 250px;
@@ -210,44 +213,6 @@ export default {
     color:rgb(50, 26, 5);
 }
 
-.card{
-    font-size:20px;
-    width: max-content;
-    display: flex;
-    justify-content: center;
-    margin: 10px auto;
-    align-items: center;
-    letter-spacing: 1px;
-}
-.circleCreator{
-    width: 20px;
-    height: 20px;
-    background-color:#e8dfda;
-    border-radius: 50%;
-    margin-right:8px;
-}
-.cardCreator{
-    background-color: rgb(50, 26, 5);
-    color:#e8dfda;
-    padding:8px 12px;
-    border:2px solid rgb(50, 26, 5);
-    border-radius: 35px;
-}
-
-.circleMember{
-    width: 20px;
-    height: 20px;
-    background-color:rgb(50, 26, 5);
-    border-radius: 50%;
-    margin-right:8px;
-}
-.cardMember{
-    background-color: #FFF6F6;
-    color:rgb(50, 26, 5);
-    padding:8px 12px;
-    border:2px solid #FFF6F6;
-    border-radius: 35px;
-}
 
 .profile-bio{
     margin-top: 10px;
@@ -292,8 +257,7 @@ export default {
     transition: 0.3s;
 }
 
-.musicContents{
-    
+.musicContents{ 
     margin-left: 60px;
     width:800px;
 }
@@ -338,14 +302,21 @@ export default {
   flex-direction: row;
    flex-wrap: wrap;
 justify-content: space-between;
-   
+   margin-bottom: 30px;
+}
+.following{
+    width:max-content;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+   margin-bottom: 30px;
 }
 .postcollection-square{
     width: 200px;
     height: 220px;
     background-color: #D3CCC2;
      border-radius: 15px;
-
      margin-bottom:10px;
 }
 .postcollection{
@@ -370,9 +341,10 @@ justify-content: space-between;
     color: rgb(50, 26, 5);
     display: flex;
     align-items:center;
-    justify-content:center;
+    justify-content:flex-end;
     flex-direction: column;
-    margin: 20px 0px;
+    margin-top: 20px;
+    margin-right: 40px;
     padding-bottom: 20px;
     border-radius: 15px;
 }

@@ -13,30 +13,44 @@
     <div class="profile-bio">{{bio}}</div>
 
     <div v-if="this.$store.state.userloggedin">
-    <div v-if="isthisyou" class="profile-manage"><router-link to="/manage"><button>Manage Profile</button></router-link></div>
-    <div v-else class="profile-manage">
-</div>
+    
+   
+    <div class="interactionButtons">
+        
+    <div v-if="following"><button v-on:click="unFollow" class="followButton"><img src="../images/followedButton.svg">追蹤中</button></div>
+    <div v-else><button v-on:click="Follow" class="followButton"><img src="../images/followButton.svg">追蹤</button></div>
+    
+    <div><button v-on:click="openchat" class="chatButton"><img src="../images/chatButton.svg">聊天</button></div>
+    </div>
+  
 
 
-    <div><button v-on:click="openchat">Message</button></div>
-    <div v-if="following"><button v-on:click="unFollow">Unfollow</button></div>
-    <div v-else><button v-on:click="Follow">Follow</button></div>
+   
     
 </div>
 </div>
 
-<div v-if="uploaded" class="musics">
+<div class="musicContents">
+     <div class="guideNav" v-if="uploaded">
+        <div class="guideButtons">
+        <button v-if="uploaded" class="active">音樂</button>
+    </div>
+    </div>
+    <div v-else>尚無資料</div>
+    <div v-if="uploaded" class="musics">
 <div v-for="music in musics" :key="music.postName" class="postcollection">
         <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
         <router-link :to="{name:'MusicPage',
         params:{
             postID:music.postID,
         }}">
-            <h1 class="postname">{{music.postName}}</h1>
+            <h1 class="postname">{{music.postName | capitalize}}</h1>
         </router-link>
-        <div class="posttype">{{music.postType}}</div>
+        <div class="posttype">{{music.postType | capitalize}}</div>
 </div> 
 </div>
+</div>
+
 
 </div>
 </template>
@@ -51,7 +65,6 @@ export default {
             imgSrc:"",
             bio:"",
             musics:[],
-            isthisyou:false,
             uploaded:false,
             facebook:'',
             instagram:'',
@@ -76,7 +89,7 @@ export default {
         var user = fb.auth().currentUser;
         var followArray=[];
         if(this.$route.params.userID === this.$store.state.userUID){
-            this.isthisyou = true;
+            vm.$router.push('/profile'); 
         }
         this.$store.state.currentOtherUser = this.$route.params.userID;
         if (this.$store.state.currentOtherUser) {
@@ -153,6 +166,41 @@ export default {
 </script>
 
 <style scoped>
+.guideNav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom:30px;
+    
+}
+.guideButtons .active{
+    background-color:#513E41;
+    border:2px solid #513E41;
+    color: #FFF6F6;
+    outline: none;
+    transition: 0.2s;
+}
+.guideButtons{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 40px;
+    
+}
+.guideButtons button{
+  text-align: center;
+    padding: 7px 17px 7px 17px;
+    margin-right: 20px;
+    font-size: 15px;
+    border-radius: 22px;
+    background-color: #e8dfda;
+    border:2px solid #e8dfda;
+    outline: none;
+    transition: 0.2s;
+    box-shadow: 1px 4px 10px #a5a5a5;
+    color:rgb(50, 26, 5);
+    letter-spacing: 1px;
+}
 .profile{
     display: flex;
     justify-content: flex-start;
@@ -164,6 +212,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    height: 90vh;
 }
 .imgSrc{
     width: 250px;
@@ -175,62 +224,18 @@ export default {
     margin-top: 40px;
 }
 
-
-.circle-pic{
-    width: 250px;
-    height: 250px;
-    background-color: rgb(50, 26, 5) ;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    margin: auto;
-    margin-top: 80px;
+.musicContents{
+    
+    margin-left: 60px;
+    width:800px;
+  
 }
+
 .profile-name{
     font-size: 48px;
     margin-top: 10px;
     width:max-content;
     color:rgb(50, 26, 5);
-}
-
-
-.card{
-    font-size:20px;
-    width: max-content;
-    display: flex;
-    justify-content: center;
-    margin: 10px auto;
-    align-items: center;
-    letter-spacing: 1px;
-}
-.circleCreator{
-    width: 20px;
-    height: 20px;
-    background-color:#e8dfda;
-    border-radius: 50%;
-    margin-right:8px;
-}
-.cardCreator{
-    background-color: rgb(50, 26, 5);
-    color:#e8dfda;
-    padding:8px 12px;
-    border:2px solid rgb(50, 26, 5);
-    border-radius: 35px;
-}
-
-.circleMember{
-    width: 20px;
-    height: 20px;
-    background-color:rgb(50, 26, 5);
-    border-radius: 50%;
-    margin-right:8px;
-}
-.cardMember{
-    background-color: #FFF6F6;
-    color:rgb(50, 26, 5);
-    padding:8px 12px;
-    border:2px solid #FFF6F6;
-    border-radius: 35px;
 }
 
 
@@ -264,29 +269,40 @@ export default {
    transition:0.2s ;
    opacity: 0.6;
 }
-
-.profile-manage{
-   
-    margin-top:20px;
-    margin-bottom: 50px;
+.interactionButtons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
 }
-.profile-manage button{
-    border-radius: 25px;
-    padding: 10px 15px;
-    color: rgb(50, 26, 5);
-    font-size: 16px;
-    letter-spacing: 1px;
-    background-color: #e8dfda;  
-    border:2px solid rgb(50, 26, 5);
+.interactionButtons button{
+    font-size: 15px;
+    letter-spacing: 1.5px;
+    border-radius:25px;
+    border: 2px solid #513E41;
+    padding: 8px 13px;
     cursor: pointer;
     transition: 0.3s;
     outline: none;
+    display: flex;
+    align-items: center;
 }
-.profile-manage button:hover{
-    color: rgb(50, 26, 5);
-    
-    border-color: rgb(50, 26, 5);
-    transition: 0.3s;
+.chatButton{
+    background-color:#513E41;
+    color:#FFF6F6;
+    margin-left:10px ;
+}
+.chatButton img{
+    width: 18px;
+    margin-right:8px ;
+}
+.followButton{
+    background-color: #e8dfda;
+}
+.followButton img{
+    width: 18px;
+    margin-right:8px;
+
 }
 
 .musicContents{
@@ -299,6 +315,7 @@ export default {
   flex-direction: row;
    flex-wrap: wrap;
 justify-content: space-between;
+
    
 }
 .postcollection-square{

@@ -7,6 +7,8 @@ import Manage from "../components/ManageProfile.vue"
 import Upload from "../components/Upload.vue"
 import MusicPage from "../components/MusicPage.vue"
 import OtherProfile from "../components/OtherUserProfile.vue"
+import Audiotest from '../components/Audiotest.vue'
+
 
 import * as firebase from "firebase/app";
 import "firebase/auth";
@@ -45,6 +47,12 @@ const routes = [
     name:"OtherProfile",
     component:OtherProfile
   },
+  {
+    path:"/Audiotest",
+    name:"Audiotest",
+    component:Audiotest
+  },
+
   
   
 ];

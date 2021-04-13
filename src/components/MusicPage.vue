@@ -1,11 +1,70 @@
 <template>
 <div>
 <div class="musicpage">
-    <div>
+  
+    <div class= "musicPlayer">
         <img :src="imgSrc" alt="" class="musicsrc">
-        <audio controls :src="musicSrc" alt="" class="audio">
-        </audio>
+        <div >
+            <audio
+                style="display:none"
+                ref="player"
+                :id="playerid"
+               :src="musicSrc"
+            >
+                
+            </audio>
+        </div>
+
+          <div>
+                <div id="player-row" >
+                    <div id="button-div" class="flex-initial pr-3">
+                      
+                    </div>
+                       <div
+                                v-show="audioLoaded"
+                                class="time"
+                            >
+                            
+                                <span class="text-sm" v-html="elapsedTime()">{{this.currentSeconds}}</span>
+
+                                <span class="text-sm" v-html="totalTime()"> 00:00 </span>
+                                
+                            </div>
+                    <div id="progress-bar">
+                        <div>
+                            <input
+                                v-model="playbackTime"
+                                type="range"
+                                min="0"
+                                :max="audioDuration"
+                                class="slider"
+                                id="position"
+                                name="position"
+                            />
+                            <div v-show="!audioLoaded"
+                            class="pointer-events-none"
+                            style="color: #513E41">
+                            加載中..
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="audioControls"> 
+                        <button @click="playback()" class="playbackbutton"><img src="../images/playbackButton.svg" alt=""></button>
+                      <button @click="toggleAudio()" class="playbutton">
+                            <img src="../images/playButton.svg" v-if="!isPlaying" class="play-button">
+                            <img src="../images/pauseButton.svg" class="pause" v-else>
+                        </button>
+                        <button @click="audioVolume()" class="volumebutton">
+                            <img src="../images/volumeButton.svg" v-if="!volume" >
+                            <img src="../images/muteButton.svg" v-else>
+                        </button>
+                   </div>
+                </div>
+        
     </div>
+   
+    
     <div class="postinfo">
     <h1>{{postName | capitalize}}</h1>
     <h2>{{postType | capitalize}}</h2>
@@ -144,7 +203,9 @@ let Imgfile ={};
 import {fb,db,firebase} from './firebaseinit.js';
 
 export default {
- name:'MusicPage',
+    props: ["url", "playerid"],
+    name:'MusicPage',
+
  data(){
      return{
         postName:"",
@@ -167,7 +228,14 @@ export default {
         updatepostBio:"",
         updatepostType:"",
         comment:"",
-        commentArray:[]
+        commentArray:[],
+        audioPause:true,
+        playbackTime: 0,
+        audioDuration: 100,
+        audioLoaded: false,
+        isPlaying: false,
+        currentSeconds:"00:00",
+        volume:false
      }
  },
  watch: {
@@ -180,6 +248,84 @@ created(){
     
  },
     methods:{
+        audioVolume(){
+            var audio = this.$refs.player;
+            if (audio.muted) {
+                audio.muted = false;
+                this.volume = false;
+            } else {
+                audio.muted = true;
+                this.volume = true;
+            }
+        },
+        playback(){
+            var audio = this.$refs.player;
+            audio.currentTime=0;
+            audio.play();
+        },
+        initSlider() {
+            var audio = this.$refs.player;
+            if (audio) {
+                this.audioDuration = Math.round(audio.duration);
+            }
+        },
+        convertTime(seconds){
+                            const format = val => `0${Math.floor(val)}`.slice(-2);
+                
+                var minutes = (seconds % 3600) / 60;
+                return [minutes, seconds % 60].map(format).join(":");
+        },
+        totalTime() {
+            var audio = this.$refs.player;
+            if (audio) {
+                var seconds = audio.duration;
+                return this.convertTime(seconds);
+            } else {
+                return '00:00';
+            }
+        },
+        elapsedTime() {
+            var audio = this.$refs.player;
+            if (audio) {
+                var seconds = audio.currentTime;
+                return this.convertTime(seconds);
+            } else {
+                return '00:00';
+            }
+        },
+        playbackListener() {
+            var audio = this.$refs.player;
+            this.playbackTime = audio.currentTime;
+            audio.addEventListener("ended", this.endListener);
+            audio.addEventListener("pause", this.pauseListener);
+        },
+        pauseListener() {
+            this.isPlaying = false;
+            this.listenerActive = false;
+            this.cleanupListeners();
+        },
+        endListener() {
+            this.isPlaying = false;
+            this.listenerActive = false;
+            this.cleanupListeners();
+        },
+        cleanupListeners() {
+            var audio = this.$refs.player;
+            audio.removeEventListener("timeupdate", this.playbackListener);
+            audio.removeEventListener("ended", this.endListener);
+            audio.removeEventListener("pause", this.pauseListener);
+        },
+        toggleAudio() {
+            var audio = this.$refs.player;
+            if (audio.paused) {
+                audio.play();
+                this.isPlaying = true;
+            } else {
+                audio.pause();
+                this.isPlaying = false;
+            }
+        },
+   
         doStuff(){
             this.$store.state.currentPost = Number(this.$route.params.postID);
     var vm = this;
@@ -234,12 +380,7 @@ created(){
        this.commentArray = allcomments
         
     })
-
     })
-
-
-
-
    }
         },
 
@@ -402,12 +543,147 @@ created(){
   }
 
     },
+     mounted: function() {
+      this.$nextTick(function() {
+        var audio=this.$refs.player;
+        audio.addEventListener(
+          "loadedmetadata",
+          function() {
+            this.initSlider();
+          }.bind(this)
+        );
+        audio.addEventListener(
+          "canplay",
+          function() {
+            this.audioLoaded=true;
+          }.bind(this)
+        );
+        this.$watch("isPlaying",function() {
+          if(this.isPlaying) {
+            var audio=this.$refs.player;
+            this.initSlider();
+            if(!this.listenerActive) {
+              this.listenerActive=true;
+              audio.addEventListener("timeupdate",this.playbackListener);
+            }
+          }
+        });
+
+        this.$watch("playbackTime",function() {
+           
+            var audio=this.$refs.player;
+            var diff=Math.abs(this.playbackTime-audio.currentTime);
+        
+          if(diff>0.01) {
+            this.$refs.player.currentTime=this.playbackTime;
+          }
+            var seconds = audio.currentTime;
+           
+            this.currentSeconds = this.convertTime(seconds);
+        });
+      });
+    }
   
   
 }
 </script>
 
 <style scoped>
+h1{
+    text-decoration: none;
+    color: rgb(50, 26, 5);
+}
+h2{
+    color: rgb(50, 26, 5);
+}
+p {
+    color: rgb(50, 26, 5);
+}
+
+
+.time{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: auto;
+    width: 430px;
+}
+.text-sm{
+    color: #513E41;
+    font-size:13px;
+    margin: 2px 0px; 
+}
+
+.play-button{
+    width: 32px;
+    height: 32px;
+}
+
+input[type="range"] {
+    margin: auto;
+    -webkit-appearance: none;
+    position: relative;
+    overflow: hidden;
+    width: 430px;
+    height: 10px;
+    cursor: pointer;
+    outline: none;
+    border-radius: 10px;
+    background: transparent;
+}
+input[type="range"]:focus {
+    outline: none;
+}
+::-webkit-slider-runnable-track {
+    background: #D3CCC2;
+}
+
+::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 0;
+    height: 40px;
+    background: #D3CCC2;
+    box-shadow: -100vw 0 0 100vw #513E41; 
+    border: none;
+}
+::-moz-range-track {
+    height: 40px;
+    background: #D3CCC2;
+}
+::-moz-range-thumb {
+    background: #D3CCC2;
+    height: 40px;
+    width: 0; /* 20px; */
+    border: none; /* 3px solid #999; */
+    border-radius: 0 !important;
+    box-shadow: -100vw 0 0 100vw #513E41; 
+    box-sizing: border-box;
+}
+::-ms-fill-lower {
+    background: #513E41;
+}
+::-ms-thumb {
+    background: #D3CCC2;
+    border: 2px solid #999;
+    height: 40px;
+    width: 20px;
+    box-sizing: border-box;
+}
+::-ms-ticks-after {
+    display: none;
+}
+::-ms-ticks-before {
+    display: none;
+}
+::-ms-track {
+    background: #D3CCC2;
+    color: transparent;
+    height: 40px;
+    border: none;
+}
+::-ms-tooltip {
+    display: none;
+}
 .musicpage{
     margin: 20px 100px;
     padding: 20px;
@@ -417,31 +693,155 @@ created(){
  
     height: 600px;
 }
+.musicPlayer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;    
+}
+
+.seek {
+ 
+  height: 60px;
+  width: 85%;
+  top: 0;
+  left: unset;
+  right: 0;
+}
+
+.title-and-time {
+  height: 25px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-container {
+  position: relative;
+  height: 10px;
+  width: auto;
+  display: flex;
+  align-items: center;
+}
+
+ .progress {
+  background-color: rgba(0, 0, 0, 0.05);
+  height: 4px;
+  width: 100%;
+  margin: 0;
+  padding: 0 2px;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.progress-handle {
+  display: block;
+  position: absolute;
+  z-index: 6;
+  margin-top: 0;
+  margin-left: -2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+  background-color: #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+.progress-handle:hover {
+  background-color: #000;
+}
+
+.progress-container .progress .transparent-seeker-layer {
+  width: 100%;
+  height: 6px;
+  background-color: transparent;
+  position: absolute;
+  cursor: pointer;
+  z-index: 5;
+}
+.bar {
+  width: 0;
+  background-color: #fff;
+  height: 4px;
+  position: absolute;
+}
 .musicsrc{
-    width: 500px;
-    margin:30px 30px -30px 30px;
+    width: 430px;
+    height: 430px;
+    margin: 10px 20px;
     background-color:rgb(227, 221, 221);
-    border-radius:20px;
+    border-radius:15px;
     display: flex;
     align-items: flex-end;
-    justify-content:center ;
+    justify-content:center;
+     object-fit: cover;
 }
 
-audio::-webkit-media-controls-panel {
-     background-color:rgb(247, 247, 247);
+.audioControls{
+display: flex;
+align-items: center;
+justify-content: center;
+margin-top: 20px;
+
+
 }
-
-audio:focus{
-      outline: none;
+.play{
+    padding-left: 2px;
 }
-
-
-.audio{
-    background-color:rgb(247, 247, 247);
-    padding:10px 0 10px 0;
-    width: 500px;
-    border-radius: 0;
+.playbackbutton{
+    outline: none;
+    border: none;
+    background-color: white;
+    margin-right:30px;
     
+}
+.playbackbutton img{
+    width: 24px;
+    height: 24px;
+      display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.playbutton{
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    border: 2px solid black;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    cursor: pointer;
+    background-color: white;
+}
+.playbutton img{
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.volumebutton{
+ outline: none;
+    
+    background-color: white;
+   border: none;
+   margin-left:30px;
+}
+.volumebutton img{
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .postinfo{
     margin-left:50px;
@@ -491,16 +891,6 @@ audio:focus{
     justify-content: center;
     margin: auto;
     margin-right: 20px;
-}
-.circle-pic{
-    width: 50px;
-    height: 50px; 
-    border-radius: 50%;
-    background-color: #513E41 ;
-   display: flex;
-    justify-content: center;
-    margin: auto;
-    margin-top: 80px;
 }
 
 .Popoverlay {
