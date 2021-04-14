@@ -1,5 +1,5 @@
 <template>
-<div id="app" v-bind:class="{'color':$route.path == '/profile' || $route.name == 'OtherProfile' || $route.path =='/manage'}">
+<div id="app" v-bind:class="{'color':$route.path == '/profile'  || $route.name == 'MusicPage'|| $route.name == 'OtherProfile' || $route.path =='/manage'}">
     
     <app-navbar-loggedin v-if="this.$store.state.userloggedin"></app-navbar-loggedin>
     <app-navbar-loggedout v-else></app-navbar-loggedout>

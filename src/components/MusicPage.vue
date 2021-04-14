@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="musicbackground">
 <div class="musicpage">
   
     <div class= "musicPlayer">
@@ -49,8 +49,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="audioControls"> 
-                        <button @click="playback()" class="playbackbutton"><img src="../images/playbackButton.svg" alt=""></button>
+                    <div class="controlPanel">
+                           <div class="audioControls"> 
+                        <button class="playbackbutton"><img src="../images/playbackButton.svg" @click="playback()" alt=""></button>
                       <button @click="toggleAudio()" class="playbutton">
                             <img src="../images/playButton.svg" v-if="!isPlaying" class="play-button">
                             <img src="../images/pauseButton.svg" class="pause" v-else>
@@ -60,6 +61,8 @@
                             <img src="../images/muteButton.svg" v-else>
                         </button>
                    </div>
+                    </div>
+                 
                 </div>
         
     </div>
@@ -67,15 +70,11 @@
     
     <div class="postinfo">
     <h1>{{postName | capitalize}}</h1>
-    <h2>{{postType | capitalize}}</h2>
-    <p>{{postBio | capitalize}}</p>
-   
-    <div class="postUser">
+       <div class="postUser">
       
         <div v-if="profileSrc" class="profile-pic">
             <img v-bind:src="profileSrc" alt="" class="imgSrc">
         </div>
-        <div v-else class="circle-pic"></div>
         <router-link :to="{name:'OtherProfile',
             params:{
                 userID:postUserID,
@@ -96,8 +95,45 @@
         </div>
       
 </div>
+    <h2>{{postType | capitalize}}</h2>
+    <p>{{postBio | capitalize}}</p>
+   
+ 
     </div>
+    <div class="commentSection">
+        <div class="postComment">
+                <img v-bind:src="profileSrc" alt="" class="imgSrc">
+              <input type="text" v-model="comment" placeholder="請輸入留言">
+        <button v-on:click="addComment"><img src="../images/commentButton.svg" alt=""></button>
+        </div>
+      
+    <div class="messageboard">
+    <div v-for="comment in commentArray" :key="comment.comment" class="comments">
+    <div class="commentUser">
+     <img v-bind:src="comment.profilePic" alt="" class="commentImg">
+        <router-link :to="{name:'OtherProfile',
+        params:{
+            userID:comment.user,
+        }}">
+        <p class="commentName">{{comment.name}}</p>
+        </router-link>
     </div>
+    <div class="commentContent">
+        <div class="commentString">
+            {{comment.comment}}
+        </div>
+        <div class="commentTimeStamp">
+        <div class="timestamp">{{comment.date | convertDate}} {{comment.date | convertTime}}</div>
+           
+        </div>
+    </div>
+    
+   
+</div>
+    </div>
+</div>
+    </div>
+
         <div v-if="popupEdit" v-on:click="popupEdit=false;popupDelete=false;popupReport=false" class="Popoverlay"></div>
         <div v-if="popupDelete" v-on:click="popupEdit=false;popupDelete=false;popupReport=false" class="Popoverlay"></div>
         <div v-if="popupReport" v-on:click="popupReport=false" class="Popoverlay"></div>
@@ -130,23 +166,8 @@
        
     </div>
 
-<div class="messageboard">
-    <input type="text" v-model="comment"/>
-    <button v-on:click="addComment">Post</button>
-</div>
 
-<div v-for="comment in commentArray" :key="comment.comment" class="commentSection">
-    <div class="commentUser">
-     <img v-bind:src="comment.profilePic" alt="" class="commentImg">
-        <router-link :to="{name:'OtherProfile',
-        params:{
-            userID:comment.user,
-        }}">
-        <p class="commentName">{{comment.name}}</p>
-        </router-link>
-    </div>
-    <div class="commentContent">{{comment.comment}}</div>
-</div>
+
 
         <div v-if="popupDelete" class="Deletetemplate">
         <h1>Delete</h1>
@@ -260,9 +281,12 @@ created(){
         },
         playback(){
             var audio = this.$refs.player;
+            this.currentSeconds = "00:00";
             audio.currentTime=0;
-            audio.play();
+            this.playbackTime = 0;
+           
         },
+   
         initSlider() {
             var audio = this.$refs.player;
             if (audio) {
@@ -519,8 +543,7 @@ created(){
       
      },
      addComment(){
-         var date = new Date(); 
-       
+         var date = new Date();
          var user = fb.auth().currentUser;
          var name;
          var profilePic;
@@ -559,6 +582,7 @@ created(){
           }.bind(this)
         );
         this.$watch("isPlaying",function() {
+          
           if(this.isPlaying) {
             var audio=this.$refs.player;
             this.initSlider();
@@ -570,7 +594,7 @@ created(){
         });
 
         this.$watch("playbackTime",function() {
-           
+           console.log(this.playbackTime)
             var audio=this.$refs.player;
             var diff=Math.abs(this.playbackTime-audio.currentTime);
         
@@ -684,13 +708,17 @@ input[type="range"]:focus {
 ::-ms-tooltip {
     display: none;
 }
+.musicbackground{
+    height: 100vh;
+}
 .musicpage{
-    margin: 20px 100px;
+    margin: 0px 100px 20px 100px;
     padding: 20px;
     background-color: white;
-    border-radius:20px;
+    border-radius:5px;
     display: flex;
- 
+    justify-content: flex-start;
+    box-shadow: 1px 4px 10px #a5a5a5;
     height: 600px;
 }
 .musicPlayer{
@@ -800,8 +828,8 @@ margin-top: 20px;
     
 }
 .playbackbutton img{
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
       display: flex;
     align-items: center;
     justify-content: center;
@@ -812,7 +840,7 @@ margin-top: 20px;
     width: 55px;
     height: 55px;
     border-radius: 50%;
-    border: 2px solid black;
+    border: 2px solid #513E41;
     display: flex; 
     justify-content: center;
     align-items: center;
@@ -821,8 +849,8 @@ margin-top: 20px;
     background-color: white;
 }
 .playbutton img{
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -844,29 +872,38 @@ margin-top: 20px;
     justify-content: center;
 }
 .postinfo{
-    margin-left:50px;
+    width: 350px;
+    padding:20px 30px;
     text-align: left;
 }
 .postinfo h1{
- font-size: 50px;
+    font-size: 50px;
     display: flex;
     justify-content: flex-start;
+    margin-top: 0px;
+    margin-bottom:20px;
 }
 
 .postinfo p{
     font-size:18px;
     display: flex;
     justify-content: flex-start;
-  
+    overflow: scroll;
+    overflow-x: hidden;
     line-height: 28px;
     margin-bottom: 30px;
-    width: 600px;
+    width: 350px;
+
+}
+
+.postinfo p::-webkit-scrollbar {
+  display: none;
 }
 .postinfo h2{
     font-size:20px;
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 30px;
+    margin: 30px 0px;
 }
 
 .postUser{
@@ -882,17 +919,119 @@ margin-top: 20px;
     justify-content: center;
 }
 .imgSrc{
-    
-    width: 50px;
-    height: 50px; 
+    width: 45px;
+    height: 45px; 
     border-radius: 50%;
     object-fit: cover;
     display: flex;
     justify-content: center;
     margin: auto;
-    margin-right: 20px;
+    margin-right: 15px;
 }
 
+.commentSection{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top:25px;
+    width: 350px;
+  
+}
+.messageboard {
+    overflow: scroll;
+    overflow-x: hidden;
+}
+.messageboard::-webkit-scrollbar {
+  display: none;
+}
+.postComment{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.postComment input{
+ border: 2px solid #bdb6ac;
+ height: 35px;
+ width: 250px;
+ border-radius: 25px;
+ outline: none;
+ padding-left:10px;
+}
+
+.postComment input::placeholder{
+    color: gray;
+    transition: 0.1s;
+    letter-spacing: 0.5px;
+}
+.postComment input:focus::placeholder {
+   opacity: 0;
+   transition: 0.1s; 
+}
+.postComment button{
+    border: none;
+    background-color:white;
+    padding-left: 10px;
+    
+
+}
+.postComment button img{
+   width: 25px;
+   cursor: pointer;
+   opacity: 0.9;
+    transition: 0.2s; 
+}
+.postComment button img:hover{
+   transition: 0.2s; 
+   opacity:1;
+}
+.comments{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin:10px 0px;
+    padding: 10px 20px 15px 20px;
+    width: 320px;
+    border: 2px solid #513E41;
+      
+    
+}
+
+.commentUser{
+    width: max-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.commentImg{
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius:50%;
+    margin-right:10px;
+}
+
+.commentName{
+    font-weight: bold;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+.commentContent{
+    display: flex;
+    justify-content: space-between;
+     width: 320px;
+     align-items: flex-end;
+}
+
+.timestamp{
+    font-size: 12px;
+    color:#b1aaa1;
+    letter-spacing: 1px;
+    
+}
 .Popoverlay {
     position: fixed;
     width: 100%;
@@ -1070,31 +1209,7 @@ font-size: 30px;
     justify-content: flex-start;
 }
 
-.commentSection{
-    width: 400px;
-    display: flex;
-    justify-content: flex-start;
-    align-items:center;
-   
-}
 
-.commentUser{
-    width: 200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.commentImg{
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius:50%;
-    margin-right:20px;
-}
-
-.commentName{
-    font-weight: bold;
-}
 
 
 </style>

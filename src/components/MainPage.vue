@@ -262,7 +262,7 @@ a{
     color: rgb(50, 26, 5);
 }
 .introBlock {
-    margin: 10px 100px;
+    margin: 0px 100px;
     height: 280px;
     background-color: #e8dfda;
     border-radius: 10px;
@@ -328,6 +328,7 @@ a{
     margin-bottom:10px;
 }
 .postcollection{
+    box-shadow: 1px 2px 5px #c4c4c4;
     width: 270px;
     height: 320px;
     color: rgb(50, 26, 5);

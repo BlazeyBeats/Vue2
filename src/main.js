@@ -16,6 +16,18 @@ Vue.filter('capitalize', function (value) {
   return value.charAt(0).toUpperCase() + value.slice(1)
 })
 
+Vue.filter('convertDate', function (timestamp) {
+  var date = new Date(timestamp.seconds*1000).toISOString();
+  var string = date.slice(0,-14);
+  return string;
+})
+
+Vue.filter('convertTime', function (timestamp) {
+  var date = new Date(timestamp.seconds*1000).toTimeString();
+  var string = date.slice(0,5);
+  return string;
+})
+
 
 let app;
 

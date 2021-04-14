@@ -8,7 +8,7 @@
         </div>
         
     <div class="navbarLoginButtons">  
-        <router-link to="/upload" ><button class="upload" v-bind:class="{'uploadHover':$route.path == '/profile' || $route.path =='/profile/:userID' || $route.path =='/manage'}"><img src="../images/uploadsvg.svg"><p>上傳</p></button></router-link>
+        <router-link to="/upload" ><button class="upload" v-bind:class="{'uploadHover':$route.path == '/profile'  || $route.name == 'MusicPage'|| $route.name == 'OtherProfile' || $route.path =='/manage'}"><img src="../images/uploadsvg.svg"><p>上傳</p></button></router-link>
         <router-link to="/"><button v-on:click="signOut" class="signoutBtn">登出</button></router-link>
         <router-link to="/profile" class="imgRouter">
        
