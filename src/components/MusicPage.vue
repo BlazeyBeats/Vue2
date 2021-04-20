@@ -1,8 +1,9 @@
 <template>
 <div class="musicbackground">
-<div class="musicpage">
-  
-    <div class= "musicPlayer">
+<div class="musicpage" v-if="!popupEdit">
+    <div style="display:flex; justify-content:flex-start;">
+         <div class= "musicPlayer">
+           
         <img :src="imgSrc" alt="" class="musicsrc">
         <div >
             <audio
@@ -17,7 +18,7 @@
 
           <div>
                 <div id="player-row" >
-                    <div id="button-div" class="flex-initial pr-3">
+                    <div id="button-div">
                       
                     </div>
                        <div
@@ -51,6 +52,14 @@
                     </div>
                     <div class="controlPanel">
                            <div class="audioControls"> 
+                               <button class="likebutton" v-if="!isthisyou">
+                            <img v-if="like" @click="addLike()" src="../images/likeButton.svg" alt="">
+                            <img v-else v-on:click="removeLike()" src="../images/likedButton.svg" alt="">
+                        </button>
+                            <button class="likebutton" v-if="isthisyou" style="visibility:hidden">
+                            <img src="../images/likeButton.svg" alt="">
+                        </button>
+           
                         <button class="playbackbutton"><img src="../images/playbackButton.svg" @click="playback()" alt=""></button>
                       <button @click="toggleAudio()" class="playbutton">
                             <img src="../images/playButton.svg" v-if="!isPlaying" class="play-button">
@@ -60,16 +69,20 @@
                             <img src="../images/volumeButton.svg" v-if="!volume" >
                             <img src="../images/muteButton.svg" v-else>
                         </button>
+                      
+                        
+                           <button class="reportbutton" v-on:click="popupReport=!popupReport" v-if="!isthisyou"><img src="../images/reportButton.svg" alt=""></button>
+                           
+                           <button class="reportbutton" v-if="isthisyou" v-on:click="popupEdit=!popupEdit"><img src="../images/editButton.svg" alt=""></button>
                    </div>
+                   
                     </div>
                  
                 </div>
         
-    </div>
-   
-    
+    </div>  
     <div class="postinfo">
-    <h1>{{postName | capitalize}}</h1>
+    <div class="postTitle">{{postName | capitalize}}</div>
        <div class="postUser">
       
         <div v-if="profileSrc" class="profile-pic">
@@ -81,18 +94,7 @@
             }}">
             <h1>{{postUser}}</h1>
         </router-link>
-        <div v-if="this.$store.state.userloggedin">
-              <div v-if="isthisyou">
-            <button v-on:click="popupEdit=!popupEdit" >Edit</button>
-            <button v-on:click="popupDelete=!popupDelete">Delete</button>
-           
-        </div>
-        <div v-else>
-            <button v-on:click="popupReport=!popupReport" >Report</button>
-             <div v-if="like"><button v-on:click="addLike">Like</button></div>
-            <div v-else><button v-on:click="removeLike">Removelike</button></div>
-        </div>
-        </div>
+      
       
 </div>
     <h2>{{postType | capitalize}}</h2>
@@ -100,6 +102,11 @@
    
  
     </div>
+  
+    </div>
+   
+   
+  
     <div class="commentSection">
         <div class="postComment">
                 <img v-bind:src="profileSrc" alt="" class="imgSrc">
@@ -132,42 +139,56 @@
 </div>
     </div>
 </div>
-    </div>
+</div>
 
-        <div v-if="popupEdit" v-on:click="popupEdit=false;popupDelete=false;popupReport=false" class="Popoverlay"></div>
-        <div v-if="popupDelete" v-on:click="popupEdit=false;popupDelete=false;popupReport=false" class="Popoverlay"></div>
-        <div v-if="popupReport" v-on:click="popupReport=false" class="Popoverlay"></div>
-        <div v-if="popupConfirm" v-on:click="popupConfirm=false" class="Popoverlay"></div>
+
+<div class="musicpage" v-else>
+    <div style="display:flex; justify-content:flex-start;">
+         <div class= "musicPlayer">
+             <div class="loading">
+                 <div v-if="uploading" class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                <img v-else :src="this.currentPic" alt="" class="musicsrc">
+             </div>
+          
+          <div>
+                        <div class="editControls"> 
+                        <button class="editInput" @click="inputFiles()">更換圖片</button>
+                        <input id="fileUpload" v-on:change=" chooseFile" type="file" hidden/>
+                           <button class="reportbutton" @click="updateMusic()"><img src="../images/followedButton.svg" alt=""></button>
+                   </div>
+
+                </div>
         
-
-         <div v-if="popupEdit" class="Edittemplate">
-        <h1>Edit</h1>
-        <form @submit.prevent="pressed">
-            <div class="input-edit editForm">
-                <div class="songName">
-                    <p>Song Name :</p>
-                    <input type="text" v-model="updatepostName"/>
-                </div>
-                <div class="songBio">
-                    <p>Bio :</p>
-                    <input type="text" v-model="updatepostBio" />
-                </div>
-                <div class="songType">
-                    <p>Music Type :</p>
-                    <input type="text" v-model="updatepostType" />
-                </div>
-                <p>Choose Picture File :</p>
-                <input type="file" v-on:change="chooseImgFile" class="uploadMusic"/>
-
-
-                <button v-on:click="updateMusic">Update</button>
-            </div>
-        </form>
+    </div>  
+    <div class="postinfo">
        
+    <input type="text" v-model="postName" class="postName">
+       <div class="postUser">
+      
+        <div v-if="profileSrc" class="profile-pic">
+            <img v-bind:src="profileSrc" alt="" class="imgSrc">
+        </div>
+        <router-link :to="{name:'OtherProfile',
+            params:{
+                userID:postUserID,
+            }}">
+            <h1>{{postUser}}</h1>
+        </router-link>
+  
+      
+</div>
+    <h2><input type="text" v-model="postType" class="postType"></h2>
+    <p><textarea v-model="postBio" class="postBio"></textarea></p>
     </div>
-
-
-
+    <div class="deleteButton">
+        <button  v-on:click="popupDelete=!popupDelete">刪除</button>
+    </div>
+     
+    </div>
+    </div>
+  
+<div v-if="popupDelete" v-on:click="popupEdit=false;popupDelete=false;popupReport=false" class="Popoverlay"></div>
+<div v-if="popupReport" v-on:click="popupReport=false" class="Popoverlay"></div>
 
         <div v-if="popupDelete" class="Deletetemplate">
         <h1>Delete</h1>
@@ -184,15 +205,15 @@
     </div>
 
             <div v-if="popupReport" class="Reporttemplate">
-        <h1>Report</h1>
+        <h1>檢舉</h1>
         <form @submit.prevent="pressed">
             <div class="input-edit reportForm">
                 <div>
-                    <p>Why do you want to report this post?</p>     
+                    <p>為什麼要檢舉這個音樂?</p>     
                 </div>
                
-                    <button v-on:click="reportOriginal">It's not an original</button>
-                    <button v-on:click="reportInappropriate"  >It's inappropriate</button>
+                    <button v-on:click="reportOriginal">這不是原創</button>
+                    <button v-on:click="reportInappropriate">這不洽當</button>
                
             </div>
         </form>
@@ -245,9 +266,6 @@ export default {
         postId:"",
         imageupLoad:false,
         like:true,
-        updatepostName:"",
-        updatepostBio:"",
-        updatepostType:"",
         comment:"",
         commentArray:[],
         audioPause:true,
@@ -256,7 +274,9 @@ export default {
         audioLoaded: false,
         isPlaying: false,
         currentSeconds:"00:00",
-        volume:false
+        volume:false,
+        currentPic:"",
+        uploading:false
      }
  },
  watch: {
@@ -269,6 +289,9 @@ created(){
     
  },
     methods:{
+         inputFiles(){
+            document.getElementById("fileUpload").click()
+        },
         audioVolume(){
             var audio = this.$refs.player;
             if (audio.muted) {
@@ -365,6 +388,7 @@ created(){
             this.postType = doc.data().postType;
             this.musicSrc = doc.data().musicSrc;
             this.imgSrc = doc.data().ImgSrc;
+            this.currentPic = doc.data().ImgSrc;
             this.postUserID = doc.data().postUser;
             LikeArray = doc.data().Likes;
             
@@ -408,23 +432,30 @@ created(){
    }
         },
 
-          chooseImgFile(e){
-            var vm = this;
+     chooseFile(e){
+          var vm = this;
             if(e.target.files[0]){
-            Imgfile = e.target.files[0];
+               this.uploading = true;
+             Imgfile = e.target.files[0];
+            fb.storage().ref('music/'+ this.$store.state.userUID +'/' + this.postId +'/' +'Temporary.jpg').put(Imgfile).then(function(){
+                    fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + vm.postId +'/' +'Temporary.jpg').getDownloadURL().then(url=>{
+                    vm.currentPic = url;
+                    console.log(vm.currentPic);
+                   vm.uploading = false;
+                });      
+                });
             vm.imageupLoad = true;
-            } 
+            
+            }
+            
         },
+    
 
         updateMusic(){
            var vm = this;
-             if (this.updatepostName === "") this.updatepostName = this.postName;
-             else this.postName = this.updatepostName;
-              if (this.updatepostBio === "") this.updatepostBio = this.postBio;
-             else this.postBio = this.updatepostBio;
-            if (this.updatepostType === "") this.updatepostType = this.postType;
-             else this.postType = this.updatepostType;
+         
             if(vm.imageupLoad){
+                fb.storage().ref().child('music/'+ vm.$store.state.userUID +'/' + vm.postId +'/' +'Temporary.jpg').delete();
                 fb.storage().ref('music/'+ this.$store.state.userUID +'/' + this.postId +'/' +'Img.jpg').put(Imgfile).then(function(){
                  
                 fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + vm.postId +'/' + 'Img.jpg').getDownloadURL().then(url=>{
@@ -432,9 +463,9 @@ created(){
 
            db.collection('music').doc(vm.postId).update({
                 ImgSrc:vm.imgSrc,
-                postName:vm.updatepostName,
-                postBio:vm.updatepostBio,
-                postType:vm.updatepostType 
+                postName:vm.postName,
+                postBio:vm.postBio,
+                postType:vm.postType 
             });
                
                 });
@@ -444,9 +475,9 @@ created(){
             } else{
 
                 db.collection('music').doc(this.postId).update({
-                    postName:this.updatepostName,
-                    postBio:this.updatepostBio,
-                    postType:this.updatepostType 
+                    postName:this.postName,
+                    postBio:this.postBio,
+                    postType:this.postType 
             });
              this.popupEdit = false;
             }
@@ -471,10 +502,6 @@ created(){
             });
         })
 
-
-        
-     
-        
      },
      reportOriginal(){
          this.popupReport = false;
@@ -613,6 +640,7 @@ created(){
 </script>
 
 <style scoped>
+
 h1{
     text-decoration: none;
     color: rgb(50, 26, 5);
@@ -631,6 +659,7 @@ p {
     align-items: center;
     margin: auto;
     width: 430px;
+    margin: 5px 0px;
 }
 .text-sm{
     color: #513E41;
@@ -677,8 +706,8 @@ input[type="range"]:focus {
 ::-moz-range-thumb {
     background: #D3CCC2;
     height: 40px;
-    width: 0; /* 20px; */
-    border: none; /* 3px solid #999; */
+    width: 0; 
+    border: none; 
     border-radius: 0 !important;
     box-shadow: -100vw 0 0 100vw #513E41; 
     box-sizing: border-box;
@@ -729,7 +758,6 @@ input[type="range"]:focus {
 }
 
 .seek {
- 
   height: 60px;
   width: 85%;
   top: 0;
@@ -812,10 +840,37 @@ input[type="range"]:focus {
 .audioControls{
 display: flex;
 align-items: center;
-justify-content: center;
-margin-top: 20px;
+justify-content: space-between;
+margin-top: 30px;
+}
 
-
+.loading{
+   width: 430px;
+   height: 430px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin: 10px 20px;
+}
+.editControls{
+    margin-top: 38px;
+    width: 430px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 40px;
+}
+.editInput{
+    letter-spacing: 1px;
+   background-color: white;
+   color: rgb(50, 26, 5);
+    margin-right:0px;
+    width: max-content;
+    font-size: 40px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    border:none;
 }
 .play{
     padding-left: 2px;
@@ -871,17 +926,107 @@ margin-top: 20px;
     align-items: center;
     justify-content: center;
 }
+.likebutton{
+    outline: none;
+    margin-right: 90px;
+ 
+    background-color: white;
+   border: none;
+
+}
+.likebutton img{
+    width: 25px;
+    cursor: pointer;
+}
+.reportbutton{
+    outline: none;
+    margin-left: 80px;
+    margin-top: 2px;
+    background-color: transparent;
+   border: none;
+   
+}
+.reportbutton img{
+    width: 33px;
+    cursor: pointer;
+}
+.postTitle{
+    color: rgb(50, 26, 5);
+    font-weight: bold;
+    font-size: 50px;
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
+    word-break: break-all;
+    margin-top: 0px;
+    margin-bottom:20px;
+    width: 350px  !important;
+    max-width: 400px;
+}
 .postinfo{
-    width: 350px;
     padding:20px 30px;
     text-align: left;
+    width: 300px;
+    max-width: 500px;
 }
+.postinfo input{
+    outline: none;
+    border: none;
+     border-bottom: 1px solid #513E41;
+     margin-left: -2px;
+     margin-top: -1px;
+    
+     
+}
+.postName{
+    font-size: 50px;
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom:20px;
+    width: 350px;
+    font-weight: bold;
+    color: rgb(50, 26, 5);
+   padding: 5px;
+    
+}
+.postType{
+    padding: 5px;
+     font-size:20px;
+     margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+  padding-bottom: 5px;
+     min-width: 350px;
+    width: max-content;
+}
+
+.postBio{
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+   width: 350px;
+   padding: 5px;
+   border: 1px solid #513E41;
+   outline: none;
+    resize: none;
+    font-size:18px;
+    display: flex;
+    justify-content: flex-start;
+    overflow: hidden;
+    overflow-x: hidden;
+    line-height: 28px;
+    margin-bottom: 30px;
+    width: 350px;
+    max-width: 400px;
+    height: 300px;
+}
+
 .postinfo h1{
     font-size: 50px;
     display: flex;
     justify-content: flex-start;
     margin-top: 0px;
     margin-bottom:20px;
+    width: 350px;
+    max-width: 400px;
 }
 
 .postinfo p{
@@ -893,7 +1038,8 @@ margin-top: 20px;
     line-height: 28px;
     margin-bottom: 30px;
     width: 350px;
-
+    max-width: 400px;
+    word-break: break-all;
 }
 
 .postinfo p::-webkit-scrollbar {
@@ -918,6 +1064,40 @@ margin-top: 20px;
     display: flex;
     justify-content: center;
 }
+.deleteButton{
+    width: 150px;
+    height: 560px;
+    display: flex;
+    justify-content: flex-end;
+    align-items:flex-end;
+    margin-left: 20px;
+}
+.deleteButton button{
+    display: flex;
+    align-items: center;
+    border: 2px solid #513E41;
+    height: 45px;
+    color: white;
+    letter-spacing: 1px;
+    background-color: #513E41;
+    border-radius: 30px;
+    padding: 15px 20px;
+    font-size: 25px;
+    transition: 0.2s;
+    cursor: pointer;
+    outline: none;
+}
+
+.deleteButton button:hover{
+     transition: 0.2s;
+    
+    border: 2px solid #513E41;
+    
+    color: #513E41;
+   
+    background-color: white;
+  
+}
 .imgSrc{
     width: 45px;
     height: 45px; 
@@ -933,9 +1113,11 @@ margin-top: 20px;
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
-    align-items: flex-start;
+    align-items:flex-end;
     padding-top:25px;
-    width: 350px;
+    padding-bottom:25px;
+    width: 800px;
+    margin:0px 40px 0px 40px;
   
 }
 .messageboard {
@@ -954,7 +1136,7 @@ margin-top: 20px;
 .postComment input{
  border: 2px solid #bdb6ac;
  height: 35px;
- width: 250px;
+width: 280px;
  border-radius: 25px;
  outline: none;
  padding-left:10px;
@@ -981,6 +1163,7 @@ margin-top: 20px;
    cursor: pointer;
    opacity: 0.9;
     transition: 0.2s; 
+   
 }
 .postComment button img:hover{
    transition: 0.2s; 
@@ -991,12 +1174,12 @@ margin-top: 20px;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    margin:10px 0px;
+    margin:10px 0px 20px 0px;
     padding: 10px 20px 15px 20px;
-    width: 320px;
     border: 2px solid #513E41;
-      
-    
+    width: 350px;
+  
+
 }
 
 .commentUser{
@@ -1022,10 +1205,12 @@ margin-top: 20px;
 .commentContent{
     display: flex;
     justify-content: space-between;
-     width: 320px;
-     align-items: flex-end;
+    width: 100%;
+    align-items: flex-end;
 }
-
+.commentString{
+    margin-right: 20px;
+}
 .timestamp{
     font-size: 12px;
     color:#b1aaa1;
@@ -1209,7 +1394,41 @@ font-size: 30px;
     justify-content: flex-start;
 }
 
-
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid #513E41;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #513E41 transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 
 </style>

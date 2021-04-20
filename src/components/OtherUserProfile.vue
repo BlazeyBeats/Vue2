@@ -227,7 +227,7 @@ export default {
 .musicContents{
     
     margin-left: 60px;
-    width:800px;
+   margin-right: 60px;
   
 }
 
@@ -334,7 +334,7 @@ justify-content: space-between;
     align-items:center;
     justify-content:flex-end;
     flex-direction: column;
-    margin: 10px 0px;
+    margin: 10px 40px 30px 0px;
     padding-bottom: 20px;
    background-color: #D3CCC2;
    border-radius: 15px;

@@ -259,7 +259,7 @@ export default {
 
 .musicContents{ 
     margin-left: 60px;
-    width:800px;
+   margin-right: 60px;
 }
 .guideNav{
     display: flex;
@@ -299,9 +299,9 @@ export default {
 }
 .musics{
    display: flex;
-  flex-direction: row;
+    flex-direction: row;
    flex-wrap: wrap;
-justify-content: space-between;
+    justify-content: space-between;
    margin-bottom: 30px;
 }
 .following{
@@ -327,7 +327,7 @@ justify-content: space-between;
     align-items:center;
     justify-content:flex-end;
     flex-direction: column;
-    margin: 10px 0px;
+    margin: 10px 40px 30px 0px;
     padding-bottom: 20px;
    background-color: #D3CCC2;
    border-radius: 15px;

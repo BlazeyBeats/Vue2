@@ -177,18 +177,19 @@ export default {
 
 <style scoped>
 .manage{
-  height:calc(100vh - 140px);
+  
   background-color: #e8dfda;
   display: flex;
   align-items: flex-end;
-  padding-top:60px;
+ 
 }
 .update-profile{
     display: flex;
    justify-content: flex-start;
     width: 800px;
+    height: 60vh;
    align-items: center;
-    margin: 20px auto 150px auto;
+    margin: 20px auto 14rem auto;
 
 }
 .picture{
