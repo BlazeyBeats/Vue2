@@ -34,10 +34,15 @@
     
     </div>
  
-    
+   <div style="height:60vh; display:flex; align-items:flex-end; padding:0px 0px 70px 60px">
+     <button class="updateProfile" v-on:click="updateProfile" >完成編輯</button> 
+   </div>
+        
+  
   
     </div>
-       <button class="updateProfile" v-on:click="updateProfile" >完成編輯</button> 
+    
+     
     
 
 </div>
@@ -185,8 +190,8 @@ export default {
 }
 .update-profile{
     display: flex;
-   justify-content: flex-start;
-    width: 800px;
+   justify-content: center;
+    width: max-content;
     height: 60vh;
    align-items: center;
     margin: 20px auto 14rem auto;
@@ -297,12 +302,10 @@ object-fit: cover;
    width: 500px;
 }
 .updateProfile{
+  width: max-content;
    display: flex;
    align-items: center;
    height: 40px;
-   margin-top: 10px;
-   margin-bottom: 160px;
-   margin-right: 200px;
    letter-spacing: 1px;
     color: white;
     font-size: 16px;
