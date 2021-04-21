@@ -34,7 +34,7 @@
     
     </div>
  
-   <div style="height:60vh; display:flex; align-items:flex-end; padding:0px 0px 70px 60px">
+   <div style="height:500px;display:flex; align-items:flex-end;margin-left:50px;margin-bottom:10px;">
      <button class="updateProfile" v-on:click="updateProfile" >完成編輯</button> 
    </div>
         
@@ -182,19 +182,20 @@ export default {
 
 <style scoped>
 .manage{
-  
+  height: 85vh;
   background-color: #e8dfda;
   display: flex;
-  align-items: flex-end;
+  justify-content: center;
+  align-items: flex-start;
  
 }
 .update-profile{
+  height: 500px;
     display: flex;
    justify-content: center;
     width: max-content;
-    height: 60vh;
    align-items: center;
-    margin: 20px auto 14rem auto;
+    
 
 }
 .picture{
