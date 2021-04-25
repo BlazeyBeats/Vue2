@@ -1,22 +1,31 @@
 .<template>
     <div class="chatroom">
-        <div class="notActive" v-if="this.$store.state.userloggedin">
-            <div class="plus" v-on:click="opencontact=!opencontact"></div>
+        <div class="notActive" v-if="this.$store.state.userloggedin" v-bind:class="{'displayChat':opencontact == true ||$store.state.openchat == true}">
+            <div class="chatFixed" v-on:click="opencontact=!opencontact"><img  src="../images/chatFixed.svg" alt=""></div>
         </div>
 
         <div class="activeContacts" v-if="opencontact">
-              <div v-for="(contact,idx) in contacts" :key="idx" class="contactSection">
+            <div class="chatTitle">
+                <div class="circle">
+                </div>
+                聊天室
+            </div>
+            <div id="contactSection">
+                       <div v-for="(contact,idx) in contacts" :key="idx" class="contactSection">
                 <div class="contactUser" v-bind:data-id = "contact.userUID" v-on:click=" callchat">
                    
                
                       
                              <img v-bind:src="contact.profilePic" alt="" class="contactImg">
                         <p class="contactname">{{contact.name}}</p>
+                      
                     </div>
                 </div>
+            </div>  
+       
         </div>
 
-        <div class="activeChat" v-if="this.$store.state.openchat">
+        <div class="activeChat" v-if="this.$store.state.openchat" >
             <div class="chatUser">
                 <img v-bind:src="imgSrc" alt="" class="imgSrc">
                 <router-link :to="{name:'OtherProfile',
@@ -30,18 +39,18 @@
             <div id="container" class="messageboard">
 
                 <div v-for="(chat, idx) in messagesArray" :key="idx" class="messageSection">
-                <div class="messageUser">
+                <div class="messageUser" v-bind:class="{'textRight':$store.state.userUID == chat.user}">
                     <img v-bind:src="chat.profilePic" alt="" class="messageImg">
                
                     <div class="messageContent">{{chat.message}}</div>
                     </div>
                 </div>
-
+            </div>
                 <div class="messagebox">
                     <input type="text" v-model="messages" @keyup.enter="message"/>
                     
                 </div>
-            </div>
+            
       </div>
     </div>
 </template>
@@ -61,40 +70,20 @@ export default {
     },
 
     created(){
-        
+     
  
     },
     watch:{
+  
          '$store.state.userloggedin': function () {
-     var user = fb.auth().currentUser;
-         var contacts = [];
-        db.collection('profiles').doc(user.uid)
-        .onSnapshot((doc) => {
-        contacts = doc.data().messagesTime
-       
-        if(user){
-            this.notActive = true;
-        }
-         if(contacts){
-             this.contacts = [];
-                var j = Number(contacts.length)-1;
-                for(j; j>=0;j--){
-                    db.collection('profiles').doc(contacts[j]).get().then(doc =>{
-                    this.contacts.push(doc.data());
-                    
-                    })
-                }
-            }
-
-
-
-
-    });
-      
+              this.contacts=[];
+        this.opencontact=false;
+        this.$store.state.openchat=false;
+             this.fetchContacts();  
     },
         '$store.state.messageUser': function() {
-
-            this.name ="";
+             
+         this.name ="";
             this.imgSrc="";
             this.messages="";
             this.messagesArray= [];
@@ -116,14 +105,46 @@ export default {
             allmessages.push(doc.data())
         })
        this.messagesArray = allmessages;
-        
+       this.scrollToBottom();
+       
     })
-
+   
         
          } 
+    setTimeout(()=>{
+            this.scrollToBottom();
+        },1000);
         }
     },
     methods: {
+        fetchContacts(){
+        
+        var user = fb.auth().currentUser;
+         var contacts = [];
+        db.collection('profiles').doc(user.uid)
+        .onSnapshot((doc) => {
+        this.contacts = [];
+        contacts = doc.data().messagesTime;
+       
+        if(user){
+            this.notActive = true;
+        }
+         if(contacts){
+             this.contacts = [];
+                var j = Number(contacts.length)-1;
+                for(j; j>=0;j--){
+                    db.collection('profiles').doc(contacts[j]).get().then(doc =>{
+                    this.contacts.push(doc.data());
+                    
+                    })
+                }
+            }
+    });
+        },
+        scrollToBottom(){
+            let box = document.querySelector('.messageboard');
+            box.scrollTop=box.scrollHeight;
+        },
         opencontacts(){
             
             this.opencontact = true;
@@ -137,6 +158,9 @@ export default {
             
             this.$store.state.messageUser = event.target.dataset.id;
             this.$store.state.openchat = true;
+             setTimeout(()=>{
+            this.scrollToBottom();
+        },1000);
         },
 
         message() {
@@ -146,7 +170,7 @@ export default {
          var user = fb.auth().currentUser;
          var name;
          var profilePic;
-
+        this.contacts = [];
         
         
          db.collection('profiles').doc(user.uid).get().then(doc =>{ 
@@ -206,14 +230,11 @@ export default {
             message:this.messages,
             
         });
-        this.messages="",
-        this.scrollToEnd();
+        this.messages="";
+        
           })
       },
-      scrollToEnd() {    	
-      var container = this.$el.querySelector("#container");
-      container.scrollTop = container.scrollHeight;
-    },
+     
         
     }
  
@@ -230,17 +251,43 @@ export default {
     
 }
 .activeContacts{
-position: fixed;
+    border-radius: 10px; 
+    position: fixed;
     bottom: 20px;
     right: 100px;
-    width: 270px;
-    height: 360px;
+    width: 300px;
+    height: 400px;
     background-color: white;
-   -webkit-box-shadow: 0 0 15px #a7a7a7;
-	-moz-box-shadow: 0 0 15px #a7a7a7;
-	box-shadow: 0 0 15px #a7a7a7;
+   -webkit-box-shadow: 0 0 15px #929292;
+	-moz-box-shadow: 0 0 15px #929292;
+	box-shadow: 0 0 15px #929292;
+    margin-right: 20px;
 }
+#contactSection{
+    overflow: scroll;
+    overflow-x: hidden;
+  height:340px;
+}
+.chatTitle{
+    border-radius: 10px 10px 0px 0px; 
+height: 60px;
+display: flex;
+justify-content: flex-start;
+align-items: center;
+color: rgb(50, 26, 5);
+font-size: 18px;
+background-color:#e8dfda ;
+letter-spacing: 1px;
 
+}
+.circle{
+    margin-left: 20px;
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgb(50, 26, 5);
+}
 .contactUser{
     display: flex;
     justify-content: flex-start;
@@ -251,7 +298,7 @@ position: fixed;
    
 }
 .contactUser:hover{
- background-color: rgb(226, 226, 226);
+ background-color: rgb(241, 241, 241);
  transition: 0.2s;
 }
 
@@ -267,16 +314,19 @@ position: fixed;
     width: 300px;
     height: 400px;
     background-color: white;
-   -webkit-box-shadow: 0 0 15px #a7a7a7;
-	-moz-box-shadow: 0 0 15px #a7a7a7;
-	box-shadow: 0 0 15px #a7a7a7;
+   -webkit-box-shadow: 0 0 15px #929292;
+	-moz-box-shadow: 0 0 15px #929292;
+	box-shadow: 0 0 15px #929292;
+    margin-right: 20px;
 }
 .chatUser{
     padding: 10px;
     display: flex;
+    font-size: 20px;
+    font-weight: 500;
     justify-content: flex-start;
     align-items: center;
-    background-color:rgb(227, 221, 221) ;
+    background-color:#e8dfda;
 }
 .chatUser img{
     width: 45px;
@@ -321,11 +371,12 @@ position: fixed;
     align-items: center;
     
 }
+
 .messageboard{
     height: 301px;
     overflow: scroll;
     overflow-x: hidden;
-    
+   
 }
 .messageSection{
     width: 292px;
@@ -337,6 +388,18 @@ position: fixed;
     align-items: center;
     margin: 10px;
 }
+.textRight{
+    display: flex;
+    justify-content: flex-end;
+    
+}
+.textRight .messageContent{
+    margin-right: 10px;
+    background-color:#f7efef ;
+}
+.textRight img{
+   display: none;
+}
 .messageUser img{
     width: 30px;
     border-radius: 50%;
@@ -346,26 +409,43 @@ position: fixed;
 .messageImg{
     width: 20px;
 }
+.messageContent{
+    overflow: hidden;
+    max-width: 180px;
+    word-break: break-all;
+    text-align: left;
+    background-color:#e8dfda;
+    padding: 6px 11px;
+    border-radius: 25px;
+    color:rgb(48, 48, 48);
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .messagebox input{
     width: 292px;
     height: 30px;
+    outline: none;
+    padding-left: 5px;
+    border: 1px solid rgb(50, 26, 5);
 }
-.plus {
+.chatFixed {
     cursor: pointer;
     display:inline-block;
-    width:60px;
-    height:60px;
-    background:
-    linear-gradient(#fff,#fff),
-    linear-gradient(#fff,#fff),
-    #000;
-    background-position:center;
-    background-size: 50% 3px,3px 50%; /*thickness = 2px, length = 50% (25px)*/
-    background-repeat:no-repeat;
+    width:65px;
+    height:65px;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 50%;
     transition: 0.4s;
 }
-.plus:hover {
+.chatFixed img{
+    width: 35px;
+}
+.chatFixed:hover {
     
     opacity: 0.8;
     transition: 0.4s;
