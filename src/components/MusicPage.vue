@@ -440,7 +440,7 @@ created(){
             fb.storage().ref('music/'+ this.$store.state.userUID +'/' + this.postId +'/' +'Temporary.jpg').put(Imgfile).then(function(){
                     fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + vm.postId +'/' +'Temporary.jpg').getDownloadURL().then(url=>{
                     vm.currentPic = url;
-                    console.log(vm.currentPic);
+                    
                    vm.uploading = false;
                 });      
                 });
@@ -489,9 +489,7 @@ created(){
       deleteMusic(){
         var vm = this;
         var storageRef = fb.storage().ref();
-        console.log(vm.$store.state.userUID);
-        console.log( vm.postId);
-
+      
         db.collection("music").doc(vm.postId).delete().then(()=>{
             storageRef.child('music/'+ this.$store.state.userUID +'/' + this.postId +'/' +'Img.jpg').delete().then(()=>{
                 storageRef.child('music/'+ this.$store.state.userUID +'/' + this.postId +'/' + 'Music.mp3').delete();
@@ -621,7 +619,7 @@ created(){
         });
 
         this.$watch("playbackTime",function() {
-           console.log(this.playbackTime)
+          
             var audio=this.$refs.player;
             var diff=Math.abs(this.playbackTime-audio.currentTime);
         

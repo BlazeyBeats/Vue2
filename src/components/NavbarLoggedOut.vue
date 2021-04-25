@@ -10,7 +10,7 @@
 
      <div class="navbarButtons">  
         <button v-on:click="popupsignin=!popupsignin;" class="signinBtn">登入</button>
-        <button v-on:click="popupsignup=!popupsignup;" class="signupBtn">註冊</button>
+        <button v-on:click="popupsignup=!popupsignup;" class="signupBtn" v-bind:class="{'signupBtnColor':$route.name == 'MusicPage'}">註冊</button>
     </div>
     </div>
     <div v-if="popupsignin" v-on:click="popupsignup=false;popupsignin=false" class="signoverlay"></div>
@@ -92,8 +92,8 @@ export default {
            
                 fb.auth()
                 .signInWithEmailAndPassword(this.email, this.password)
-                .then(data => {
-                    console.log(data);
+                .then(() =>  {
+                   
                     var user = fb.auth().currentUser;
                     this.$store.state.userUID = user.uid;
                     this.$store.state.userloggedin = true;
@@ -182,7 +182,9 @@ export default {
     color: #513E41;
     background-color:#FFF6F6;
 }
-
+.signupBtnColor{
+background-color:#e8dfda !important;
+}
 .signoverlay {
     position: fixed;
     width: 100%;

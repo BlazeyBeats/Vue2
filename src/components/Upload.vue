@@ -191,7 +191,7 @@ export default {
         });
 
         this.$watch("playbackTime",function() {
-           console.log(this.playbackTime)
+           
             var audio=this.$refs.player;
             var diff=Math.abs(this.playbackTime-audio.currentTime);
         
@@ -388,8 +388,8 @@ export default {
                 break;
         }
         }, 
-          (error) => {
-        console.log(error);
+          () => {
+        
         }, 
         () => {
               uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {

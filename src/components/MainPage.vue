@@ -207,7 +207,7 @@ data() {
                             })
                        }
                     }
-                    } console.log(vm.musicsFollowing);
+                    } 
                     }, 1000)
                     ;
                 }   
@@ -223,13 +223,8 @@ data() {
             
             
            
-            db.collection('types').doc(this.search.toLowerCase().trim()).get().then((doc) => {
-            if (doc.exists) {
-        console.log("Document data:", doc.data());
-        } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-        }
+            db.collection('types').doc(this.search.toLowerCase().trim()).get().then(() => {
+           
         })
         }
     },

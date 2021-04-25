@@ -1,0 +1,15 @@
+{
+  "rules": {
+    ".read": true, 
+    ".write": "auth != null"
+  },
+  "hosting": {
+    "public": "dist",
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/dist/index.html"
+      }
+    ]
+  }
+}
