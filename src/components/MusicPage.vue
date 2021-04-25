@@ -108,7 +108,7 @@
    
   
     <div class="commentSection">
-        <div class="postComment">
+        <div class="postComment" v-if="this.$store.state.userloggedin">
                 <img v-bind:src="profileSrc" alt="" class="imgSrc">
               <input type="text" v-model="comment" placeholder="請輸入留言">
         <button v-on:click="addComment"><img src="../images/commentButton.svg" alt=""></button>
