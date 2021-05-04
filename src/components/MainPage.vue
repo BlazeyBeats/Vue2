@@ -5,39 +5,46 @@
         <div v-if="this.$store.state.phoneWindow">
             <img src="../images/posterSmall.png" alt="">
         </div>
-        <div v-else>
-        <div class="introcontentleft" >
+        
+        <div class="introcontentleft" v-if="this.$store.state.phoneWindow ==false">
             <img class="logoLeft" src="../images/logoword_svg.svg" alt="">
         </div>
-        <div class="introcontentright" >
+        <div class="introcontentright" v-if="this.$store.state.phoneWindow ==false">
             <img class="logoRight" src="../images/homepicsvg.svg" alt="">
         </div>
-        </div>
+        
         
     </div>
 </div>
 <div class="guideNav">
-    <div class="guideButtons">
+    <div class="guideButtons"  >
     <button v-on:click="newPosts=true;following=false;hotPosts=false" v-bind:class="{ active: newPosts }">最新</button>
     <button v-on:click="hotPosts=true;following=false;newPosts=false" v-bind:class="{ active: hotPosts }">熱門</button>
-    <div v-if="this.$store.state.userloggedin"><div v-if="followingFlag"><button v-on:click="following=true;newPosts=false;hotPosts=false" v-bind:class="{ active: following }">追蹤中</button></div></div>
+    <div v-if="musicsFollowing.length != 0" v-bind:class="{ 'searchHidden': searchFocus }"><button v-on:click="following=true;newPosts=false;hotPosts=false" v-bind:class="{ active: following }">追蹤中</button></div>
     </div>
    
-    <div class ="guideSearch" v-if="this.$store.state.phoneWindow == false"><img src="../images/searchsvg.svg" alt="" class="searchSvg"><input type="text" v-model="search" placeholder="search music" @keyup.enter="searchMusic"></div>
-    <div v-else><img src="../images/searchsvg.svg" alt="" class="searchSvg"></div>
+    <div class ="guideSearch" v-if="this.$store.state.phoneWindow ==false"><img src="../images/searchsvg.svg" alt="" class="searchSvg"><input type="text" v-model="search" placeholder="search music" @keyup.enter="searchMusic"></div>
+   
+
+    <form id="demo-2" v-if="this.$store.state.phoneWindow">
+	<input type="search" v-model="search" placeholder="search music" @focus="searchFocus = true" @blur="searchUnFocus()" >
+    </form>
+
 </div>
 
 <div class="mainpageMusic">
     <div class="musics" v-if="newPosts">
 <div v-for="(music,idx) in filteredMusicNew" :key="idx" class="postcollection">
        <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
-        <router-link :to="{name:'MusicPage',
+       <div class="phoneFlex">
+            <router-link :to="{name:'MusicPage',
         params:{
             postID:music.postID,
         }}">
         <h1 class="postname">{{music.postName | capitalize}}</h1>
         </router-link>
         <div class="posttype">{{music.postType | capitalize}}</div>
+       </div>
 </div>
 <div class="flexgrow"></div>
 <div class="flexgrow"></div>
@@ -47,13 +54,16 @@
 <div class="musics" v-if="hotPosts">
 <div v-for="(music,idx) in filteredMusicHot" :key="idx" class="postcollection">
        <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
-        <router-link :to="{name:'MusicPage',
+       <div class="phoneFlex">
+            <router-link :to="{name:'MusicPage',
         params:{
             postID:music.postID,
         }}">
         <h1 class="postname">{{music.postName}}</h1>
         </router-link>
         <div class="posttype">{{music.postType | capitalize}}</div>
+       </div>
+       
 </div>
 <div class="flexgrow"></div>
 <div class="flexgrow"></div>
@@ -65,13 +75,16 @@
 <div class="musics" v-if="following && this.$store.state.userloggedin">
 <div v-for="(music,idx) in filteredMusicFollowing" :key="idx" class="postcollection">
        <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
-        <router-link :to="{name:'MusicPage',
+       <div class="phoneFlex">
+             <router-link :to="{name:'MusicPage',
         params:{
             postID:music.postID,
         }}">
         <h1 class="postname">{{music.postName}}</h1>
         </router-link>
         <div class="posttype">{{music.postType | capitalize}}</div>
+       </div>
+      
 </div> 
 <div class="flexgrow"></div>
 <div class="flexgrow"></div>
@@ -103,10 +116,12 @@ data() {
             followingFlag:false,
             following:false,
             search:'',
+            searchFocus:false
             
         };
     },
     watch:{
+        
         '$store.state.userloggedin': function () {
           this.musicsFollowing = [];
           this.followingFlag = false;
@@ -165,7 +180,9 @@ data() {
 
     },
     methods:{
-
+        searchUnFocus(){
+            setTimeout(() => this.searchFocus = false, 300);
+        },
         getfollowingData(){
           this.newPosts = true;
           this.hotPosts = false;
@@ -353,6 +370,7 @@ a{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 35px;
     margin-top: 40px;
     margin-left: 100px;
     margin-right: 100px;
@@ -368,7 +386,7 @@ a{
     display: flex;
     align-items: center;
     justify-content: flex-start;
-
+    
 }
 .guideButtons button{
    text-align: center;
@@ -421,7 +439,6 @@ a{
 
 @media screen and (max-width: 425px) {
   .introBlock {
-    
     margin-left: 40px;
     margin-right: 40px;
     height: max-content;
@@ -440,8 +457,103 @@ a{
 .guideButtons button{
     padding: 4px 14px;
     margin-right: 10px;
-    font-size: 12px;
+    font-size: 14px;
     letter-spacing: 0px;
 }
+.musics{
+    padding: 20px 40px;
+    margin: 0px auto;
+    justify-content: center;
+}
+.postcollection-square{
+    width: 90px;
+    height: auto;
+    margin: 0px;
+    margin-right:20px;    
+}
+.postcollection{
+    width: 100%;
+    height: 90px;
+    margin: 10px 0px;
+    padding: 10px;
+   justify-content: flex-start;
+   flex-direction:row;
+}
+.postname{
+    margin-top:0px;
+}
+.phoneFlex{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+input {
+	outline: none;
+    border: none;
+  
+}
+input[type=search] {
+	-webkit-appearance: textfield;
+	-webkit-box-sizing: content-box;
+	font-family: inherit;
+	font-size: 100%;
+}
+input::-webkit-search-decoration,
+input::-webkit-search-cancel-button {
+	display: none; 
+}
+
+
+input[type=search] {
+	background: #FFF6F6 url(../images/searchsvg.svg) no-repeat 9px center;
+    background-size:25px;
+    
+    border: none;
+	padding: 9px 10px 9px 32px;
+	width: 55px;
+	
+	-webkit-border-radius: 10em;
+	-moz-border-radius: 10em;
+	border-radius: 10em;
+	
+	-webkit-transition: all .5s;
+	-moz-transition: all .5s;
+	transition: all .5s;
+}
+
+input::-webkit-input-placeholder {
+	color: #999;
+}
+#demo-2 input[type=search] {
+	width: 15px;
+	padding-left: 10px;
+	color: transparent;
+	cursor: pointer;
+}
+
+#demo-2 input[type=search]:focus {
+	width: 140px;
+	padding-left: 45px;
+    border: 1.5px solid rgb(50, 26, 5);
+	cursor: auto;
+    color: rgb(50, 26, 5);
+    
+}
+
+#demo-2 input:-moz-placeholder {
+	color: transparent;
+}
+#demo-2 input::-webkit-input-placeholder {
+	color: transparent;
+}
+.searchHidden{
+    display:none;
+    transition: all .5s;
+}
+
+
+
 }
 </style>
