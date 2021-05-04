@@ -103,7 +103,7 @@
         <textarea v-model="postBio" ></textarea>   
     </div> 
     </div>
-    <div v-if="audioLoaded"   style="height: 430px;display:flex; align-items:flex-end;">
+    <div v-if="audioLoaded && postName!=''" style="height: 430px;display:flex; align-items:flex-end;">
         <button class="uploadButton" @click="uploadMusic()">上傳</button>
     </div>
  </div>

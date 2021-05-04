@@ -21,6 +21,12 @@ import "firebase/auth";
 
 
 export default {
+        data() {
+        return {
+            firebasetest:false,
+            windowWidth: 0,
+        };
+    },
     components: {
        
         'app-navbar-loggedout': NavbarLoggedOut,
@@ -31,9 +37,29 @@ export default {
     },
     mounted() {
         this.setupFirebase();
+
+         this.$nextTick(function() {
+      window.addEventListener('resize', this.getWindowWidth);
+
+      //Init
+      this.getWindowWidth();
+    });
     },
-    
+   
+    beforeDestroy() {
+    window.removeEventListener('resize', this.getWindowWidth);
+  },
     methods: {
+         getWindowWidth() {
+        this.windowWidth = document.documentElement.clientWidth;
+        if(this.windowWidth <= 425){
+            this.$store.state.phoneWindow = true;
+        }else{
+            this.$store.state.phoneWindow =false;
+        }
+       
+      },
+
         setupFirebase() {
             firebase.auth().onAuthStateChanged(user => {
                 if (user) {
@@ -59,12 +85,8 @@ export default {
                     });
                 });
         }
-    },
-    data() {
-        return {
-            firebasetest:false
-        };
     }
+
 };
 </script>  
 

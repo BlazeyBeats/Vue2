@@ -2,12 +2,18 @@
 <div class="mainpage">
 <div class="intro">
     <div class="introBlock">
-        <div class="introcontentleft">
+        <div v-if="this.$store.state.phoneWindow">
+            <img src="../images/posterSmall.png" alt="">
+        </div>
+        <div v-else>
+        <div class="introcontentleft" >
             <img class="logoLeft" src="../images/logoword_svg.svg" alt="">
         </div>
-        <div class="introcontentright">
+        <div class="introcontentright" >
             <img class="logoRight" src="../images/homepicsvg.svg" alt="">
         </div>
+        </div>
+        
     </div>
 </div>
 <div class="guideNav">
@@ -17,7 +23,8 @@
     <div v-if="this.$store.state.userloggedin"><div v-if="followingFlag"><button v-on:click="following=true;newPosts=false;hotPosts=false" v-bind:class="{ active: following }">追蹤中</button></div></div>
     </div>
    
-    <div class ="guideSearch"><img src="../images/searchsvg.svg" alt="" class="searchSvg"><input type="text" v-model="search" placeholder="search music" @keyup.enter="searchMusic"></div>
+    <div class ="guideSearch" v-if="this.$store.state.phoneWindow == false"><img src="../images/searchsvg.svg" alt="" class="searchSvg"><input type="text" v-model="search" placeholder="search music" @keyup.enter="searchMusic"></div>
+    <div v-else><img src="../images/searchsvg.svg" alt="" class="searchSvg"></div>
 </div>
 
 <div class="mainpageMusic">
@@ -158,6 +165,7 @@ data() {
 
     },
     methods:{
+
         getfollowingData(){
           this.newPosts = true;
           this.hotPosts = false;
@@ -220,9 +228,7 @@ data() {
        
         },
         searchMusic(){
-            
-            
-           
+
             db.collection('types').doc(this.search.toLowerCase().trim()).get().then(() => {
            
         })
@@ -252,6 +258,9 @@ data() {
 </script>
 
 <style scoped>
+.mobile{
+    display: none;
+}
 a{
     text-decoration: none;
     color: rgb(50, 26, 5);
@@ -359,8 +368,7 @@ a{
     display: flex;
     align-items: center;
     justify-content: flex-start;
-  
-    
+
 }
 .guideButtons button{
    text-align: center;
@@ -409,5 +417,31 @@ a{
 .guideSearch  input:focus::placeholder {
    opacity: 0;
    transition: 0.1s; 
+}
+
+@media screen and (max-width: 425px) {
+  .introBlock {
+    
+    margin-left: 40px;
+    margin-right: 40px;
+    height: max-content;
+     background-color: #FFF6F6;
+  }
+    .introBlock img{
+    object-fit: cover;
+    max-width:100%;
+    border-radius: 10px;
+  }
+  .guideNav{
+    margin-top: 30px;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+.guideButtons button{
+    padding: 4px 14px;
+    margin-right: 10px;
+    font-size: 12px;
+    letter-spacing: 0px;
+}
 }
 </style>

@@ -139,8 +139,6 @@ export default {
     margin-right:100px;
 }
 
-
-
 .navbarButtons{
     display: flex;
     justify-content: center;
@@ -153,10 +151,8 @@ export default {
 }
 .navbar button {
     font-size: 20px;
-   
     outline: none;
-   
-    
+
 }
 .signinBtn{
     padding: 3px 17px 3px 20px;
@@ -166,8 +162,7 @@ export default {
      background-color: #513E41;
     letter-spacing: 2px;
     transition: 0.2s;
-    
-   
+
 }
 .signinBtn:hover{
     border: 2px solid #513E41;
@@ -176,7 +171,7 @@ export default {
      transition: 0.2s;
 }
 .signupBtn {
-    margin-right: 75px;
+    
     margin-left:30px;
     border: none;
     color: #513E41;
@@ -300,8 +295,8 @@ background-color:#e8dfda !important;
 .error {
     display: flex;
     justify-content: flex-start;
-    margin-left: 55px;
-    margin-top: 10px;
+    font-size: 20px;
+    margin: 30px;
 }
 
 .switch-template {
@@ -321,5 +316,74 @@ background-color:#e8dfda !important;
     font-size: 20px;
     letter-spacing: 2px;
     margin-left: 5px;
+}
+
+@media screen and (max-width: 425px) {
+.navbar button {
+    font-size: 16px;
+}
+  .signinBtn{
+    padding: 2px 12px 2px 16px;
+}
+.signupBtn {
+    margin-left:15px;
+}
+
+.signintemplate  {
+    width: 360px;
+    height: 470px;
+    margin-top: -235px;
+    margin-left: -180px;
+}
+
+.signuptemplate  {
+   width: 360px;
+    height: 470px;
+    margin-top: -235px;
+    margin-left: -180px;
+   
+}
+.signtemplate h1 {
+    font-size: 22px;
+    padding: 15px;
+   
+}
+.input-email-password{
+    margin: 0px 20px;
+}
+.input-email-password p {
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    
+  
+}
+
+.input-email-password input {
+    font-size: 15px;
+    padding-left: 15px;
+    width: 280px;
+    height: 28px;
+}
+.input-email-password button { 
+    font-size: 17px;
+    margin: 30px auto 10px auto;
+    padding: 6px 20px 6px 23px;
+    width: max-content;
+}
+.error {
+    font-size: 14px;
+    margin: 10px;
+}
+
+.switch-template {
+    margin: 10px 55px;
+    font-size: 15px;
+}
+
+.switch-template button {
+    font-size: 15px;
+    margin-left: 5px;
+}
 }
 </style>

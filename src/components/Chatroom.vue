@@ -105,11 +105,12 @@ export default {
             allmessages.push(doc.data())
         })
        this.messagesArray = allmessages;
-       this.scrollToBottom();
+        setTimeout(()=>{
+            this.scrollToBottom();
+        },1000);
        
     })
-   
-        
+
          } 
     setTimeout(()=>{
             this.scrollToBottom();
@@ -158,6 +159,7 @@ export default {
             
             this.$store.state.messageUser = event.target.dataset.id;
             this.$store.state.openchat = true;
+           
              setTimeout(()=>{
             this.scrollToBottom();
         },1000);
@@ -207,9 +209,6 @@ export default {
        
          });
 
-
-
-
         db.collection('profiles').doc(user.uid).get().then(doc=>{
             name = doc.data().name;
             profilePic = doc.data().profilePic;
@@ -231,8 +230,12 @@ export default {
             
         });
         this.messages="";
-        
+       
           })
+       setTimeout(()=>{
+            this.scrollToBottom();
+        },1000);
+
       },
      
         

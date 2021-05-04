@@ -186,10 +186,11 @@ export default {
     display: flex;
     justify-content: flex-start;
     height: max-content;
+    
 }
 .profile-data{
     margin-left: 150px;
-    width: 380px;
+    width: 300px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;

@@ -14,7 +14,8 @@ export default new Vuex.Store({
     currentOtherUser:"",
     userProfilePic:"",
     openchat:false,
-    messageUser:""
+    messageUser:"",
+    phoneWindow:false
   },
   mutations: {
   },

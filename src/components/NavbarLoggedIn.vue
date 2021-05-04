@@ -8,7 +8,7 @@
         </div>
         
     <div class="navbarLoginButtons">  
-        <router-link to="/upload" ><button class="upload" v-bind:class="{'uploadHover':$route.path == '/profile'  || $route.name == 'MusicPage'|| $route.name == 'OtherProfile' || $route.path =='/manage'}"><img src="../images/uploadsvg.svg"><p>上傳</p></button></router-link>
+        <router-link v-if="this.$store.state.phoneWindow == false" to="/upload" ><button class="upload" v-bind:class="{'uploadHover':$route.path == '/profile'  || $route.name == 'MusicPage'|| $route.name == 'OtherProfile' || $route.path =='/manage'}"><img src="../images/uploadsvg.svg"><p>上傳</p></button></router-link>
         <router-link to="/"><button v-on:click="signOut" class="signoutBtn">登出</button></router-link>
         <router-link to="/profile" class="imgRouter">
        
@@ -104,17 +104,8 @@ a{
 .navbarLoginButtons a{
     margin-left:30px;
 }
-.navbar button {
-    
-    font-size: 20px;
-   
-    outline: none;
-    
-   
-}
 
 .uploadHover:hover{
-
 background-color: #e8dfda !important;
 
 }
@@ -171,14 +162,35 @@ background-color: #e8dfda !important;
     display: flex;
     justify-content: center;
     margin: auto;
-    
     cursor: pointer;
 }
 .imgSrc{
-     
      border-radius: 50%;
      
 }
 
-
+@media screen and (max-width: 425px) {
+    .navbarLogo{
+    margin-left: 40px;
+    display: flex;
+   
+}
+  .navbarLogo img{
+    width: 40px;
+   cursor: pointer;
+}
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 40px 0px 40px 0px;
+    justify-content: space-between;
+    margin-right:40px;
+}
+@media screen and (max-width: 425px) {
+.imgRouter img{
+    width: 40px;
+    height: 40px;
+}
+}
+}
 </style>
