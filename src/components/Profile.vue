@@ -3,7 +3,8 @@
 
 <div class="profile-data">
     <img v-bind:src="this.$store.state.userProfilePic" alt="" class="imgSrc">
-<div class="profile-name">{{this.$store.state.userName}}</div>
+    <div class="profile-info">
+        <div class="profile-name">{{this.$store.state.userName}}</div>
 
 
 <div class="social-links">
@@ -13,6 +14,8 @@
 </div>
 <div class="profile-bio">{{bio}}</div>
 <div class="profile-manage"><router-link to="/manage"><button>編輯資料</button></router-link></div>
+    </div>
+
 </div>
 
 
@@ -27,19 +30,22 @@
     <button v-if="following" v-on:click="OwnPosts=false;OwnLikes=false;;OwnFollowing=true" v-bind:class="{ active: OwnFollowing }">追蹤中</button>
     </div>
     </div>
-    <div v-else>尚無資料</div>
+    <div v-else class="guideError">尚無資料</div>
 
 <div v-if="OwnPosts">
     <div v-if="uploaded" class="musics">
 <div v-for="music in musics" :key="music.postName" class="postcollection">
          <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
-        <router-link :to="{name:'MusicPage',
+         <div class="phoneFlex">
+              <router-link :to="{name:'MusicPage',
         params:{
             postID:music.postID,
         }}">
             <h1 class="postname">{{music.postName | capitalize}}</h1>
         </router-link>
         <div class="posttype">{{music.postType | capitalize}}</div>
+         </div>
+       
 </div> 
 </div>
 </div>
@@ -48,13 +54,16 @@
     <div v-if="likes" class="musics">
     <div v-for="LikedPost in LikedPosts" :key="LikedPost.postName" class="postcollection">
         <img v-bind:src="LikedPost.ImgSrc" alt="" class="postcollection-square">
-        <router-link :to="{name:'MusicPage',
+        <div class="phoneFlex">
+            <router-link :to="{name:'MusicPage',
         params:{
             postID:LikedPost.postID,
         }}">
             <h1 class="postname">{{LikedPost.postName | capitalize}}</h1>
         </router-link>
         <div class="posttype">{{LikedPost.postType | capitalize}}</div>
+        </div>
+     
 </div> 
 </div>
 </div>
@@ -190,6 +199,11 @@ export default {
     align-items: flex-start;
     height: 90vh;
 }
+.profile-info{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
 .imgSrc{
     width: 250px;
     height: 250px;
@@ -255,6 +269,7 @@ export default {
 .musicContents{ 
     margin-left: 60px;
    margin-right: 60px;
+   width: max-content;
 }
 .guideNav{
     display: flex;
@@ -311,7 +326,7 @@ export default {
     width: 200px;
     height: 220px;
     background-color: #D3CCC2;
-     border-radius: 15px;
+    border-radius: 5px;
      margin-bottom:10px;
 }
 .postcollection{
@@ -325,7 +340,7 @@ export default {
     margin: 10px 40px 30px 0px;
     padding-bottom: 20px;
    background-color: #D3CCC2;
-   border-radius: 15px;
+   border-radius: 5px;
 }
 .postname{
     font-size:20px;
@@ -349,5 +364,116 @@ export default {
     height: 180px;
     object-fit: cover;
     border-radius: 50%;
+}
+@media screen and (max-width: 425px) {
+ .profile{
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    flex-direction: column;
+    padding: 0px 40px;
+}
+.profile-data{
+    margin-left: 0px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    height: max-content;
+    margin-top: 0px;
+    width:100%;
+}
+.imgSrc{
+    width: 150px;
+    height: 150px;
+    margin-top: 0px;
+    margin-right: 20px;
+   
+}
+
+
+.profile-name{
+    font-size: 30px;
+}
+
+
+.profile-bio{
+    margin-top: 12px;
+    font-size:14px;
+    letter-spacing: 1px;
+    line-height: 20px;
+    width: 100%;
+}
+
+.social-links img{
+    width: 28px;
+    margin: 10px 5px 0px 0px;
+}
+
+.profile-manage{
+    margin-top:15px;
+    margin-bottom: 0px;
+}
+.profile-manage button{
+    padding: 6px 10px;
+    font-size: 12px;
+}
+.musicContents{ 
+    margin-left: 0px;
+   margin-right: 0px;
+   width: 100%;
+   height: 80vh;
+}
+.guideNav{
+    justify-content: flex-start;
+    margin-bottom:20px; 
+}
+.guideError{
+    margin-top: 30px; 
+}
+.guideButtons{
+    margin-top: 30px;
+    
+}
+.phoneFlex{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+.postcollection-square{
+    width: 90px;
+    height: auto;
+    margin: 0px;
+    margin-right:20px;    
+}
+.postcollection{
+    width: 100%;
+    height: 90px;
+    margin: 10px 0px;
+    padding: 10px;
+   justify-content: flex-start;
+   flex-direction:row;
+}
+.postname{
+    margin-top:0px;
+}
+.following{
+    width:100%;
+   margin-bottom: 0px;
+}
+.followingcollection{
+   
+    margin-top: 20px;
+    margin-right: 0px;
+    padding-bottom: 0px;
+    
+}
+
+.followingcollection-square{
+    width: 90px;
+    height: 90px;
+    margin-bottom: 10px;
+}
 }
 </style>

@@ -2,9 +2,9 @@
 <div class="profile">
 <div class="profile-data">
     <img v-bind:src="imgSrc" alt="" class="imgSrc">
-
-    <div class="profile-name">{{name}}</div>
-
+  <div class="profile-info">
+       <div class="profile-name">{{name}}</div>
+  
     <div class="social-links">
     <a :href="facebook" v-if="facebook !=''" target="_blank"><img src="../images/Facebook.svg" alt=""></a>
     <a :href="instagram" v-if="instagram !=''" target="_blank"><img src="../images/Instagram.svg" alt=""></a>
@@ -22,6 +22,8 @@
     
     <div><button v-on:click="openchat" class="chatButton"><img src="../images/chatButton.svg">聊天</button></div>
     </div>
+  </div>
+   
 
 </div>
 </div>
@@ -32,17 +34,20 @@
         <button v-if="uploaded" class="active">音樂</button>
     </div>
     </div>
-    <div v-else>尚無資料</div>
+    <div v-else class="guideError">尚無資料</div>
     <div v-if="uploaded" class="musics">
 <div v-for="music in musics" :key="music.postName" class="postcollection">
         <img v-bind:src="music.ImgSrc" alt="" class="postcollection-square">
-        <router-link :to="{name:'MusicPage',
+        <div class="phoneFlex">
+             <router-link :to="{name:'MusicPage',
         params:{
             postID:music.postID,
         }}">
             <h1 class="postname">{{music.postName | capitalize}}</h1>
         </router-link>
         <div class="posttype">{{music.postType | capitalize}}</div>
+        </div>
+       
 </div> 
 </div>
 </div>
@@ -211,6 +216,11 @@ export default {
     align-items: flex-start;
     height: 90vh;
 }
+.profile-info{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
 .imgSrc{
     width: 250px;
     height: 250px;
@@ -319,7 +329,7 @@ justify-content: space-between;
     width: 200px;
     height: 220px;
     background-color: #D3CCC2;
-     border-radius: 15px;
+      border-radius: 5px;
 
      margin-bottom:10px;
 }
@@ -334,10 +344,109 @@ justify-content: space-between;
     margin: 10px 40px 30px 0px;
     padding-bottom: 20px;
    background-color: #D3CCC2;
-   border-radius: 15px;
+   border-radius: 5px;
 }
 .postname{
     font-size:20px;
 }
+@media screen and (max-width: 425px) {
+ .profile{
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    flex-direction: column;
+    padding: 0px 40px;
+}
+.profile-data{
+    margin-left: 0px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    height: max-content;
+    margin-top: 0px;
+    width:100%;
+}
+.imgSrc{
+    width: 150px;
+    height: 150px;
+    margin-top: 0px;
+    margin-right: 20px;
+   
+}
 
+
+.profile-name{
+    font-size: 30px;
+}
+
+
+.profile-bio{
+   margin-top: 12px;
+    font-size:14px;
+    letter-spacing: 1px;
+    line-height: 20px;
+    width: 100%;
+}
+
+.social-links img{
+    width: 28px;
+    margin: 10px 5px 0px 0px;
+}
+
+.interactionButtons{
+    margin-top: 15px;
+}
+.interactionButtons button{
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 6px 11px;
+}
+
+.chatButton img{
+    width: 15px;
+}
+
+.followButton img{
+    width: 15px;
+}
+.musicContents{ 
+    margin-left: 0px;
+   margin-right: 0px;
+   width: 100%;
+   height: 80vh;
+}
+.guideNav{
+    justify-content: flex-start;
+    margin-bottom:20px; 
+}
+
+.guideError{
+    margin-top: 30px; 
+}
+.phoneFlex{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+.postcollection-square{
+    width: 90px;
+    height: auto;
+    margin: 0px;
+    margin-right:20px;    
+}
+.postcollection{
+    width: 100%;
+    height: 90px;
+    margin: 10px 0px;
+    padding: 10px;
+   justify-content: flex-start;
+   flex-direction:row;
+}
+.postname{
+    margin-top:0px;
+}
+
+}
 </style>

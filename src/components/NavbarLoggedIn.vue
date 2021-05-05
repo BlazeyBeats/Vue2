@@ -182,15 +182,19 @@ background-color: #e8dfda !important;
 .navbar {
     display: flex;
     align-items: center;
-    padding: 40px 0px 40px 0px;
+    padding: 30px 0px 30px 0px;
     justify-content: space-between;
     margin-right:40px;
 }
-@media screen and (max-width: 425px) {
+.signoutBtn{
+   padding: 3px 15px 3px 17px;
+ 
+}
 .imgRouter img{
     width: 40px;
     height: 40px;
 }
-}
+
+
 }
 </style>
