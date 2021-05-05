@@ -129,9 +129,13 @@ export default {
                     this.likes = true;
                     if(this.uploaded ===false){
                         this.OwnLikes = true;
+                    }else{
+                        this.OwnLikes = false;
                     }
                     })   
                 }
+            }else{
+                this.likes = false;
             }
 
             if(Following){
@@ -157,17 +161,7 @@ export default {
             this.OwnLikes = false; 
             this.OwnFollowing = false; 
             })
-           
-            if(this.uploaded){
-                this.card = "Creator";
-               
-            }else{
-               this.card = "Member";
-            }
-
             
-
-           
         }) 
          }
 

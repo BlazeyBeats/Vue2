@@ -240,7 +240,7 @@
 </template>
 
 <script>
-
+var LikeArray=[];
 let Imgfile ={};
 import {fb,db,firebase} from './firebaseinit.js';
 
@@ -286,7 +286,7 @@ export default {
   },
 created(){
     this.doStuff();
-    
+
  },
     methods:{
          inputFiles(){
@@ -377,7 +377,7 @@ created(){
             this.$store.state.currentPost = Number(this.$route.params.postID);
     var vm = this;
     var user = fb.auth().currentUser;
-    var LikeArray=[];
+    
    
     if(this.$store.state.currentPost){
     db.collection("music").where('postID','==',this.$store.state.currentPost).get().then(querySnapshot =>{
@@ -395,6 +395,7 @@ created(){
             if(user){
                    for(var i=0; i<LikeArray.length;i++){
                 var name = LikeArray[i];
+                
                 if(name == user.uid ){
                     this.like = false;
                     break;
@@ -489,7 +490,26 @@ created(){
       deleteMusic(){
         var vm = this;
         var storageRef = fb.storage().ref();
-      
+
+
+          db.collection("music").where('postID','==',this.$store.state.currentPost).get().then(querySnapshot =>{
+            querySnapshot.forEach(doc=>{ 
+            LikeArray = doc.data().Likes;
+            
+            if(LikeArray){
+                   for(var i=0; i<LikeArray.length;i++){
+                var name = LikeArray[i];
+              db.collection('profiles').doc(name).update({
+                LikedPosts: firebase.firestore.FieldValue.arrayRemove(this.postId)
+            });
+            } 
+            }
+
+    })
+   
+    })
+
+
         db.collection("music").doc(vm.postId).delete().then(()=>{
             storageRef.child('music/'+ this.$store.state.userUID +'/' + this.postId +'/' +'Img.jpg').delete().then(()=>{
                 storageRef.child('music/'+ this.$store.state.userUID +'/' + this.postId +'/' + 'Music.mp3').delete();

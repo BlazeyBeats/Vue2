@@ -285,7 +285,7 @@ export default {
             querySnapshot.forEach(doc=>{
                 ID = doc.data().postID;
             })
-           vm.$router.push('/');
+           
             db.collection("music").add({
                     postName: vm.postName,
                     postBio:vm.postBio,
@@ -319,18 +319,19 @@ export default {
            db.collection('music').doc(currentFirestore).update({
                 musicSrc:vm.musicSrc,
             });
+            vm.$router.push('/');
             });
             
             })
 
-
-            if(vm.imageupLoad){
+               if(vm.imageupLoad){
                   
                 fb.storage().ref().child('music/'+ this.$store.state.userUID +'/' + 'Temp' +'/' +'Temporary.jpg').delete();
                 fb.storage().ref('music/'+ this.$store.state.userUID +'/' + currentFirestore +'/' + 'Img.jpg').put(Imgfile).then(function(){
                  
                 fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + currentFirestore +'/' + 'Img.jpg').getDownloadURL().then(url=>{
                     vm.ImgSrc = url;
+                    
                     db.collection('music').doc(currentFirestore).update({
                         ImgSrc:vm.ImgSrc,
                     });
@@ -346,6 +347,7 @@ export default {
             }); 
              
             }
+         
        
 
             });
