@@ -1,7 +1,7 @@
 <template>
 <div class="musicbackground">
 <div class="musicpage" v-if="!popupEdit">
-    <div style="display:flex; justify-content:flex-start;">
+    <div class="musicPageContainer">
          <div class= "musicPlayer">
            
         <img :src="imgSrc" alt="" class="musicsrc">
@@ -16,7 +16,7 @@
             </audio>
         </div>
 
-          <div>
+          <div class="playerContainer">
                 <div id="player-row" >
                     <div id="button-div">
                       
@@ -52,10 +52,11 @@
                     </div>
                     <div class="controlPanel">
                            <div class="audioControls"> 
-                               <button class="likebutton" v-if="!isthisyou">
+                               <button class="likebutton" v-if="!isthisyou && this.$store.state.userloggedin" >
                             <img v-if="like" @click="addLike()" src="../images/likeButton.svg" alt="">
                             <img v-else v-on:click="removeLike()" src="../images/likedButton.svg" alt="">
                         </button>
+                        <button class="likebutton" v-else><img style="visibility:hidden" src="../images/likeButton.svg" alt=""></button>
                             <button class="likebutton" v-if="isthisyou" style="visibility:hidden">
                             <img src="../images/likeButton.svg" alt="">
                         </button>
@@ -71,8 +72,8 @@
                         </button>
                       
                         
-                           <button class="reportbutton" v-on:click="popupReport=!popupReport" v-if="!isthisyou"><img src="../images/reportButton.svg" alt=""></button>
-                           
+                           <button class="reportbutton" v-on:click="popupReport=!popupReport" v-if="!isthisyou && this.$store.state.userloggedin"><img src="../images/reportButton.svg" alt=""></button>
+                           <button class="reportbutton" v-else><img style="visibility:hidden" src="../images/reportButton.svg"></button>
                            <button class="reportbutton" v-if="isthisyou" v-on:click="popupEdit=!popupEdit"><img src="../images/editButton.svg" alt=""></button>
                    </div>
                    
@@ -143,24 +144,25 @@
 
 
 <div class="musicpage" v-else>
-    <div style="display:flex; justify-content:flex-start;">
+    <div class ="musicPageContainer">
          <div class= "musicPlayer">
              <div class="loading">
                  <div v-if="uploading" class="lds-ring"><div></div><div></div><div></div><div></div></div>
                 <img v-else :src="this.currentPic" alt="" class="musicsrc">
              </div>
           
-          <div>
-                        <div class="editControls"> 
+          <div class="controlsContainer">
+                        <div class="editControls">
+                            <button class="reportbutton" style="visibility:hidden;"><img src="../images/followedButton.svg" alt=""></button>
                         <button class="editInput" @click="inputFiles()">更換圖片</button>
                         <input id="fileUpload" v-on:change=" chooseFile" type="file" hidden/>
-                           <button class="reportbutton" @click="updateMusic()"><img src="../images/followedButton.svg" alt=""></button>
+                        <button class="reportbutton" @click="updateMusic()"><img src="../images/followedButton.svg" alt=""></button>
                    </div>
 
                 </div>
         
     </div>  
-    <div class="postinfo">
+    <div class="postinfo editpostinfo">
        
     <input type="text" v-model="postName" class="postName">
        <div class="postUser">
@@ -176,8 +178,8 @@
         </router-link>
   
       
-</div>
-    <h2><input type="text" v-model="postType" class="postType"></h2>
+    </div>
+    <h2><input type="text" v-model="postType" class="postType editpostType"></h2>
     <p><textarea v-model="postBio" class="postBio"></textarea></p>
     </div>
     <div class="deleteButton">
@@ -204,7 +206,7 @@
        
     </div>
 
-            <div v-if="popupReport" class="Reporttemplate">
+        <div v-if="popupReport" class="Reporttemplate">
         <h1>檢舉</h1>
         <form @submit.prevent="pressed">
             <div class="input-edit reportForm">
@@ -756,6 +758,7 @@ input[type="range"]:focus {
     display: none;
 }
 .musicbackground{
+    width: 100%;
     height: 100vh;
 }
 .musicpage{
@@ -767,6 +770,10 @@ input[type="range"]:focus {
     justify-content: flex-start;
     box-shadow: 1px 4px 10px #a5a5a5;
     height: 600px;
+}
+.musicPageContainer{
+    display:flex;
+    justify-content:flex-start;
 }
 .musicPlayer{
     display: flex;
@@ -903,7 +910,7 @@ margin-top: 30px;
 .playbackbutton img{
     width: 16px;
     height: 16px;
-      display: flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
@@ -981,6 +988,7 @@ margin-top: 30px;
     width: 350px  !important;
     max-width: 400px;
 }
+
 .postinfo{
     padding:20px 30px;
     text-align: left;
@@ -1011,9 +1019,9 @@ margin-top: 30px;
     padding: 5px;
      font-size:20px;
      margin-left: 0;
-  margin-right: 0;
-  font-weight: bold;
-  padding-bottom: 5px;
+    margin-right: 0;
+    font-weight: bold;
+    padding-bottom: 5px;
      min-width: 350px;
     width: max-content;
 }
@@ -1246,17 +1254,7 @@ width: 280px;
     background-color: #000;
 }
 
-.Edittemplate  {
-    left: 50%;
-    top: 50%;
-    width: 700px;
-    height: 600px;
-    margin-top: -300px;
-    margin-left: -350px;
-    position: fixed;
-    background-color: rgb(239, 243, 243);
-    border-radius: 15px;
-}
+
 
 .Deletetemplate  {
     left: 50%;
@@ -1298,16 +1296,7 @@ width: 280px;
 
 
 
-.Edittemplate h1 {
-    letter-spacing: 1px;
-    color: rgb(50, 26, 5);
-    background-color: rgb(202, 206, 196);
-    margin: 0;
-    padding: 25px;
-    border-radius: 15px 15px 0 0;
-    display: flex;
-    justify-content: center;
-}
+
 
 .Deletetemplate h1 {
     letter-spacing: 1px;
@@ -1448,5 +1437,247 @@ font-size: 30px;
   }
 }
 
+@media screen and (max-width: 425px) {
+  .musicpage{
+    margin: 0px 40px 20px 40px;
+    height: max-content;
+    flex-direction: column;
+}  
+
+.musicPageContainer{
+    flex-direction: column;
+    width: 100%;
+    height: max-content;
+}
+.musicPlayer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;    
+}
+.musicbackground{
+    width: 100%;
+    height: max-content;
+    padding-bottom: 20px;
+}
+.musicsrc{
+    width: 100%;
+    height: 100%;
+    margin: 0px 20px 10px 20px;
+}
+.playerContainer{
+    width:  100%;
+}
+.time{
+    width:  100%;
+}
+input[type="range"] {
+    width: 100%;
+}
+
+.audioControls button{
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.audioControls button img{
+   margin: 0px;
+}
+.playbackbutton{
+    margin-right:0px;
+}
+.playbackbutton img{
+    width: 12px;
+    height: 12px;
+}
+.playbutton img{
+    width: 12px;
+    height: 12px;
+}
+.volumebutton img{
+    width: 14px;
+    height: 14px;
+}
+.likebutton img{
+    width: 20px;
+}
+.reportbutton img{
+    width: 26px;
+}
+.volumebutton{
+   margin-left:0px;
+}
+
+.likebutton{
+    margin-right: 0px;
+}
+
+.reportbutton{
+   margin-left: 0px;
+}
+.postinfo{
+    padding:0px;
+    width: 100%;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    background-color:#e8dfda;
+    border-radius: 5px;
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-start;
+   align-items: flex-start;
+}
+
+.postTitle{
+    font-size: 42px;
+    width: 100%;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+.postType{
+   width: 100%;
+   box-sizing: border-box;
+    min-width: 100%;
+}
+
+.postUser{
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+.postinfo h1{
+    font-size: 19px;
+    margin-bottom:0px;
+    width: 100%;
+   
+}
+.postinfo h2{
+    font-size: 17px;
+    margin-top: 20px;
+    margin-bottom:20px;
+    width: 100%;
+   margin-left: 20px;
+}
+
+.postinfo p{
+    font-size:16px;
+    margin-bottom: 0px;
+    width: 100%;
+    margin-left: 20px;
+    margin-bottom:20px;
+}
+.commentSection{
+    padding-top:0px;
+    padding-bottom:0px;
+    width: 100%;
+    margin:0px;
+  
+}
+.postComment{
+    width: 100%;
+}
+.postComment input{
+width: 100%;
+}
+.messageboard{
+    width: 100%;
+}
+.comments{
+    width: 100%;
+    box-sizing:border-box;
+}
+
+.commentContent{
+    width: 100%;
+}
+.loading{
+   width: 100%;
+    height: 100%;
+    margin: 0px 20px 10px 20px;
+}
+.controlsContainer{
+    width: 100%;
+}
+.editControls{
+    margin-top: 15px;
+    width: 100%;
+    margin-bottom: 0px;
+    justify-content: center;
+}
+.editInput{
+   margin-right: 10px;
+   margin-left: 10px;
+}
+
+.postName{
+    width:100%;
+    font-size: 42px;
+    margin-left: 20px;
+    margin-right: 0px;
+   box-sizing: border-box;   
+}
+.postinfo input{
+     margin-left: 0px;
+     margin-top:0px;
+    width: 100%;
+     
+}
+.editpostinfo{  
+    background-color:#ffffff;
+    margin-bottom: 0;
+}
+.editpostinfo input{  
+    padding-left: 10px;
+    width: 100%;
+    margin-right: 0px;
+}
+
+.editpostinfo h2{
+    margin-left: 0px;
+      width: 100%;
+    box-sizing: border-box;
+}
+.editpostType{
+  width: 100%;
+   box-sizing: border-box;
+}
+.editpostinfo p{
+     margin-left: 0px;
+      width: 100%;
+    box-sizing: border-box;
+}
+.editpostinfo textarea{
+    width: 100%;
+    margin-bottom: 0;
+}
+.deleteButton{
+    height: max-content;
+    width: 100%;
+    justify-content: center;
+    margin: 0;
+}
+.Popoverlay{
+    max-width: 100%;
+    width: 100%;
+}
+.Reporttemplate  {
+    width: 90%;
+    height: 360px;
+    margin-top: -180px;
+    margin-left: -45%;
+}
+.Reporttemplate h1 {
+    letter-spacing: 1px;
+    color: rgb(50, 26, 5);
+    background-color: rgb(202, 206, 196);
+    margin: 0;
+    padding: 25px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: center;
+}
+}
 
 </style>

@@ -330,19 +330,21 @@ background-color:#e8dfda !important;
 }
 
 .signintemplate  {
-    width: 360px;
+    width: 90%;
     height: 470px;
     margin-top: -235px;
-    margin-left: -180px;
+    margin-left: -45%;
+
 }
 
 .signuptemplate  {
-   width: 360px;
+   width: 90%;
     height: 470px;
     margin-top: -235px;
-    margin-left: -180px;
+    margin-left: -45%;
    
 }
+
 .signtemplate h1 {
     font-size: 22px;
     padding: 15px;
@@ -362,8 +364,10 @@ background-color:#e8dfda !important;
 .input-email-password input {
     font-size: 15px;
     padding-left: 15px;
-    width: 280px;
-    height: 28px;
+    padding-right: 15px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 35px;
 }
 .input-email-password button { 
     font-size: 17px;
@@ -377,7 +381,8 @@ background-color:#e8dfda !important;
 }
 
 .switch-template {
-    margin: 10px 55px;
+    width: 100%;
+    margin: 10px 0px;
     font-size: 15px;
 }
 
@@ -385,5 +390,9 @@ background-color:#e8dfda !important;
     font-size: 15px;
     margin-left: 5px;
 }
+.signoverlay {
+  
+}
+
 }
 </style>

@@ -460,8 +460,12 @@ a{
     font-size: 14px;
     letter-spacing: 0px;
 }
+.mainpageMusic {
+    width: 100%;
+}
 .musics{
-    padding: 20px 40px;
+    width: 100%;
+    padding: 20px 0px;
     margin: 0px auto;
     justify-content: center;
 }
@@ -474,7 +478,7 @@ a{
 .postcollection{
     width: 100%;
     height: 90px;
-    margin: 10px 0px;
+    margin: 10px 40px;
     padding: 10px;
    justify-content: flex-start;
    flex-direction:row;
