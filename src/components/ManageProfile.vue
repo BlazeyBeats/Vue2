@@ -34,7 +34,7 @@
     
     </div>
  
-   <div style="height:500px;display:flex; align-items:flex-end;margin-left:50px;margin-bottom:10px;">
+   <div class="updateProfileButton">
      <button class="updateProfile" v-on:click="updateProfile" >完成編輯</button> 
    </div>
         
@@ -302,6 +302,13 @@ object-fit: cover;
 .instagram input{
    width: 500px;
 }
+.updateProfileButton{
+  height:500px;
+  display:flex;
+   align-items:flex-end;
+   margin-left:50px;
+   margin-bottom:10px;
+}
 .updateProfile{
   width: max-content;
    display: flex;
@@ -363,6 +370,68 @@ object-fit: cover;
     transform: rotate(360deg);
   }
 }
+@media screen and (max-width: 425px) {
+  .manage{
+  flex-direction: column;
+ padding: 0px 40px;
+ height: max-content;
+}
+.update-profile{
+  height: 100%;
+   flex-direction: column;
+   justify-content: flex-start;
+  width: 100%;
+}
+.picture{
+  margin-top: 20px;
+    padding: 0px;
+    margin-right: 0px;
+   
+}
 
+.userProfile{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+.userProfile input{
+    width: 100%;
+    box-sizing:border-box;
+    height: 35px;
+}
+.name{
+   width: 100%;
+}
+
+.bio textarea{
+   width:100%;
+    box-sizing:border-box;
+    border-radius: 28px;
+}
+.bio textarea:active {
+        width: 100%;   
+    }
+.bio textarea:focus {
+    min-width:100%;
+    }
+.facebook input{
+   width: 100%; 
+    box-sizing:border-box;
+}
+.instagram input{
+  width: 100%; 
+   box-sizing:border-box;
+}
+.updateProfileButton{
+  height:max-content;
+  display:flex;
+   align-items:center;
+   margin-top: 30px;
+   margin-left:0px;
+   margin-bottom:40px;
+}
+
+}
 
 </style>
