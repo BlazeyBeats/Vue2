@@ -1,9 +1,9 @@
 <template>
+
 <div class="musicbackground">
 <div class="musicpage" v-if="!popupEdit">
     <div class="musicPageContainer">
-         <div class= "musicPlayer">
-           
+    <div class= "musicPlayer">
         <img :src="imgSrc" alt="" class="musicsrc">
         <div >
             <audio
@@ -31,7 +31,7 @@
                                 <span class="text-sm" v-html="totalTime()"> 00:00 </span>
                                 
                             </div>
-                    <div id="progress-bar">
+                    <div id="progress-bar" v-if="!$store.state.navbarTemplate">
                         <div>
                             <input
                                 v-model="playbackTime"
@@ -53,13 +53,11 @@
                     <div class="controlPanel">
                            <div class="audioControls"> 
                                <button class="likebutton" v-if="!isthisyou && this.$store.state.userloggedin" >
-                            <img v-if="like" @click="addLike()" src="../images/likeButton.svg" alt="">
-                            <img v-else v-on:click="removeLike()" src="../images/likedButton.svg" alt="">
-                        </button>
-                        <button class="likebutton" v-else><img style="visibility:hidden" src="../images/likeButton.svg" alt=""></button>
-                            <button class="likebutton" v-if="isthisyou" style="visibility:hidden">
-                            <img src="../images/likeButton.svg" alt="">
-                        </button>
+                                    <img v-if="like" @click="addLike()" src="../images/likeButton.svg" alt="">
+                                    <img v-else v-on:click="removeLike()" src="../images/likedButton.svg" alt="">
+                                </button>
+                                <button class="likebutton" v-else><img style="visibility:hidden" src="../images/likeButton.svg" alt=""></button>
+                                
            
                         <button class="playbackbutton"><img src="../images/playbackButton.svg" @click="playback()" alt=""></button>
                       <button @click="toggleAudio()" class="playbutton">
@@ -73,7 +71,7 @@
                       
                         
                            <button class="reportbutton" v-on:click="popupReport=!popupReport" v-if="!isthisyou && this.$store.state.userloggedin"><img src="../images/reportButton.svg" alt=""></button>
-                           <button class="reportbutton" v-else><img style="visibility:hidden" src="../images/reportButton.svg"></button>
+                           <button class="reportbutton" v-if="this.$store.state.userloggedin == false "><img style="visibility:hidden" src="../images/reportButton.svg"></button>
                            <button class="reportbutton" v-if="isthisyou" v-on:click="popupEdit=!popupEdit"><img src="../images/editButton.svg" alt=""></button>
                    </div>
                    
@@ -245,11 +243,9 @@
 var LikeArray=[];
 let Imgfile ={};
 import {fb,db,firebase} from './firebaseinit.js';
-
 export default {
     props: ["url", "playerid"],
     name:'MusicPage',
-
  data(){
      return{
         postName:"",
@@ -288,7 +284,6 @@ export default {
   },
 created(){
     this.doStuff();
-
  },
     methods:{
          inputFiles(){
@@ -410,7 +405,6 @@ created(){
             }
             }
          
-
             
     
     db.collection("profiles").doc(this.postUserID).get().then(doc =>{ 
@@ -422,7 +416,6 @@ created(){
     })
     
     })
-
         db.collection("comments").where('postID','==',this.postId).orderBy('date','desc').onSnapshot((querySnapshot)=>{
        let allcomments=[]
         querySnapshot.forEach(doc=>{
@@ -434,7 +427,6 @@ created(){
     })
    }
         },
-
      chooseFile(e){
           var vm = this;
             if(e.target.files[0]){
@@ -453,7 +445,6 @@ created(){
             
         },
     
-
         updateMusic(){
            var vm = this;
          
@@ -463,7 +454,6 @@ created(){
                  
                 fb.storage().ref('music/'+ vm.$store.state.userUID +'/' + vm.postId +'/' + 'Img.jpg').getDownloadURL().then(url=>{
                 vm.imgSrc = url;
-
            db.collection('music').doc(vm.postId).update({
                 ImgSrc:vm.imgSrc,
                 postName:vm.postName,
@@ -473,10 +463,8 @@ created(){
                
                 });
                 })
-
                  this.popupEdit = false;
             } else{
-
                 db.collection('music').doc(this.postId).update({
                     postName:this.postName,
                     postBio:this.postBio,
@@ -484,16 +472,11 @@ created(){
             });
              this.popupEdit = false;
             }
-
-
            
-
         },  
       deleteMusic(){
         var vm = this;
         var storageRef = fb.storage().ref();
-
-
           db.collection("music").where('postID','==',this.$store.state.currentPost).get().then(querySnapshot =>{
             querySnapshot.forEach(doc=>{ 
             LikeArray = doc.data().Likes;
@@ -506,12 +489,9 @@ created(){
             });
             } 
             }
-
     })
    
     })
-
-
         db.collection("music").doc(vm.postId).delete().then(()=>{
             storageRef.child('music/'+ this.$store.state.userUID +'/' + this.postId +'/' +'Img.jpg').delete().then(()=>{
                 storageRef.child('music/'+ this.$store.state.userUID +'/' + this.postId +'/' + 'Music.mp3').delete();
@@ -521,7 +501,6 @@ created(){
             posts: firebase.firestore.FieldValue.arrayRemove(this.postId)
             });
         })
-
      },
      reportOriginal(){
          this.popupReport = false;
@@ -555,7 +534,6 @@ created(){
      },
      addLike(){
          var user = fb.auth().currentUser;
-
         db.collection('music').doc(this.postId).get().then(doc =>{ 
         var LikeCount = doc.data().LikeCount;
         db.collection('music').doc(this.postId).update({
@@ -572,7 +550,6 @@ created(){
      },
      removeLike(){
          var user = fb.auth().currentUser;
-
         db.collection('music').doc(this.postId).get().then(doc =>{ 
        var LikeCount = doc.data().LikeCount;
       
@@ -611,7 +588,6 @@ created(){
     
       
   }
-
     },
      mounted: function() {
       this.$nextTick(function() {
@@ -639,7 +615,6 @@ created(){
             }
           }
         });
-
         this.$watch("playbackTime",function() {
           
             var audio=this.$refs.player;
@@ -660,7 +635,6 @@ created(){
 </script>
 
 <style scoped>
-
 h1{
     text-decoration: none;
     color: rgb(50, 26, 5);
@@ -671,14 +645,54 @@ h2{
 p {
     color: rgb(50, 26, 5);
 }
-
-
+.musicbackground{
+    height: 95vh;
+}
+.musicpage{
+    margin: 0px 100px 20px 100px;
+    width: auto;
+    padding: 20px;
+    background-color: white;
+    border-radius:5px;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 1px 4px 10px #a5a5a5;
+    height: 600px;
+}
+.musicPageContainer{
+    display:flex;
+    justify-content:flex-start;
+}
+.musicPlayer{
+    width: 500px;
+    padding: 0px 30px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;    
+}
+.playerContainer{
+    width:  100%;
+}
+#player-row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+#button-div{
+    width: 100%;
+}
+#progress-bar{
+    width: 100%;
+}
 .time{
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: auto;
-    width: 430px;
+    width: 100%;
     margin: 5px 0px;
 }
 .text-sm{
@@ -686,18 +700,16 @@ p {
     font-size:13px;
     margin: 2px 0px; 
 }
-
 .play-button{
     width: 32px;
     height: 32px;
 }
-
 input[type="range"] {
     margin: auto;
     -webkit-appearance: none;
     position: relative;
     overflow: hidden;
-    width: 430px;
+     width: 100%;
     height: 10px;
     cursor: pointer;
     outline: none;
@@ -710,7 +722,6 @@ input[type="range"]:focus {
 ::-webkit-slider-runnable-track {
     background: #D3CCC2;
 }
-
 ::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 0;
@@ -757,30 +768,7 @@ input[type="range"]:focus {
 ::-ms-tooltip {
     display: none;
 }
-.musicbackground{
-    width: 100%;
-    height: 100vh;
-}
-.musicpage{
-    margin: 0px 100px 20px 100px;
-    padding: 20px;
-    background-color: white;
-    border-radius:5px;
-    display: flex;
-    justify-content: flex-start;
-    box-shadow: 1px 4px 10px #a5a5a5;
-    height: 600px;
-}
-.musicPageContainer{
-    display:flex;
-    justify-content:flex-start;
-}
-.musicPlayer{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;    
-}
+
 
 .seek {
   height: 60px;
@@ -789,7 +777,6 @@ input[type="range"]:focus {
   left: unset;
   right: 0;
 }
-
 .title-and-time {
   height: 25px;
   width: 100%;
@@ -798,7 +785,6 @@ input[type="range"]:focus {
   justify-content: space-between;
   align-items: center;
 }
-
 .progress-container {
   position: relative;
   height: 10px;
@@ -806,7 +792,6 @@ input[type="range"]:focus {
   display: flex;
   align-items: center;
 }
-
  .progress {
   background-color: rgba(0, 0, 0, 0.05);
   height: 4px;
@@ -818,7 +803,6 @@ input[type="range"]:focus {
   align-items: center;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
-
 .progress-handle {
   display: block;
   position: absolute;
@@ -835,7 +819,6 @@ input[type="range"]:focus {
 .progress-handle:hover {
   background-color: #000;
 }
-
 .progress-container .progress .transparent-seeker-layer {
   width: 100%;
   height: 6px;
@@ -861,14 +844,20 @@ input[type="range"]:focus {
     justify-content:center;
      object-fit: cover;
 }
-
 .audioControls{
+    width: 100%;
 display: flex;
 align-items: center;
 justify-content: space-between;
 margin-top: 30px;
 }
-
+.audioControls button{
+    width: 55px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .loading{
    width: 430px;
    height: 430px;
@@ -904,7 +893,7 @@ margin-top: 30px;
     outline: none;
     border: none;
     background-color: white;
-    margin-right:30px;
+    
     
 }
 .playbackbutton img{
@@ -915,7 +904,6 @@ margin-top: 30px;
     justify-content: center;
     cursor: pointer;
 }
-
 .playbutton{
     width: 55px;
     height: 55px;
@@ -935,13 +923,10 @@ margin-top: 30px;
     align-items: center;
     justify-content: center;
 }
-
 .volumebutton{
- outline: none;
-    
+    outline: none;
     background-color: white;
-   border: none;
-   margin-left:30px;
+    border: none;
 }
 .volumebutton img{
     cursor: pointer;
@@ -953,11 +938,10 @@ margin-top: 30px;
 }
 .likebutton{
     outline: none;
-    margin-right: 90px;
+    margin-right: 0px;
  
     background-color: white;
    border: none;
-
 }
 .likebutton img{
     width: 25px;
@@ -965,7 +949,7 @@ margin-top: 30px;
 }
 .reportbutton{
     outline: none;
-    margin-left: 80px;
+    margin-left: 0px;
     margin-top: 2px;
     background-color: transparent;
    border: none;
@@ -985,10 +969,9 @@ margin-top: 30px;
     word-break: break-all;
     margin-top: 0px;
     margin-bottom:20px;
-    width: 350px  !important;
+    width: 350px;
     max-width: 400px;
 }
-
 .postinfo{
     padding:20px 30px;
     text-align: left;
@@ -1025,7 +1008,6 @@ margin-top: 30px;
      min-width: 350px;
     width: max-content;
 }
-
 .postBio{
     font-family: Avenir, Helvetica, Arial, sans-serif;
    width: 350px;
@@ -1044,7 +1026,6 @@ margin-top: 30px;
     max-width: 400px;
     height: 300px;
 }
-
 .postinfo h1{
     font-size: 50px;
     display: flex;
@@ -1054,7 +1035,6 @@ margin-top: 30px;
     width: 350px;
     max-width: 400px;
 }
-
 .postinfo p{
     font-size:18px;
     display: flex;
@@ -1067,7 +1047,6 @@ margin-top: 30px;
     max-width: 400px;
     word-break: break-all;
 }
-
 .postinfo p::-webkit-scrollbar {
   display: none;
 }
@@ -1077,13 +1056,13 @@ margin-top: 30px;
     justify-content: flex-start;
     margin: 30px 0px;
 }
-
 .postUser{
     display: flex;
     align-items: center;
 }
 .postUser h1{
     width: max-content;
+    box-sizing: border-box;
     font-size: 20px;
     margin: auto;
     padding: 0;
@@ -1113,7 +1092,6 @@ margin-top: 30px;
     cursor: pointer;
     outline: none;
 }
-
 .deleteButton button:hover{
      transition: 0.2s;
     
@@ -1134,17 +1112,22 @@ margin-top: 30px;
     margin: auto;
     margin-right: 15px;
 }
-
 .commentSection{
+    max-width: 500px;
+    box-sizing: border-box;
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
     align-items:flex-end;
+    padding-right: 30px;
     padding-top:25px;
     padding-bottom:25px;
-    width: 800px;
-    margin:0px 40px 0px 40px;
+    width: 100%;
+    margin:0px;
   
+}
+.messageboard{
+    width: 100%;
 }
 .messageboard {
     overflow: scroll;
@@ -1154,6 +1137,7 @@ margin-top: 30px;
   display: none;
 }
 .postComment{
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1162,12 +1146,11 @@ margin-top: 30px;
 .postComment input{
  border: 2px solid #bdb6ac;
  height: 35px;
-width: 280px;
+    width: 100%;
  border-radius: 25px;
  outline: none;
  padding-left:10px;
 }
-
 .postComment input::placeholder{
     color: gray;
     transition: 0.1s;
@@ -1182,7 +1165,6 @@ width: 280px;
     background-color:white;
     padding-left: 10px;
     
-
 }
 .postComment button img{
    width: 25px;
@@ -1196,6 +1178,7 @@ width: 280px;
    opacity:1;
 }
 .comments{
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -1203,11 +1186,9 @@ width: 280px;
     margin:10px 0px 20px 0px;
     padding: 10px 20px 15px 20px;
     border: 2px solid #513E41;
-    width: 350px;
+    width: 100%;
   
-
 }
-
 .commentUser{
     width: max-content;
     display: flex;
@@ -1222,7 +1203,6 @@ width: 280px;
     border-radius:50%;
     margin-right:10px;
 }
-
 .commentName{
     font-weight: bold;
     font-size: 16px;
@@ -1253,9 +1233,6 @@ width: 280px;
     height: 100%;
     background-color: #000;
 }
-
-
-
 .Deletetemplate  {
     left: 50%;
     top: 50%;
@@ -1267,7 +1244,6 @@ width: 280px;
     background-color: rgb(239, 243, 243);
     border-radius: 15px;
 }
-
 .Reporttemplate  {
     left: 50%;
     top: 50%;
@@ -1279,7 +1255,6 @@ width: 280px;
     background-color: rgb(239, 243, 243);
     border-radius: 15px;
 }
-
 .Confirmtemplate  {
     left: 50%;
     top: 50%;
@@ -1291,13 +1266,6 @@ width: 280px;
     background-color: rgb(239, 243, 243);
     border-radius: 15px;
 }
-
-
-
-
-
-
-
 .Deletetemplate h1 {
     letter-spacing: 1px;
     color: rgb(50, 26, 5);
@@ -1308,7 +1276,6 @@ width: 280px;
     display: flex;
     justify-content: center;
 }
-
 .Reporttemplate h1 {
     letter-spacing: 1px;
     color: rgb(50, 26, 5);
@@ -1319,7 +1286,6 @@ width: 280px;
     display: flex;
     justify-content: center;
 }
-
 .Confirmtemplate p {
     letter-spacing: 1px;
     color: rgb(50, 26, 5);
@@ -1328,27 +1294,21 @@ width: 280px;
     display: flex;
     justify-content: center;
 }
-
-
 .editForm button{
 font-size: 30px;
 }
-
 .deleteForm button{
     font-size: 30px;
     margin:0 10px;
 }
-
 .reportForm button{
     font-size: 20px;
     margin:0px 20px;
 }
-
 .confirmForm button{
     font-size: 20px;
     margin:0px 20px;
 }
-
 .input-edit p {
     color: rgb(50, 26, 5);
     font-size: 22px;
@@ -1359,7 +1319,6 @@ font-size: 30px;
     justify-content: flex-start;
     letter-spacing: 1px;
 }
-
 .input-edit input {
     font-size: 18px;
     padding-left: 10px;
@@ -1372,11 +1331,9 @@ font-size: 30px;
     border-radius: 0 0 15px 15px;
     outline: none;
 }
-
 .input-edit input::placeholder {
     color: gray;
 }
-
 .input-edit button {
     background-color: rgb(239, 243, 243);
     
@@ -1389,9 +1346,6 @@ font-size: 30px;
     transition: 0.2s;
     cursor: pointer;
 }
-
-
-
 .input-edit button:hover {
     background-color: rgb(50, 26, 5);
     color: rgb(239, 243, 243);
@@ -1400,7 +1354,6 @@ font-size: 30px;
     display: flex;
     justify-content: flex-start;
 }
-
 .lds-ring {
   display: inline-block;
   position: relative;
@@ -1436,20 +1389,36 @@ font-size: 30px;
     transform: rotate(360deg);
   }
 }
-
+@media screen and (min-device-width: 481px) and (max-width: 1440px) {
+.musicsrc{
+    width: 400px;
+    height: 400px;
+}
+.musicPlayer{
+    width: 440px;
+    padding: 0px 22.5px;
+}
+.postinfo{
+    padding: 20px;
+}
+.commentSection{
+    padding-right: 20px;
+}
+}
 @media screen and (max-width: 425px) {
   .musicpage{
-    margin: 0px 40px 20px 40px;
+    margin: 0px 30px 20px 30px;
     height: max-content;
     flex-direction: column;
 }  
-
 .musicPageContainer{
     flex-direction: column;
     width: 100%;
     height: max-content;
 }
 .musicPlayer{
+    width: 100%;
+    padding: 0px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1474,13 +1443,9 @@ font-size: 30px;
 input[type="range"] {
     width: 100%;
 }
-
 .audioControls button{
     width: 45px;
     height: 45px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 .audioControls button img{
    margin: 0px;
@@ -1509,11 +1474,9 @@ input[type="range"] {
 .volumebutton{
    margin-left:0px;
 }
-
 .likebutton{
     margin-right: 0px;
 }
-
 .reportbutton{
    margin-left: 0px;
 }
@@ -1529,7 +1492,6 @@ input[type="range"] {
    justify-content: flex-start;
    align-items: flex-start;
 }
-
 .postTitle{
     font-size: 42px;
     width: 100%;
@@ -1541,7 +1503,6 @@ input[type="range"] {
    box-sizing: border-box;
     min-width: 100%;
 }
-
 .postUser{
     display: flex;
     align-items: center;
@@ -1560,7 +1521,6 @@ input[type="range"] {
     width: 100%;
    margin-left: 20px;
 }
-
 .postinfo p{
     font-size:16px;
     margin-bottom: 0px;
@@ -1569,18 +1529,14 @@ input[type="range"] {
     margin-bottom:20px;
 }
 .commentSection{
+    padding-right: 0px;
     padding-top:0px;
     padding-bottom:0px;
     width: 100%;
     margin:0px;
   
 }
-.postComment{
-    width: 100%;
-}
-.postComment input{
-width: 100%;
-}
+
 .messageboard{
     width: 100%;
 }
@@ -1588,7 +1544,6 @@ width: 100%;
     width: 100%;
     box-sizing:border-box;
 }
-
 .commentContent{
     width: 100%;
 }
@@ -1610,7 +1565,6 @@ width: 100%;
    margin-right: 10px;
    margin-left: 10px;
 }
-
 .postName{
     width:100%;
     font-size: 42px;
@@ -1633,7 +1587,6 @@ width: 100%;
     width: 100%;
     margin-right: 0px;
 }
-
 .editpostinfo h2{
     margin-left: 0px;
       width: 100%;
@@ -1678,6 +1631,32 @@ width: 100%;
     display: flex;
     justify-content: center;
 }
+@media screen and (max-device-width: 320px) {
+    .musicpage{
+        margin: 0px 20px 20px 20px;
+    }
+    .audioControls button{
+    width: 35px;
+    height: 35px;
 }
-
+.playbackbutton img{
+    width: 10px;
+    height: 10px;
+}
+.playbutton img{
+    width: 11px;
+    height: 11px;
+}
+.volumebutton img{
+    width: 12px;
+    height: 12px;
+}
+.likebutton img{
+    width: 17px;
+}
+.reportbutton img{
+    width: 22px;
+}
+}
+}
 </style>

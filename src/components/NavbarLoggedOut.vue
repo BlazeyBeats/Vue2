@@ -9,12 +9,12 @@
 
 
      <div class="navbarButtons">  
-        <button v-on:click="popupsignin=!popupsignin;" class="signinBtn">登入</button>
-        <button v-on:click="popupsignup=!popupsignup;" class="signupBtn" v-bind:class="{'signupBtnColor':$route.name == 'MusicPage'}">註冊</button>
+        <button v-on:click="popupsignin=!popupsignin; $store.state.navbarTemplate=true;" class="signinBtn">登入</button>
+        <button v-on:click="popupsignup=!popupsignup; $store.state.navbarTemplate=true;" class="signupBtn" v-bind:class="{'signupBtnColor':$route.name == 'MusicPage'}">註冊</button>
     </div>
     </div>
-    <div v-if="popupsignin" v-on:click="popupsignup=false;popupsignin=false" class="signoverlay"></div>
-    <div v-if="popupsignup" v-on:click="popupsignup=false;popupsignin=false" class="signoverlay"></div>
+    <div v-if="popupsignin" v-on:click="popupsignup=false;popupsignin=false;$store.state.navbarTemplate=false;" class="signoverlay"></div>
+    <div v-if="popupsignup" v-on:click="popupsignup=false;popupsignin=false;$store.state.navbarTemplate=false;" class="signoverlay"></div>
 
     <div v-if="popupsignin" class="signtemplate signintemplate">
         <h1>登入</h1>
@@ -390,9 +390,7 @@ background-color:#e8dfda !important;
     font-size: 15px;
     margin-left: 5px;
 }
-.signoverlay {
-  
-}
+
 
 }
 </style>
